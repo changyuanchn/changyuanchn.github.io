@@ -7,7 +7,7 @@
 
 <html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
-  <meta charset="UTF-8"/>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
@@ -126,7 +126,7 @@
 
 
 
-  <title>读书笔记之The C Programming Language | axis tech zone</title>
+  <title>读书笔记之The C Programming Language | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -145,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -356,7 +356,7 @@
 <h3 id="第四章：Function-and-Program-Structure"><a href="#第四章：Function-and-Program-Structure" class="headerlink" title="第四章：Function and Program Structure"></a>第四章：Function and Program Structure</h3><p>c语言最重要的就是函数，c就是由函数构成的，程序的主体是包含在main{}中的部分，main函数也是函数，有着与其他函数一样的性质，比如说作用域，参数，返回值的问题等等。函数有声明和定义，在用到一个函数之前必须先声明。函数可以声明多次，但是只能定义一次。c语言不允许在函数中定义函数，这和matlab等是不一样的，因为程序都是并列存在的，所以所有的函数都是external。变量也分为外部变量和内部变量。内部变量的作用域是函数本身，外部变量的作用域是程序的整个执行空间。静态变量static是用在外部变量和函数的修饰符，表明这些函数或变量的作用域只是到此源文件的结尾。寄存器变量register，是定义在了计算机的寄存器上的变量，应该说在运行速度上肯定是很有优势的，但是实际意义，还没怎么看得到。递归，是一个很神奇的东西，它能很大程度上简化程序的复杂度，但是缺点是，时间复杂度太大。递归在数据结构上会有很大应用，尤其是tree。递归必须要有一个终止条件，否则就是死循环。最后本章还包含了宏替换的内容，需要注意的是要给每个变量加上括号，如#define max(A，B) ((A)&gt;(B)？(A)：(B))，否则后果会很严重。本章写了相当多的有意义的函数，如getline，strindex，atof，出入栈函数（push，pop），getch和ungetch，快速查找quicksort，以及取最大值的宏替换等等。同时也很系统的做了一个计算器的程序，用到了子函数，外部变量，栈等等，算是一个比较完备的程序了。</p>
 <h3 id="第五章：Pointers-and-Arrays"><a href="#第五章：Pointers-and-Arrays" class="headerlink" title="第五章：Pointers and Arrays"></a>第五章：Pointers and Arrays</h3><p>指针才是c语言的精华所在。如果学c语言不学指针或者说不懂指针的话，那就只能呵呵了。从全书来看，pointer绝对是重中之重，函数的形参定义要用到，结构的定义要用到，数据结构也要用到，前面的内容，其实各种编程语言都是差不多的，懂了一种编程语言，那么基本上看看就能掌握，但是这对指针不适用。指针应该是c语言的独创，c语言30年不倒，跟指针应该说是有很大关系的，c与底层硬件的紧密联系应该说指针也是有功劳的。指针是包含变量地址的变量，因此指针也是变量（这一点很重要）。指针的一个比较大的用处应该是在函数的形参声明上，因为c语言的函数是值传递的，因此如果用普通的int等变量定义函数的行参，那么实际上函数运行的时候，只是修改的是输入的变量的副本，对实参是没有任何改变的，因此其实是什么都没有做的，这跟c语言的值传递，以及作用域原则有关。而指针和数组则不存在这样的问题，数组和指针在相当大的程度上是相通的，而且指针比较简洁，所以形参声明会用到指针。指针指向的是数组的元素，p是指针，a[]是数组，那么p=a；指针指向数组时是可以做加减法的，当然要在数组的索引范围内。指针和数组名的区别是指针是变量，而数组名不是，这也就意味着不可以做b=a以及a++这样的事情。指向指针的指针，也就是指针数组，就相当于是数组中存的内容是指针，我觉得这个主要是为了替代多维数组而存在的。而指针数组相对比多维数组的优点是不用为每个子数组定义相同大小的空间。指向函数的指针，函数不是变量，但是可以定义指向函数的指针，我觉得意义就在于可以让程序选择在不同情况下用哪个函数，例如(int （<em>）（void</em>,void*）)(numeric?numcmp:strcmp),numcmp和strcmp是两个函数。另外本章还提到了命令行参数，args（命令行参数的个数），argv[]（指向命令行参数的指针数组）。这一章写了更多的函数swap，strlen，alloc，strcmp，strcpy，getline，writeline，重写的qsort函数等等。</p>
 <h3 id="第六章：Structure"><a href="#第六章：Structure" class="headerlink" title="第六章：Structure"></a>第六章：Structure</h3><p>我感觉structure就是为了构建数据结构而存在的！Structure是用于构建属于自己的data type，就像int，char一样，实际而言，他们的用法是一样的。因此，自然就会有pointer，function，array等等内容。还有结构的自引用，有点递归的意思，这个在构建tree结构的时候有了很好的应用。Union的用处在于程序的兼容，当定义变量时，我们不确定要定义成什么类型时，也即不知到该分配多少空间时，union可以表现一下。本章的另一个比较重要的点是：typedef。typedef并不能创建一个新的数据类型，他只是把原有的数据类型又重新定义了一个名字，看上去没什么用，但是真的没用么？当然不是，这么做的目的一个是可移植性，因为不同的machine对于int（举个例子）的空间分配是不同的，所以当需要移植的时候，只需要修改typedef就可以了；第二个就是能使变量的意义更明了，比如typedef inttreeptr，当定义int型的树指针时，用treestr更加清晰。本章的程序主要是keyword_count，tree，以及table_lookup，其中tree这个函数系列涉及到了C语言的很多方面，作为一个例子来说，比较有深度。</p>
-<h3 id="第七章：Input-and-Output"><a href="#第七章：Input-and-Output" class="headerlink" title="第七章：Input and Output"></a>第七章：Input and Output</h3><p>本章介绍了一些输入输出的接口函数，getchar，putchar, printf, scanf, sprintf, sscanf, getc, putc, fopen, fclose,stdin, stdout, fputs, fgets. 并且介绍了几个比较有用的头文件：&lt;ctype.h&gt;,&lt;string.h&gt;, &lt;math.h&gt;.</p>
+<h3 id="第七章：Input-and-Output"><a href="#第七章：Input-and-Output" class="headerlink" title="第七章：Input and Output"></a>第七章：Input and Output</h3><p>本章介绍了一些输入输出的接口函数，getchar，putchar, printf, scanf, sprintf, sscanf, getc, putc, fopen, fclose,stdin, stdout, fputs, fgets. 并且介绍了几个比较有用的头文件：<ctype.h>,<string.h>, <math.h>.</math.h></string.h></ctype.h></p>
 <p>本书还有两个附录：一个是Reference Manual， 另一个是Standard Library. 有时间要翻翻看看。</p>
 
       
@@ -479,7 +479,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -490,7 +490,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -501,7 +501,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -704,7 +704,24 @@
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -757,6 +774,8 @@
   
 
   
+  
+
 
   
 

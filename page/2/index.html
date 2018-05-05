@@ -7,7 +7,7 @@
 
 <html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
-  <meta charset="UTF-8"/>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
@@ -124,7 +124,7 @@
 
 
 
-  <title>axis tech zone</title>
+  <title>axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -143,7 +143,7 @@
     
   
 
-  <div class="container sidebar-position-left 
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left 
   page-home">
     <div class="headband"></div>
 
@@ -252,7 +252,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/15/0_1背包问题之穷举解法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/18/动态规划解决0_1背包问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -271,7 +271,156 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2016/05/15/0_1背包问题之穷举解法/" itemprop="url">0_1背包问题之穷举解法</a></h1>
+                <a class="post-title-link" href="/2016/05/18/动态规划解决0_1背包问题/" itemprop="url">动态规划解决0/1背包问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-18T00:00:00+08:00">
+                2016-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构与基本算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与基本算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          之前总结了利用穷举法，贪婪法解决0/1背包的方法，同时也通过Fibnacci介绍了动态规划，那么该如何来利用动态规划来解决0/1背包问题呢？
+首先动态规划有两个条件;如果可以把局部子问题的解结合起来得到全局最优解，那这个问题就具备最优子结构如果计算最优解时需要处理很多相同的问题，那么这个问题就具备重
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/05/18/动态规划解决0_1背包问题/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/15/动态规划/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuanchn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/05/15/动态规划/" itemprop="url">动态规划</a></h1>
         
 
         <div class="post-meta">
@@ -345,11 +494,12 @@
       
         
           
-          [0-1背包问题]有一个背包，背包容量是M=150kg。有7个物品，物品不可以分割成任意大小。（这句很重要）要求尽可能让装入背包中的物品总价值最大，但不能超过总容量。物品 A B C D E F G重量 35kg 30kg 6kg 50kg 40kg 10kg 25kg价值 10 40 30 50 
+          动态规划是20世纪50年代由Richard Bellman发明的。不像贪婪算法，回溯算法等，单从名字上根本理解不了这是什么鬼。Bellman自己也说了，这个名字完全是为了申请经费搞出来的（囧），所以说这个名字坑了一代又一代的人啊。
+言归正传，我们来了解下动态规划，dynamic Programmin
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/05/15/0_1背包问题之穷举解法/#more" rel="contents">
+            <a class="btn" href="/2016/05/15/动态规划/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -548,7 +698,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/15/动态规划/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/15/0_1背包问题之穷举解法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -567,7 +717,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2016/05/15/动态规划/" itemprop="url">动态规划</a></h1>
+                <a class="post-title-link" href="/2016/05/15/0_1背包问题之穷举解法/" itemprop="url">0_1背包问题之穷举解法</a></h1>
         
 
         <div class="post-meta">
@@ -641,12 +791,11 @@
       
         
           
-          动态规划是20世纪50年代由Richard Bellman发明的。不像贪婪算法，回溯算法等，单从名字上根本理解不了这是什么鬼。Bellman自己也说了，这个名字完全是为了申请经费搞出来的（囧），所以说这个名字坑了一代又一代的人啊。
-言归正传，我们来了解下动态规划，dynamic Programmin
+          [0-1背包问题]有一个背包，背包容量是M=150kg。有7个物品，物品不可以分割成任意大小。（这句很重要）要求尽可能让装入背包中的物品总价值最大，但不能超过总容量。物品 A B C D E F G重量 35kg 30kg 6kg 50kg 40kg 10kg 25kg价值 10 40 30 50 
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/05/15/动态规划/#more" rel="contents">
+            <a class="btn" href="/2016/05/15/0_1背包问题之穷举解法/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1335,7 +1484,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1346,7 +1495,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1357,7 +1506,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -1593,6 +1742,45 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
 
   
 

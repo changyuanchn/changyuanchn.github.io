@@ -7,7 +7,7 @@
 
 <html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
-  <meta charset="UTF-8"/>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
@@ -126,7 +126,7 @@
 
 
 
-  <title>0_1背包问题之穷举解法 | axis tech zone</title>
+  <title>0_1背包问题之穷举解法 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -145,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -363,14 +363,14 @@ def getWeight(self):
     return self.weight
 
 def __str__(self):
-    result = &apos; &lt; &apos;+self.name+&apos; , &apos;+str(self.value)+&apos; , &apos;+str(self.weight) + &apos;&gt;&apos;
+    result = &#39; &lt; &#39;+self.name+&#39; , &#39;+str(self.value)+&#39; , &#39;+str(self.weight) + &#39;&gt;&#39;
     return result
 </code></pre><p>下面的这段算法提供了整个解空间，她的返回值就是整个$2^7$个集合</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#get the binary representation of a num n</span><br><span class="line">def getBinaryRep(n,numDigitals):</span><br><span class="line">    result=&apos;&apos;</span><br><span class="line">    while n&gt;0:</span><br><span class="line">        result=str(n%2)+result</span><br><span class="line">        n=n//2</span><br><span class="line">        </span><br><span class="line">    if len(result)&gt;numDigitals:</span><br><span class="line">        raise ValueError(&quot;not enough digits&quot;)</span><br><span class="line">    </span><br><span class="line">    for i in range(numDigitals - len(result)):</span><br><span class="line">        result = &apos;0&apos;+result</span><br><span class="line">    return result</span><br><span class="line">    </span><br><span class="line">def genPowerSet(L):</span><br><span class="line">    powerset=[]</span><br><span class="line">    for i in range(2**len(L)):</span><br><span class="line">        binstr = getBinaryRep(i,len(L))</span><br><span class="line">        subset = []</span><br><span class="line">        for j in range(len(L)):</span><br><span class="line">            if binstr[j]==&apos;1&apos;:</span><br><span class="line">               subset.append(L[j])</span><br><span class="line">        powerset.append(subset)</span><br><span class="line">    return powerset</span><br></pre></td></tr></table></figure>
 <p>这段代码需要详细的解释一下。<br><code>getBinaryRep</code> 就是获取一个数的指定位数的二进制表示。不足的位数补0，运行这个函数的结果如下所示：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print getBinaryRep(7,7)</span><br><span class="line">0000111</span><br></pre></td></tr></table></figure>
 <p><code>genPowerSet</code> 这个函数可以获取指定输入集合的所有子集合的表示。<br><strong>原理如下：</strong></p>
-<p>我们可以把输入集合当做一个元素的列表，任意一个子集合看成是一个只包含了0,1的字符串，0表示不包含指定元素，1表示包含指定元素，那么全0就表示空集，全1就表示包括所有元素的集合（输入集合）。因此0–$2^7$所有的数的2进制就代表了输入集合的所有子集，也就是找到了问题的全部子空间。</p>
+<p>我们可以把输入集合当做一个元素的列表，任意一个子集合看成是一个只包含了0,1的字符串，0表示不包含指定元素，1表示包含指定元素，那么全0就表示空集，全1就表示包括所有元素的集合（输入集合）。因此0—$2^7$所有的数的2进制就代表了输入集合的所有子集，也就是找到了问题的全部子空间。</p>
 <p>函数的运行结果示例：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">L = [&apos;A&apos;,&apos;B&apos;,&apos;C&apos;]</span><br><span class="line">result = genPowerSet(L)</span><br><span class="line">for i in range(len(result)):</span><br><span class="line">    print result[i]</span><br><span class="line"></span><br><span class="line">[]</span><br><span class="line">[&apos;C&apos;]</span><br><span class="line">[&apos;B&apos;]</span><br><span class="line">[&apos;B&apos;, &apos;C&apos;]</span><br><span class="line">[&apos;A&apos;]</span><br><span class="line">[&apos;A&apos;, &apos;C&apos;]</span><br><span class="line">[&apos;A&apos;, &apos;B&apos;]</span><br><span class="line">[&apos;A&apos;, &apos;B&apos;, &apos;C&apos;]</span><br></pre></td></tr></table></figure>
 <p>准备工作做完了，下面来利用穷举法解决一下0/1背包问题</p>
@@ -410,8 +410,8 @@ def __str__(self):
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/05/15/贪婪算法/" rel="next" title="贪婪算法">
-                <i class="fa fa-chevron-left"></i> 贪婪算法
+              <a href="/2016/05/10/回溯算法之八皇后问题/" rel="next" title="回溯算法（BackTracking）--八皇后问题">
+                <i class="fa fa-chevron-left"></i> 回溯算法（BackTracking）--八皇后问题
               </a>
             
           </div>
@@ -420,8 +420,8 @@ def __str__(self):
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/05/18/动态规划解决0_1背包问题/" rel="prev" title="动态规划解决0/1背包问题">
-                动态规划解决0/1背包问题 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/05/15/贪婪算法/" rel="prev" title="贪婪算法">
+                贪婪算法 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -494,7 +494,7 @@ def __str__(self):
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -505,7 +505,7 @@ def __str__(self):
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -516,7 +516,7 @@ def __str__(self):
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -703,7 +703,24 @@ def __str__(self):
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -756,6 +773,8 @@ def __str__(self):
   
 
   
+  
+
 
   
 
