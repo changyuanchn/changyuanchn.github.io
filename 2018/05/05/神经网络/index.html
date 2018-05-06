@@ -99,7 +99,7 @@
 <meta property="og:image" content="http://yoursite.com/images/20180506171100.jpg">
 <meta property="og:image" content="http://yoursite.com/images/20180506172221.jpg">
 <meta property="og:image" content="http://yoursite.com/images/20180506182158.jpg">
-<meta property="og:updated_time" content="2018-05-06T10:39:56.744Z">
+<meta property="og:updated_time" content="2018-05-06T14:38:33.364Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络">
 <meta name="twitter:description" content="引言在机器学习领域，主要存在着两大流派，一派是统计学习方法，一派就是神经网络。统计学习方法大多具有严谨的数学推理，模型都有很完备的数学解释，像是SVM，就是通过核把非线性问题映射到高维空间变为线性问题。而神经网络则不然，一直没有找到合理的数学解释，迄今为止都属于实验推动，虽然说是思想来源于人类的神经元的模拟，但是没有数学解释垫背，终究没有那么大的底气。 神经网络在1943年就已经被提出了，然而直到">
@@ -376,8 +376,7 @@
 <p><img src="/images/20180506144857.jpg" alt="神经网络"></p>
 <p>给定了神经网络的架构，那么我们就可以很自然的通过给定输入然后得到相应的输出结果，那么现在还剩下一个问题，我们怎样去通过调整神经网络的参数来得到我们想要的结果呢？大神们已经为我们准备好了工具，那就是梯度下降算法。</p>
 <h2 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h2><p>在介绍梯度下降算法之前，首先需要考虑一个问题，有了神经网络模型，给定了输入，可以得到输出，那么我们怎样去衡量输出的好坏呢？因此需要有个度量标准，这个度量标准就是代价函数。所谓的代价函数，就是衡量输出结果好坏的一个度量，一般我们可以定义下面的一个代价函数</p>
-<p><code>$ C(w,b) = \frac{1}{2n} \sum_{x} || y(x) - a ||^{2} $</code></p>
-<p>其中<script type="math/tex">w</script>表示网络中权重的集合, <script type="math/tex">b</script>表示偏置，<script type="math/tex">n</script> 是训练样本的个数，<script type="math/tex">a</script> 表示输入为<script type="math/tex">x</script> 时的输出，<script type="math/tex">y(x)</script> 表示神经网络的输出。</p>
+<script type="math/tex; mode=display">C(w,b) = \frac{1}{2n} \sum_{x} || y(x) - a ||^{2}</script><p>其中<script type="math/tex">w</script>表示网络中权重的集合, <script type="math/tex">b</script>表示偏置，<script type="math/tex">n</script> 是训练样本的个数，<script type="math/tex">a</script> 表示输入为<script type="math/tex">x</script> 时的输出，<script type="math/tex">y(x)</script> 表示神经网络的输出。</p>
 <p>因此我们希望的训练得到的模型就是使代价函数最小的模型，也就是说通过修改<script type="math/tex">w</script>和<script type="math/tex">b</script>的值，使得输出结果与实际结果的误差总和最小。</p>
 <h2 id="梯度下降算法"><a href="#梯度下降算法" class="headerlink" title="梯度下降算法"></a>梯度下降算法</h2><p>通过上面的分析，我们可以得出结论，神经网络的训练问题实际上本质就是一个最小化函数<script type="math/tex">C(w,b)</script> 的问题。下面我们先通过一个二维的模型来讨论函数的最小化问题。</p>
 <p><img src="/images/20180506151335.jpg" alt="二维模型"></p>
