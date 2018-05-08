@@ -99,7 +99,8 @@
 <meta property="og:image" content="http://yoursite.com/images/20180506171100.jpg">
 <meta property="og:image" content="http://yoursite.com/images/20180506172221.jpg">
 <meta property="og:image" content="http://yoursite.com/images/20180506182158.jpg">
-<meta property="og:updated_time" content="2018-05-06T14:38:33.364Z">
+<meta property="og:image" content="http://yoursite.com/images/20180508220112.jpg">
+<meta property="og:updated_time" content="2018-05-08T14:11:51.308Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络">
 <meta name="twitter:description" content="引言在机器学习领域，主要存在着两大流派，一派是统计学习方法，一派就是神经网络。统计学习方法大多具有严谨的数学推理，模型都有很完备的数学解释，像是SVM，就是通过核把非线性问题映射到高维空间变为线性问题。而神经网络则不然，一直没有找到合理的数学解释，迄今为止都属于实验推动，虽然说是思想来源于人类的神经元的模拟，但是没有数学解释垫背，终究没有那么大的底气。 神经网络在1943年就已经被提出了，然而直到">
@@ -393,7 +394,7 @@
 <script type="math/tex; mode=display">v\rightarrow v^{'} = v - \eta \triangledown v</script><p>将上面的二维函数扩展到多为函数，则可以得到相同的结论，即</p>
 <script type="math/tex; mode=display">v\rightarrow v^{'} = v - \eta \triangledown v</script><p>其中<script type="math/tex">\Delta v = -\eta \triangledown C</script></p>
 <script type="math/tex; mode=display">\triangledown C =  \left ( \frac{\partial C}{\partial v1} ,......,\frac{\partial C}{\partial v_{m}}  \right )</script><script type="math/tex; mode=display">\Delta v =(\Delta v1,......, \Delta v_{m})^{T}</script><p>将上面的函数拓展到我们的神经网络中，可以得到下面的公式</p>
-<script type="math/tex; mode=display">w_{k}\rightarrow w_{k}^{'} = w_{k} - \eta \frac{\partial C}{\partial w_{k}}</script><script type="math/tex; mode=display">b_{l}\rightarrow b_{l}^{'} = b_{l} - \eta \frac{\partial C}{\partial b_{l}}</script><p>上面的两个公式就是<strong>随机梯度下降算法</strong>。只要我们沿着梯度下降的方向更新<script type="math/tex">w</script>和<script type="math/tex">b</script>的值，那么就能够最小化代价函数。</p>
+<script type="math/tex; mode=display">w_{k}\rightarrow w_{k}^{'} = w_{k} - \eta \frac{\partial C}{\partial w_{k}}</script><script type="math/tex; mode=display">b_{l}\rightarrow b_{l}^{'} = b_{l} - \eta \frac{\partial C}{\partial b_{l}}</script><p>上面的两个公式就是<strong>梯度下降算法</strong>。只要我们沿着梯度下降的方向更新<script type="math/tex">w</script>和<script type="math/tex">b</script>的值，那么就能够最小化代价函数。</p>
 <p>通过我们不懈的努力，我们最终找到了更新神经网络的参数的方法，那么现在又有一个问题了，怎么计算<script type="math/tex">\frac{\partial C}{\partial w_{k}}</script>和<script type="math/tex">\frac{\partial C}{\partial b_{l}}</script>呢？ 这又是一个难办的问题了。但是大神们依旧给我们解决了，那就是反向传播算法。</p>
 <h2 id="反向传播算法"><a href="#反向传播算法" class="headerlink" title="反向传播算法"></a>反向传播算法</h2><h3 id="神经元的误差"><a href="#神经元的误差" class="headerlink" title="神经元的误差"></a>神经元的误差</h3><p>在介绍反向传播算法之前，首先明确几个小概念，</p>
 <p>第一个就是下图</p>
@@ -433,6 +434,9 @@
 <p>有个上面的四个方程作为支撑，我们就可以得出反向传播算法了,如下所示：</p>
 <p><img src="/images/20180506182158.jpg" alt="反向传播算法"></p>
 <p>反向传播算法从最后一层开始计算误差，然后根据误差不断向前反馈优化每一层的权重，进而调整整个网络的权重。其实这和自动控制里面的反馈有着同样的哲学原理。</p>
+<h1 id="神经网络权重的更新算法"><a href="#神经网络权重的更新算法" class="headerlink" title="神经网络权重的更新算法"></a>神经网络权重的更新算法</h1><p>有了上面的梯度下降算法以及反向传播算法，我们就可以得到神经网络的权重的更新算法，具体算法如下所示：</p>
+<p><img src="/images/20180508220112.jpg" alt="更新算法"></p>
+<p>算法中有一点需要注意的是：<br>这里的梯度下降，我们用的是随机梯度下降算法。思想就是随机选取小批量的训练样本来计算梯度，因为如果针对全部的训练数据进行梯度下降的话，会比较耗时，随机梯度下降能够加速学习，本质上讲，就是用部分随机选取的数据替代全量数据。</p>
 <h1 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h1><h2 id="关于神经元的选择"><a href="#关于神经元的选择" class="headerlink" title="关于神经元的选择"></a>关于神经元的选择</h2><p>本文中我们选用了sigmoid函数，也就是S型神经元，实际上还有很多种神经元可以选择，不同的神经元对于不同的问题可能会有更好的效果，因此具体问题需要具体分析。本质上讲sigmoid函数并不是很好，因为这个函数在两边过于缓慢，而中间过于陡峭了。设计更好的神经元，有助于神经网络效果的提升</p>
 <h2 id="关于代价函数"><a href="#关于代价函数" class="headerlink" title="关于代价函数"></a>关于代价函数</h2><p>本文中我们用到的的二次代价函数，实际上也是有很多的代价函数可供选择的，一样的需要具体问题具体分析选用那种代价函数，二次代价函数是比较简单的一种，也是比较有效的一种。</p>
 <h2 id="关于过拟合问题"><a href="#关于过拟合问题" class="headerlink" title="关于过拟合问题"></a>关于过拟合问题</h2><p>本文没有涉及过拟合问题，实际上这是机器学习面对的一个大问题，如果发生了过拟合，那么会导致网络的泛化能力变差，也就是在训练数据集上效果非常好，在测试数据集上表现糟糕。后面博客会详细分析这一问题。</p>
@@ -559,7 +563,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -570,7 +574,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -581,7 +585,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -630,7 +634,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#感知机"><span class="nav-number">2.</span> <span class="nav-text">感知机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#S型神经元"><span class="nav-number">2.1.</span> <span class="nav-text">S型神经元</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#神经网络"><span class="nav-number">3.</span> <span class="nav-text">神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#代价函数"><span class="nav-number">3.1.</span> <span class="nav-text">代价函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度下降算法"><span class="nav-number">3.2.</span> <span class="nav-text">梯度下降算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反向传播算法"><span class="nav-number">3.3.</span> <span class="nav-text">反向传播算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#神经元的误差"><span class="nav-number">3.3.1.</span> <span class="nav-text">神经元的误差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反向传播的四个方程"><span class="nav-number">3.3.2.</span> <span class="nav-text">反向传播的四个方程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拓展"><span class="nav-number">4.</span> <span class="nav-text">拓展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于神经元的选择"><span class="nav-number">4.1.</span> <span class="nav-text">关于神经元的选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于代价函数"><span class="nav-number">4.2.</span> <span class="nav-text">关于代价函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于过拟合问题"><span class="nav-number">4.3.</span> <span class="nav-text">关于过拟合问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度神经网络"><span class="nav-number">4.4.</span> <span class="nav-text">深度神经网络</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#感知机"><span class="nav-number">2.</span> <span class="nav-text">感知机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#S型神经元"><span class="nav-number">2.1.</span> <span class="nav-text">S型神经元</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#神经网络"><span class="nav-number">3.</span> <span class="nav-text">神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#代价函数"><span class="nav-number">3.1.</span> <span class="nav-text">代价函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度下降算法"><span class="nav-number">3.2.</span> <span class="nav-text">梯度下降算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反向传播算法"><span class="nav-number">3.3.</span> <span class="nav-text">反向传播算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#神经元的误差"><span class="nav-number">3.3.1.</span> <span class="nav-text">神经元的误差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反向传播的四个方程"><span class="nav-number">3.3.2.</span> <span class="nav-text">反向传播的四个方程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#神经网络权重的更新算法"><span class="nav-number">4.</span> <span class="nav-text">神经网络权重的更新算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拓展"><span class="nav-number">5.</span> <span class="nav-text">拓展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于神经元的选择"><span class="nav-number">5.1.</span> <span class="nav-text">关于神经元的选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于代价函数"><span class="nav-number">5.2.</span> <span class="nav-text">关于代价函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于过拟合问题"><span class="nav-number">5.3.</span> <span class="nav-text">关于过拟合问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度神经网络"><span class="nav-number">5.4.</span> <span class="nav-text">深度神经网络</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>
