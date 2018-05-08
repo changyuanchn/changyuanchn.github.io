@@ -100,7 +100,7 @@
 <meta property="og:image" content="http://yoursite.com/images/20180506172221.jpg">
 <meta property="og:image" content="http://yoursite.com/images/20180506182158.jpg">
 <meta property="og:image" content="http://yoursite.com/images/20180508220112.jpg">
-<meta property="og:updated_time" content="2018-05-08T14:11:51.308Z">
+<meta property="og:updated_time" content="2018-05-08T14:52:00.001Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络">
 <meta name="twitter:description" content="引言在机器学习领域，主要存在着两大流派，一派是统计学习方法，一派就是神经网络。统计学习方法大多具有严谨的数学推理，模型都有很完备的数学解释，像是SVM，就是通过核把非线性问题映射到高维空间变为线性问题。而神经网络则不然，一直没有找到合理的数学解释，迄今为止都属于实验推动，虽然说是思想来源于人类的神经元的模拟，但是没有数学解释垫背，终究没有那么大的底气。 神经网络在1943年就已经被提出了，然而直到">
@@ -319,8 +319,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/机器学习-神经网络/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习,神经网络</span>
                   </a>
                 </span>
 
@@ -437,8 +437,8 @@
 <h1 id="神经网络权重的更新算法"><a href="#神经网络权重的更新算法" class="headerlink" title="神经网络权重的更新算法"></a>神经网络权重的更新算法</h1><p>有了上面的梯度下降算法以及反向传播算法，我们就可以得到神经网络的权重的更新算法，具体算法如下所示：</p>
 <p><img src="/images/20180508220112.jpg" alt="更新算法"></p>
 <p>算法中有一点需要注意的是：<br>这里的梯度下降，我们用的是随机梯度下降算法。思想就是随机选取小批量的训练样本来计算梯度，因为如果针对全部的训练数据进行梯度下降的话，会比较耗时，随机梯度下降能够加速学习，本质上讲，就是用部分随机选取的数据替代全量数据。</p>
-<h1 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h1><h2 id="关于神经元的选择"><a href="#关于神经元的选择" class="headerlink" title="关于神经元的选择"></a>关于神经元的选择</h2><p>本文中我们选用了sigmoid函数，也就是S型神经元，实际上还有很多种神经元可以选择，不同的神经元对于不同的问题可能会有更好的效果，因此具体问题需要具体分析。本质上讲sigmoid函数并不是很好，因为这个函数在两边过于缓慢，而中间过于陡峭了。设计更好的神经元，有助于神经网络效果的提升</p>
-<h2 id="关于代价函数"><a href="#关于代价函数" class="headerlink" title="关于代价函数"></a>关于代价函数</h2><p>本文中我们用到的的二次代价函数，实际上也是有很多的代价函数可供选择的，一样的需要具体问题具体分析选用那种代价函数，二次代价函数是比较简单的一种，也是比较有效的一种。</p>
+<h1 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h1><h2 id="关于神经元的选择"><a href="#关于神经元的选择" class="headerlink" title="关于神经元的选择"></a>关于神经元的选择</h2><p>本文中我们选用了sigmoid函数，也就是S型神经元，实际上还有很多种神经元可以选择，不同的神经元对于不同的问题可能会有更好的效果，因此具体问题需要具体分析。本质上讲sigmoid函数并不是很好，因为我们可以看到sigmoid函数的值域是[0,1]，这也就意味着对于同一神经元的所有权重要么同时增加，要么同时减少，这样会造成一定的偏置。</p>
+<h2 id="关于代价函数"><a href="#关于代价函数" class="headerlink" title="关于代价函数"></a>关于代价函数</h2><p>本文中我们用到的的二次代价函数，实际上也是有很多的代价函数可供选择的，一样的需要具体问题具体分析选用那种代价函数，二次代价函数是比较简单的一种，也是比较有效的一种。但是坦率的讲，选用不同的代价函数会对学习效率有较大的影响，这个后面我们会进行详细的分析。</p>
 <h2 id="关于过拟合问题"><a href="#关于过拟合问题" class="headerlink" title="关于过拟合问题"></a>关于过拟合问题</h2><p>本文没有涉及过拟合问题，实际上这是机器学习面对的一个大问题，如果发生了过拟合，那么会导致网络的泛化能力变差，也就是在训练数据集上效果非常好，在测试数据集上表现糟糕。后面博客会详细分析这一问题。</p>
 <h2 id="深度神经网络"><a href="#深度神经网络" class="headerlink" title="深度神经网络"></a>深度神经网络</h2><p>我们知道上古时代就已经发明了神经网络，在远古时代，反向传播算法也已经被发明出来了，那么为何直到近几年深度网络才火起来呢？这是一个问题。后续的博文会讲到为何中古时代大家都没有用到深度神经网络，他们遇到了什么样的问题，这些问题又是怎样解决的。</p>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a href="http://neuralnetworksanddeeplearning.com/" target="_blank" rel="noopener">http://neuralnetworksanddeeplearning.com/</a></p>
@@ -574,7 +574,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
