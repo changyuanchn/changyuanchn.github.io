@@ -87,10 +87,12 @@
 <meta property="og:site_name" content="axis tech zone">
 <meta property="og:description" content="引言上一章节，我们介绍了神经网络，同时在后面的扩展遗留了几个问题。其中一个问题就是代价函数的选择。常规的机器学习算法中，我们都是选取的二次函数作为代价函数，这个没有什么大的问题，但是本章我们分析一下二次代价函数，看下二次代价的性质，同时看下是否有其他更好的代价函数可供我们选择。 二次代价函数上一章节的神经网络中，我们选择了二次代价函数与sigmoid激活函数作为例子，引出介绍了神经网络。利用梯度下">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-08T16:23:01.463Z">
+<meta property="og:image" content="http://yoursite.com/images/20180506143957.jpg">
+<meta property="og:updated_time" content="2018-05-08T16:36:59.827Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络之代价函数的选择">
 <meta name="twitter:description" content="引言上一章节，我们介绍了神经网络，同时在后面的扩展遗留了几个问题。其中一个问题就是代价函数的选择。常规的机器学习算法中，我们都是选取的二次函数作为代价函数，这个没有什么大的问题，但是本章我们分析一下二次代价函数，看下二次代价的性质，同时看下是否有其他更好的代价函数可供我们选择。 二次代价函数上一章节的神经网络中，我们选择了二次代价函数与sigmoid激活函数作为例子，引出介绍了神经网络。利用梯度下">
+<meta name="twitter:image" content="http://yoursite.com/images/20180506143957.jpg">
 
 
 
@@ -347,24 +349,14 @@
 <h1 id="为什么二次代价函数学习效率会比较差"><a href="#为什么二次代价函数学习效率会比较差" class="headerlink" title="为什么二次代价函数学习效率会比较差"></a>为什么二次代价函数学习效率会比较差</h1><p>回顾一下梯度下降算法，其中的更新权重的方程如下所示：</p>
 <script type="math/tex; mode=display">w_{k}\rightarrow w_{k}^{'} = w_{k} - \eta \frac{\partial C}{\partial w_{k}}</script><script type="math/tex; mode=display">b_{l}\rightarrow b_{l}^{'} = b_{l} - \eta \frac{\partial C}{\partial b_{l}}</script><p>其中<script type="math/tex">\eta</script>是学习速率，当给定时，那么权重的更新就完全取决于后面的偏导数。也就意味着权重的更新大小将完全取决于后面的偏导数。那么我们来分析一下偏导<script type="math/tex">\frac{\partial C}{\partial w_{k}}</script></p>
 <p>回顾一下：</p>
-<p><code>$ C(w,b) = \frac{1}{2n} \sum_{x} || y(x) - a ||^{2} $</code></p>
-<script type="math/tex; mode=display">\sigma = \frac{1}{1+e^{-z}}</script><p>其中<script type="math/tex">z= \sum_{j}^{}  w_{j} *x_{j}  + b</script></p>
+<script type="math/tex; mode=display">C(w,b) = \frac{1}{2n} \sum_{x} || y(x) - a ||^{2}</script><script type="math/tex; mode=display">\sigma = \frac{1}{1+e^{-z}}</script><p>其中<script type="math/tex">z= \sum_{j}^{}  w_{j} *x_{j}  + b</script></p>
 <script type="math/tex; mode=display">a= \sigma (z)</script><p>根据链式求导法则：</p>
-<script type="math/tex; mode=display">\frac{\partial C}{\partial w_{k}} = \frac{\partial C}{\partial a}  \frac{\partial a}{\partial z}   \frac{\partial z}{\partial w_{k}} = -\frac{1}{n} \sum_{x} (a-y) \sigma'(z) x_j</script><script type="math/tex; mode=display">(a-y) $$ 是输出与实际的差值，也就是误差，误差越大，那么权重的衰减就会越大，那么也就意味着学习效率越快，但是这里我们看到方程式中还乘以了一个导数$$ \sigma'(z)$$ 我们看下$$ \sigma(z)$$的图像
-
-![S型神经元](/images/20180506143957.jpg)
-
-我们可以看到在最开始的地方，导数比较小，中间部分导数比较大，尾部导数依旧比较小，这也就意味着我们的权重更新最初是很慢的，也就意味着我们刚开始的学习效率是比较差劲的。
-
-# 交叉熵代价函数
-
-既然二次代价函数学习dasfadfafd效率比较差，那么是否存在其他的代价函数，能够消除二次代价函数存在的这个问题呢？这里我们引入交叉熵代价函数
-
-`$ C(w,b) = \frac{1}{n} \sum_{x}[ y \ln a +(1-y) \ln (1-a)] $ `
-
-交叉熵函数具有非常优良的性质，同样我们根据链式求导法则：
-
-$$ \frac{\partial C}{\partial w_{k}} = \frac{\partial C}{\partial a}  \frac{\partial a}{\partial z}   \frac{\partial z}{\partial w_{k}} = -\frac{1}{n} \sum_{x} (\frac{y}{a} - \frac{1-y}{1-a}) \sigma'(z) x_j = \frac{1}{n} \sum_{x} (\frac{(\sigma(z)-y)}{\sigma(z)(1-\sigma(z))}) \sigma'(z) x_j</script><p>同时由于：</p>
+<script type="math/tex; mode=display">\frac{\partial C}{\partial w_{k}} = \frac{\partial C}{\partial a}  \frac{\partial a}{\partial z}   \frac{\partial z}{\partial w_{k}} = -\frac{1}{n} \sum_{x} (a-y) \sigma'(z) x_j</script><p>其中<script type="math/tex">(a-y)</script>是输出与实际的差值，也就是误差，误差越大，那么权重的衰减就会越大，那么也就意味着学习效率越快，但是这里我们看到方程式中还乘以了一个导数<script type="math/tex">\sigma'(z)</script> 我们看下<script type="math/tex">\sigma(z)</script>的图像</p>
+<p><img src="/images/20180506143957.jpg" alt="S型神经元"></p>
+<p>我们可以看到在最开始的地方，导数比较小，中间部分导数比较大，尾部导数依旧比较小，这也就意味着我们的权重更新最初是很慢的，也就意味着我们刚开始的学习效率是比较差劲的。</p>
+<h1 id="交叉熵代价函数"><a href="#交叉熵代价函数" class="headerlink" title="交叉熵代价函数"></a>交叉熵代价函数</h1><p>既然二次代价函数学习dasfadfafd效率比较差，那么是否存在其他的代价函数，能够消除二次代价函数存在的这个问题呢？这里我们引入交叉熵代价函数</p>
+<script type="math/tex; mode=display">C(w,b) = \frac{1}{n} \sum_{x}[ y \ln a +(1-y) \ln (1-a)]</script><p>交叉熵函数具有非常优良的性质，同样我们根据链式求导法则：</p>
+<script type="math/tex; mode=display">\frac{\partial C}{\partial w_{k}} = \frac{\partial C}{\partial a}  \frac{\partial a}{\partial z}   \frac{\partial z}{\partial w_{k}} = -\frac{1}{n} \sum_{x} (\frac{y}{a} - \frac{1-y}{1-a}) \sigma'(z) x_j = \frac{1}{n} \sum_{x} (\frac{(\sigma(z)-y)}{\sigma(z)(1-\sigma(z))}) \sigma'(z) x_j</script><p>同时由于：</p>
 <script type="math/tex; mode=display">\sigma = \frac{1}{1+e^{-z}}</script><script type="math/tex; mode=display">\sigma' = {\sigma(z)}(1-\sigma(z))</script><p>将其带入到上面的导数公式，可得：</p>
 <script type="math/tex; mode=display">\frac{\partial C}{\partial w_{k}} = \frac{1}{n} \sum_{x} (\sigma(z)-y) x_j</script><p>这个性质就很优良了啊。权重的减少完全取决于误差，而跟激活函数的导数无关了。也就意味着初始的误差越大，学习效率越高。这就和人类的行为一致了，因为当人类犯错误的时候，才能更好的学习到东西，机器也应该如此啊。</p>
 
@@ -561,7 +553,7 @@ $$ \frac{\partial C}{\partial w_{k}} = \frac{\partial C}{\partial a}  \frac{\par
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二次代价函数"><span class="nav-number">2.</span> <span class="nav-text">二次代价函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么二次代价函数学习效率会比较差"><span class="nav-number">3.</span> <span class="nav-text">为什么二次代价函数学习效率会比较差</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二次代价函数"><span class="nav-number">2.</span> <span class="nav-text">二次代价函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么二次代价函数学习效率会比较差"><span class="nav-number">3.</span> <span class="nav-text">为什么二次代价函数学习效率会比较差</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#交叉熵代价函数"><span class="nav-number">4.</span> <span class="nav-text">交叉熵代价函数</span></a></li></ol></div>
             
 
           </div>
