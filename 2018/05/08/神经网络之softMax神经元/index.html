@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="SQLite," />
+  <meta name="keywords" content="机器学习,神经网络,softmax," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="0、 引言上一期总结了SQLite环境的构建，本次将总结一下SQLite常用的命令 1、 sqlite3命令这个命令很简单，就是登陆到sqlite提示符下的命令，如下所示：123456C:\sqlite&amp;gt;sqlite3SQLite version 3.19.2 2017-05-25 16:50:27Enter &amp;quot;.help&amp;quot; for usage hints.Connect">
-<meta name="keywords" content="SQLite">
+<meta name="description" content="引言在之前的内容里，我们采用的是sigmoid函数作为输出层神经元。这里我们介绍一种softmax函数作为新的输出层。 softmax函数softmax本质上是一种归一化的过程，假设神经元的带权输入为： z_j^L= \sum_k w_{jk}^La^{L-1}_k + b_j^L定义输出神经元的激活值为： a^{L-1}_k= \frac {e^{z_j^L}} {\sum_k e^{z_k^L">
+<meta name="keywords" content="机器学习,神经网络,softmax">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SQLite笔记之基础命令">
-<meta property="og:url" content="http://yoursite.com/2017/06/07/SQLite笔记之基础命令/index.html">
+<meta property="og:title" content="神经网络之softmax神经元">
+<meta property="og:url" content="http://yoursite.com/2018/05/08/神经网络之softMax神经元/index.html">
 <meta property="og:site_name" content="axis tech zone">
-<meta property="og:description" content="0、 引言上一期总结了SQLite环境的构建，本次将总结一下SQLite常用的命令 1、 sqlite3命令这个命令很简单，就是登陆到sqlite提示符下的命令，如下所示：123456C:\sqlite&amp;gt;sqlite3SQLite version 3.19.2 2017-05-25 16:50:27Enter &amp;quot;.help&amp;quot; for usage hints.Connect">
+<meta property="og:description" content="引言在之前的内容里，我们采用的是sigmoid函数作为输出层神经元。这里我们介绍一种softmax函数作为新的输出层。 softmax函数softmax本质上是一种归一化的过程，假设神经元的带权输入为： z_j^L= \sum_k w_{jk}^La^{L-1}_k + b_j^L定义输出神经元的激活值为： a^{L-1}_k= \frac {e^{z_j^L}} {\sum_k e^{z_k^L">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-04T16:30:58.913Z">
+<meta property="og:updated_time" content="2018-05-09T13:21:50.270Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SQLite笔记之基础命令">
-<meta name="twitter:description" content="0、 引言上一期总结了SQLite环境的构建，本次将总结一下SQLite常用的命令 1、 sqlite3命令这个命令很简单，就是登陆到sqlite提示符下的命令，如下所示：123456C:\sqlite&amp;gt;sqlite3SQLite version 3.19.2 2017-05-25 16:50:27Enter &amp;quot;.help&amp;quot; for usage hints.Connect">
+<meta name="twitter:title" content="神经网络之softmax神经元">
+<meta name="twitter:description" content="引言在之前的内容里，我们采用的是sigmoid函数作为输出层神经元。这里我们介绍一种softmax函数作为新的输出层。 softmax函数softmax本质上是一种归一化的过程，假设神经元的带权输入为： z_j^L= \sum_k w_{jk}^La^{L-1}_k + b_j^L定义输出神经元的激活值为： a^{L-1}_k= \frac {e^{z_j^L}} {\sum_k e^{z_k^L">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/06/07/SQLite笔记之基础命令/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/08/神经网络之softMax神经元/"/>
 
 
 
 
 
-  <title>SQLite笔记之基础命令 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>神经网络之softmax神经元 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -253,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/07/SQLite笔记之基础命令/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/神经网络之softMax神经元/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -270,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">SQLite笔记之基础命令</h1>
+          <h1 class="post-title" itemprop="name headline">神经网络之softmax神经元</h1>
         
 
         <div class="post-meta">
@@ -282,8 +282,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-07T00:00:00+08:00">
-                2017-06-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-08T00:00:00+08:00">
+                2018-05-08
               </time>
             
 
@@ -305,8 +305,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/数据库/" itemprop="url" rel="index">
-                    <span itemprop="name">数据库</span>
+                  <a href="/categories/机器学习-神经网络/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习,神经网络</span>
                   </a>
                 </span>
 
@@ -342,16 +342,11 @@
       
 
       
-        <h3 id="0、-引言"><a href="#0、-引言" class="headerlink" title="0、 引言"></a>0、 引言</h3><p>上一期总结了SQLite环境的构建，本次将总结一下SQLite常用的命令</p>
-<h3 id="1、-sqlite3命令"><a href="#1、-sqlite3命令" class="headerlink" title="1、 sqlite3命令"></a>1、 sqlite3命令</h3><p>这个命令很简单，就是登陆到sqlite提示符下的命令，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">C:\sqlite&gt;sqlite3</span><br><span class="line">SQLite version 3.19.2 2017-05-25 16:50:27</span><br><span class="line">Enter &quot;.help&quot; for usage hints.</span><br><span class="line">Connected to a transient in-memory database.</span><br><span class="line">Use &quot;.open FILENAME&quot; to reopen on a persistent database.</span><br><span class="line">sqlite&gt;</span><br></pre></td></tr></table></figure></p>
-<h3 id="2、退出提示符命令"><a href="#2、退出提示符命令" class="headerlink" title="2、退出提示符命令"></a>2、退出提示符命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">C:\sqlite&gt;sqlite3</span><br><span class="line">SQLite version 3.19.2 2017-05-25 16:50:27</span><br><span class="line">Enter &quot;.help&quot; for usage hints.</span><br><span class="line">Connected to a transient in-memory database.</span><br><span class="line">Use &quot;.open FILENAME&quot; to reopen on a persistent database.</span><br><span class="line">sqlite&gt; .exit</span><br><span class="line">C:\sqlite&gt;</span><br></pre></td></tr></table></figure>
-<h3 id="3、显示当前的设置值参数"><a href="#3、显示当前的设置值参数" class="headerlink" title="3、显示当前的设置值参数"></a>3、显示当前的设置值参数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; .show</span><br><span class="line">        echo: off</span><br><span class="line">         eqp: off</span><br><span class="line">     explain: auto</span><br><span class="line">     headers: off</span><br><span class="line">        mode: list</span><br><span class="line">   nullvalue: &quot;&quot;</span><br><span class="line">      output: stdout</span><br><span class="line">colseparator: &quot;|&quot;</span><br><span class="line">rowseparator: &quot;\n&quot;</span><br><span class="line">       stats: off</span><br><span class="line">       width:</span><br><span class="line">    filename: :memory:</span><br></pre></td></tr></table></figure>
-<p>命令参数可以通过下面的方式进行修改<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; .echo ON</span><br><span class="line">sqlite&gt; .show</span><br><span class="line">.show</span><br><span class="line">        echo: on</span><br><span class="line">        .......</span><br></pre></td></tr></table></figure></p>
-<p>修改输出到文件中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; .output hello.txt</span><br><span class="line">sqlite&gt; .show&apos;</span><br><span class="line">sqlite&gt;</span><br></pre></td></tr></table></figure></p>
-<h3 id="4、-列出当前的数据库"><a href="#4、-列出当前的数据库" class="headerlink" title="4、 列出当前的数据库"></a>4、 列出当前的数据库</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\hasee&gt;sqlite3 testDB.db</span><br><span class="line">SQLite version 3.19.2 2017-05-25 16:50:27</span><br><span class="line">Enter &quot;.help&quot; for usage hints.</span><br><span class="line">sqlite&gt; .database</span><br><span class="line">main: C:\Users\hasee\testDB.db</span><br></pre></td></tr></table></figure>
-<h3 id="5-、-执行文件中的sql语句"><a href="#5-、-执行文件中的sql语句" class="headerlink" title="5 、 执行文件中的sql语句"></a>5 、 执行文件中的sql语句</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\hasee&gt;sqlite3 testDB.db</span><br><span class="line">SQLite version 3.19.2 2017-05-25 16:50:27</span><br><span class="line">Enter &quot;.help&quot; for usage hints.</span><br><span class="line">sqlite&gt; .read test.sql</span><br></pre></td></tr></table></figure>
-<h3 id="6、-格式化输出"><a href="#6、-格式化输出" class="headerlink" title="6、 格式化输出"></a>6、 格式化输出</h3><p>下面例子显示出将相应的配置项修改为格式化输出后的结果，显示会更加明确<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\hasee&gt;sqlite3 testDB.db</span><br><span class="line">SQLite version 3.19.2 2017-05-25 16:50:27</span><br><span class="line">Enter &quot;.help&quot; for usage hints.</span><br><span class="line">sqlite&gt; .database</span><br><span class="line">main: C:\Users\hasee\testDB.db</span><br><span class="line">sqlite&gt; select * from class;</span><br><span class="line">1|Ahmed</span><br><span class="line">sqlite&gt; .header on</span><br><span class="line">sqlite&gt; .timer on</span><br><span class="line">sqlite&gt; .mode colum</span><br><span class="line">sqlite&gt; select * from class;</span><br><span class="line">ID          NAME</span><br><span class="line">----------  ----------</span><br><span class="line">1           Ahmed</span><br><span class="line">Run Time: real 0.016 user 0.000000 sys 0.000000</span><br><span class="line">sqlite&gt;</span><br></pre></td></tr></table></figure></p>
-<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>命令是不需要‘;’分好的，但是sql语句是需要分号的，谨记。</p>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在之前的内容里，我们采用的是sigmoid函数作为输出层神经元。这里我们介绍一种softmax函数作为新的输出层。</p>
+<h1 id="softmax函数"><a href="#softmax函数" class="headerlink" title="softmax函数"></a>softmax函数</h1><p>softmax本质上是一种归一化的过程，假设神经元的带权输入为：</p>
+<script type="math/tex; mode=display">z_j^L= \sum_k w_{jk}^La^{L-1}_k + b_j^L</script><p>定义输出神经元的激活值为：</p>
+<script type="math/tex; mode=display">a^{L-1}_k= \frac {e^{z_j^L}} {\sum_k e^{z_k^L}}</script><p>分母的求和是在所有的输出神经元上进行的。</p>
+<h1 id="softmax的意义："><a href="#softmax的意义：" class="headerlink" title="softmax的意义："></a>softmax的意义：</h1><p>softmax本质上是一种神经元输出的概率分布形式，，每个神经元的输出都可以理解为是正确输出的概率。任何输出的减少都会必然导致其他输出的增加，保证了所有的输出相加为1。</p>
 
       
     </div>
@@ -369,7 +364,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/SQLite/" rel="tag"># SQLite</a>
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/神经网络/" rel="tag"># 神经网络</a>
+          
+            <a href="/tags/softmax/" rel="tag"># softmax</a>
           
         </div>
       
@@ -382,8 +381,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/07/SQLite的Python编程/" rel="next" title="SQLite的Python编程">
-                <i class="fa fa-chevron-left"></i> SQLite的Python编程
+              <a href="/2018/05/08/神经网络之代价函数的选择/" rel="next" title="神经网络之代价函数的选择">
+                <i class="fa fa-chevron-left"></i> 神经网络之代价函数的选择
               </a>
             
           </div>
@@ -392,8 +391,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/07/SQLite常见的SQL命令/" rel="prev" title="SQLite常见的SQL命令">
-                SQLite常见的SQL命令 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/05/09/过拟合/" rel="prev" title="过拟合">
+                过拟合 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -546,7 +545,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#0、-引言"><span class="nav-number">1.</span> <span class="nav-text">0、 引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1、-sqlite3命令"><span class="nav-number">2.</span> <span class="nav-text">1、 sqlite3命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、退出提示符命令"><span class="nav-number">3.</span> <span class="nav-text">2、退出提示符命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、显示当前的设置值参数"><span class="nav-number">4.</span> <span class="nav-text">3、显示当前的设置值参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、-列出当前的数据库"><span class="nav-number">5.</span> <span class="nav-text">4、 列出当前的数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-、-执行文件中的sql语句"><span class="nav-number">6.</span> <span class="nav-text">5 、 执行文件中的sql语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、-格式化输出"><span class="nav-number">7.</span> <span class="nav-text">6、 格式化输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后记"><span class="nav-number">8.</span> <span class="nav-text">后记</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#softmax函数"><span class="nav-number">2.</span> <span class="nav-text">softmax函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#softmax的意义："><span class="nav-number">3.</span> <span class="nav-text">softmax的意义：</span></a></li></ol></div>
             
 
           </div>
@@ -700,24 +699,7 @@
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
 
 
 
@@ -770,6 +752,43 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 
