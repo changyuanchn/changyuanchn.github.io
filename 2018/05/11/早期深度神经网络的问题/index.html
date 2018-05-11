@@ -92,9 +92,10 @@
 <meta property="og:image" content="http://yoursite.com/images/20180510233555.jpg">
 <meta property="og:image" content="http://yoursite.com/images/20180510233555.jpg">
 <meta property="og:image" content="http://yoursite.com/images/20180511231548.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506172221.jpg">
 <meta property="og:image" content="http://yoursite.com/images/20180506143957.jpg">
 <meta property="og:image" content="http://yoursite.com/images/20180512000348.jpg">
-<meta property="og:updated_time" content="2018-05-11T16:26:03.524Z">
+<meta property="og:updated_time" content="2018-05-11T16:31:37.913Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="早期深度神经网络的问题">
 <meta name="twitter:description" content="引言在神经网络最开始被提出来的时候，人们设计的网络大多是这个样子的  一个输入层，一个输出层，一个隐藏层，用这样的网络能够解决很多实际的问题。但是一层隐藏层的网络能够学习到的东西毕竟是有限的，自然而然的人们就想到将网络进行扩展，给神经网络多增加隐藏层，那么神经网络就应该能够学习到更加复杂的模型，就如下所示：  人们发现对于很多问题，增加了一层隐藏层，效果有提升哎，那就就自然而然的继续增加网络的层数">
@@ -362,13 +363,10 @@
 <p>那么这种方式有什么问题呢？下面我们简化一下模型，以单个连接的多层网络来举例说明</p>
 <p><img src="/images/20180511231548.jpg" alt="简化神经网络图"></p>
 <p>我们来看一下按照这个网络更新权重会发生什么问题呢？</p>
-<p>这里先定义一些参数，和之前<a href="/_posts/神经网络.md">神经网络</a>章节的定义是一致的,</p>
-<script type="math/tex; mode=display">a_j $$ 为第$$ j $$层的激活值，$$ z_j $$ 为第$$ j $$层的带权输入，因此有
-$$ a_j = \sigma(z_j) $$，$$ z_j = w_ja_{j-1}+b_j$$，假设神经网络的代价函数为$$ C $$，那么根据之前推导的反向传播算法，有：
-
-![反向传播算法](/images/20180506172221.jpg)
-
-$$ \frac{\partial C}{\partial w^{l}_{jk}}  = a^{l-1}_{k} \delta^{l}_{j}</script><script type="math/tex; mode=display">\frac{\partial C}{\partial b^{l}_{j}} = \delta^{l}_{j}</script><p>且有定义：<script type="math/tex">\delta^{l}_{j} =  \frac{\partial C}{\partial z^{l}_{j}}</script> </p>
+<p>这里先定义一些参数，和之前<a href="/2018/05/05/神经网络/">神经网络</a>章节的定义是一致的,<script type="math/tex">a_j</script> 为第<script type="math/tex">j</script>层的激活值，<script type="math/tex">z_j</script> 为第<script type="math/tex">j</script>层的带权输入，因此有<script type="math/tex">a_j = \sigma(z_j)</script>，<script type="math/tex">z_j = w_ja_{j-1}+b_j</script>，假设神经网络的代价函数为<script type="math/tex">C</script>，那么根据之前推导的反向传播算法，有：</p>
+<p><img src="/images/20180506172221.jpg" alt="反向传播算法"></p>
+<p>其中</p>
+<script type="math/tex; mode=display">\frac{\partial C}{\partial w^{l}_{jk}}  = a^{l-1}_{k} \delta^{l}_{j}</script><script type="math/tex; mode=display">\frac{\partial C}{\partial b^{l}_{j}} = \delta^{l}_{j}</script><p>且有定义：<script type="math/tex">\delta^{l}_{j} =  \frac{\partial C}{\partial z^{l}_{j}}</script> </p>
 <p>对于图中我们简化的神经网络来说，有：</p>
 <script type="math/tex; mode=display">\frac{\partial C}{\partial b_{1}} = \delta_{1} =  \frac{\partial C}{\partial z_{1}} = \frac{\partial C}{\partial a_{4}} \frac{\partial a_4}{\partial b_{1}}</script><p>由于<script type="math/tex">a_j = \sigma(z_j)</script>，<script type="math/tex">z_j = w_ja_{j-1}+b_j</script>，所以</p>
 <script type="math/tex; mode=display">\frac{\partial a_4}{\partial b_{1}} =  \frac{\partial a_4}{\partial a_{3}}  \frac{\partial a_3}{\partial a_{2}}  \frac{\partial a_2}{\partial b_{1}} = w_4 \sigma'(z_4) w_3 \sigma'(z_3) w_2 \sigma'(z_2) \sigma'(z_1)</script><p>所以有：</p>
