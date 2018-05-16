@@ -90,7 +90,7 @@
 <meta property="og:image" content="http://yoursite.com/images/LinearRegression.jpg">
 <meta property="og:image" content="http://yoursite.com/images/logisticDistribute.jpg">
 <meta property="og:image" content="http://yoursite.com/images/20180505210156.jpg">
-<meta property="og:updated_time" content="2018-05-16T16:27:21.979Z">
+<meta property="og:updated_time" content="2018-05-16T16:33:06.406Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="logistic回归">
 <meta name="twitter:description" content="引言logistic回归是一种很早期的回归模型，属于广义的线性回归，用于数据挖掘，经济预测等多种场景。本章我们首先引入线性回归模型，然后给出逻辑回归的定义，以及二次逻辑回归，同时给出logistic回归的参数训练方法，最后给出logistic回归于神经网络的关系 线性回归所谓的线性回归，其实就是用下面的公式来对数据进行分类或者回归的模型。 z = w_0+w_1x_1+w_2x_2+...+w_n">
@@ -360,7 +360,7 @@
 <p>其实概率密度函数是一个描述这个随机变量的输出值，在某个确定的取值点附近的可能性的函数。随机变量的取值落在某个区域之内的概率则为概率密度函数在这个区域上的积分</p>
 <p>因此通过分布函数我们可以推导出上面的二项logistic回归，同样的也可以推导出多项logistic回归方程，如下所示，</p>
 <h1 id="多项logistic回归"><a href="#多项logistic回归" class="headerlink" title="多项logistic回归"></a>多项logistic回归</h1><p>多项logistic回归有下面的模型</p>
-<script type="math/tex; mode=display">P(Y=k |x) = \frac{e^{w_k x}}{1 + \sum^{K-1}_{k=1}{e^{wx}}} $$  其中$$ k=1,2,...,K-1</script><script type="math/tex; mode=display">P(Y=K |x) = \frac{1}{1 + \sum^{K-1}_{k=1}{e^{wx}}}</script><h1 id="参数学习"><a href="#参数学习" class="headerlink" title="参数学习"></a>参数学习</h1><p>下面我们已二项logistic回归为例子，用极大似然估计来推导logistic回归的参数学习。</p>
+<script type="math/tex; mode=display">P(Y=k |x) = \frac{e^{w_k x}}{1 + \sum^{K-1}_{k=1}{e^{wx}}} \qquad 其中 k=1,2,...,K-1</script><script type="math/tex; mode=display">P(Y=K |x) = \frac{1}{1 + \sum^{K-1}_{k=1}{e^{wx}}}</script><h1 id="参数学习"><a href="#参数学习" class="headerlink" title="参数学习"></a>参数学习</h1><p>下面我们已二项logistic回归为例子，用极大似然估计来推导logistic回归的参数学习。</p>
 <p>另：</p>
 <script type="math/tex; mode=display">P(Y=1|x,\theta) = \frac{e^{\theta x}}{1 + e^{\theta x}} =h_{\theta}(x)</script><script type="math/tex; mode=display">P(Y=0|x,\theta) = \frac{1}{1 + e^{\theta x}} =1-h_{\theta}(x)</script><p>则条件概率分布:</p>
 <script type="math/tex; mode=display">P(y|x; \theta) = (h_{\theta})^y(1-h_{\theta})^{1-y}</script><p>假设用于训练的m个样本独立，所以样本的条件概率分布的似然函数如下所示：</p>
