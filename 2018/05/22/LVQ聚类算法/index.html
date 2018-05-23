@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="axis tech zone">
 <meta property="og:description" content="LVQ算法LVQ是learning vector quantization的简称，是一种被称之为学习向量量化的算法。 其算法思想是通过找到一组原型向量来代表聚类的中心。而与其他的聚类算法不同，LVQ假设每个样本是有标签的，LVQ通过这些假设的标签来辅助聚类。 LVQ算法实现给定样本集\left \{ (x_1),(x_2),...,(x_N) \right \}, 我们假设样本是有标签的，如下所示">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-22T16:22:12.247Z">
+<meta property="og:updated_time" content="2018-05-23T14:59:33.050Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LVQ聚类算法">
 <meta name="twitter:description" content="LVQ算法LVQ是learning vector quantization的简称，是一种被称之为学习向量量化的算法。 其算法思想是通过找到一组原型向量来代表聚类的中心。而与其他的聚类算法不同，LVQ假设每个样本是有标签的，LVQ通过这些假设的标签来辅助聚类。 LVQ算法实现给定样本集\left \{ (x_1),(x_2),...,(x_N) \right \}, 我们假设样本是有标签的，如下所示">
@@ -352,6 +352,7 @@
 <h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><p>我们可以看到LVQ算法的重点是更新原型向量，为什么是这样的公式更新呢？<br>我们看下面的方程：</p>
 <script type="math/tex; mode=display">p'_{j*}  = p_{j*} + \eta (x_i - p_{j*} )</script><p>计算<script type="math/tex">p'_{j*}</script> 与<script type="math/tex">x_{i}</script>的距离</p>
 <script type="math/tex; mode=display">||p'_{j*} - x_i||^2 = ||p_{j*} + \eta (x_i - p_{j*} )-x_i||^2 = (1- \eta)^2||p_{j*} - x_i ||^2</script><p>而由于<script type="math/tex">\eta \subset (0,1)</script>，所以如果<script type="math/tex">p'_{j*}</script> 与<script type="math/tex">x_{i}</script>是同类的话（记住这里的类别是我们最初随机指定的），那就说明我们最初的指定是靠谱滴，他们两个确实距离近，所以我们要将原型向量<script type="math/tex">p'_{j*}</script>向<script type="math/tex">x_{i}</script>移动，反之，如果他们两个不是一类，那么说明我们最初的假设不对，而他的距离确实最近的，所以那么我们就要将原型向量<script type="math/tex">p'_{j*}</script>向<script type="math/tex">x_{i}</script>远离。</p>
+<p>但是有一点，随机选择的原型向量可能会影响聚类效果，不过这个是聚类都存在的问题，除了层次聚类，但是层次聚类也有他的限制之处。</p>
 <h1 id="实验验证"><a href="#实验验证" class="headerlink" title="实验验证"></a>实验验证</h1>
       
     </div>
@@ -397,6 +398,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/23/层次聚类/" rel="prev" title="层次聚类">
+                层次聚类 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -482,7 +487,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
