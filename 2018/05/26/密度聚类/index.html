@@ -79,18 +79,21 @@
 
 
 
-<meta name="description" content="引言">
+<meta name="description" content="引言其实对于所有的聚类问题，都有一个核心点，那就是以什么样的规则来划分两个点是不是同一类。密度聚类，本质上就是基于一种密度的概念来进行聚类。而密度的定义本质上也是来自于两点的距离，所以其实对于聚类的算法来看，大家本质上都差不多，谁也别笑话谁。下面我们来总结介绍一种叫做DBSCAN的密度算法。 DBSCANDBSCAN 的全称是 Density-Based Spatial Clustering of">
 <meta name="keywords" content="机器学习,非监督学习,聚类">
 <meta property="og:type" content="article">
 <meta property="og:title" content="密度聚类">
-<meta property="og:url" content="http://yoursite.com/2018/05/24/密度聚类/index.html">
+<meta property="og:url" content="http://yoursite.com/2018/05/26/密度聚类/index.html">
 <meta property="og:site_name" content="axis tech zone">
-<meta property="og:description" content="引言">
+<meta property="og:description" content="引言其实对于所有的聚类问题，都有一个核心点，那就是以什么样的规则来划分两个点是不是同一类。密度聚类，本质上就是基于一种密度的概念来进行聚类。而密度的定义本质上也是来自于两点的距离，所以其实对于聚类的算法来看，大家本质上都差不多，谁也别笑话谁。下面我们来总结介绍一种叫做DBSCAN的密度算法。 DBSCANDBSCAN 的全称是 Density-Based Spatial Clustering of">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-24T15:54:59.180Z">
+<meta property="og:image" content="http://yoursite.com/images/DBSCAN.jpg">
+<meta property="og:image" content="http://yoursite.com/images/density_clustering.jpg">
+<meta property="og:updated_time" content="2018-05-25T16:11:35.096Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="密度聚类">
-<meta name="twitter:description" content="引言">
+<meta name="twitter:description" content="引言其实对于所有的聚类问题，都有一个核心点，那就是以什么样的规则来划分两个点是不是同一类。密度聚类，本质上就是基于一种密度的概念来进行聚类。而密度的定义本质上也是来自于两点的距离，所以其实对于聚类的算法来看，大家本质上都差不多，谁也别笑话谁。下面我们来总结介绍一种叫做DBSCAN的密度算法。 DBSCANDBSCAN 的全称是 Density-Based Spatial Clustering of">
+<meta name="twitter:image" content="http://yoursite.com/images/DBSCAN.jpg">
 
 
 
@@ -120,7 +123,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/24/密度聚类/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/26/密度聚类/"/>
 
 
 
@@ -253,7 +256,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/24/密度聚类/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/26/密度聚类/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -282,8 +285,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-24T00:00:00+08:00">
-                2018-05-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-26T00:00:00+08:00">
+                2018-05-26
               </time>
             
 
@@ -342,7 +345,91 @@
       
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>其实对于所有的聚类问题，都有一个核心点，那就是以什么样的规则来划分两个点是不是同一类。密度聚类，本质上就是基于一种密度的概念来进行聚类。而密度的定义本质上也是来自于两点的距离，所以其实对于聚类的算法来看，大家本质上都差不多，谁也别笑话谁。下面我们来总结介绍一种叫做DBSCAN的密度算法。</p>
+<h1 id="DBSCAN"><a href="#DBSCAN" class="headerlink" title="DBSCAN"></a>DBSCAN</h1><p>DBSCAN 的全称是 Density-Based Spatial Clustering of Applications with Noise<br>单词里面有个noise,这就说明我们的算法是能抗噪声的，并且我们的算法是可以在空间中聚类为任意形状的聚类的，这点是一些其他的聚类算法不具备的性质，如下所示：</p>
+<p><img src="/images/DBSCAN.jpg" alt="kmeans"></p>
+<p>具有这样的性能，就是因为我们的算法引入了“邻域”（其参数为<script type="math/tex">(\varepsilon, MinPts )</script>）的概念来刻画样本的紧密程度的算法。</p>
+<p>下面我们来介绍一下这个算法，在具体算法之前，我们先看几个定义，非常简单，但是可能比较绕，懂了这几个定义，下面的算法就是小菜一碟了。</p>
+<h2 id="基于密度的几个概念"><a href="#基于密度的几个概念" class="headerlink" title="基于密度的几个概念"></a>基于密度的几个概念</h2><p><strong>$ \varepsilon - $邻域：</strong></p>
+<p>对<script type="math/tex">x_j \in D</script>，其<script type="math/tex">\varepsilon -</script>邻域是指样本集<script type="math/tex">D</script>中与<script type="math/tex">x_j</script>距离不大于<script type="math/tex">\varepsilon</script>的样本，即<script type="math/tex">N_{\varepsilon}(x_j) = \left \{ x_j \in D | dist(x_i,x_j) \leq \varepsilon  \right \}</script></p>
+<p><strong>核心对象：</strong></p>
+<p>对象<script type="math/tex">x_j</script>的<script type="math/tex">\varepsilon -</script>邻域中至少包含<script type="math/tex">MinPts</script>个样本，即<script type="math/tex">N_{\varepsilon}(x_j) \geq MinPts</script>，则称<script type="math/tex">x_j</script>为核心对象。</p>
+<p><strong>密度直达：</strong></p>
+<p>若<script type="math/tex">x_j</script>位于<script type="math/tex">x_i</script>的<script type="math/tex">\varepsilon -</script>邻域中，且<script type="math/tex">x_i</script>是核心对象，则称<script type="math/tex">x_j</script>由<script type="math/tex">x_i</script>密度直达。</p>
+<p><strong>密度可达：</strong></p>
+<p>对<script type="math/tex">x_j</script>与<script type="math/tex">x_i</script>，存在样本序列<script type="math/tex">p_1,p_2,...,p_n</script>且<script type="math/tex">p_1 = x_j , p_n = x_i</script> 且<script type="math/tex">p_{i+1}</script>由<script type="math/tex">p_{i}</script>密度直达，则称<script type="math/tex">x_j</script>由<script type="math/tex">x_i</script>密度可达。</p>
+<p>其实这个概念本质上要求<script type="math/tex">p_2,...,p_n</script>都是核心对象</p>
+<p><strong>密度相连：</strong></p>
+<p>对<script type="math/tex">x_j</script>与<script type="math/tex">x_i</script>，若存在<script type="math/tex">x_k</script>使得<script type="math/tex">x_j</script>与<script type="math/tex">x_i</script>均由<script type="math/tex">x_k</script>密度可达，则称<script type="math/tex">x_j</script>由<script type="math/tex">x_i</script>密度相连。</p>
+<p>下图直观的表示了这几个概念</p>
+<p><img src="/images/density_clustering.jpg" alt="kmeans"></p>
+<p>基于上面的概念，可以定义DBSCAN算法里面的簇的定义</p>
+<p><strong>簇： 由密度可达关系导出的最大的密度相连的样本集合。</strong></p>
+<p>因此实际上簇<script type="math/tex">C \subseteq D</script>满足下面的两个条件：</p>
+<p>连接性：<script type="math/tex">x_i \in C,x_j \in C \Rightarrow</script> <script type="math/tex">x_i</script>与<script type="math/tex">x_j</script>密度相连</p>
+<p>最大性：<script type="math/tex">x_i \in C</script> 且<script type="math/tex">x_j</script>由<script type="math/tex">x_i</script>密度可达 <script type="math/tex">\Rightarrow x_j \in C</script></p>
+<p><strong>实际上就是核心对象以及与其密度可达的所有的点的集合</strong></p>
+<p>本质上相当于一些核心对象以及边界点组成了簇，簇中核心的点就是核心对象。</p>
+<h2 id="具体算法描述"><a href="#具体算法描述" class="headerlink" title="具体算法描述"></a>具体算法描述</h2><p><strong>实际上就是核心对象以及与其密度可达的所有的点的集合</strong></p>
+<blockquote>
+<p>输入</p>
+<blockquote>
+<ul>
+<li>样本集 <script type="math/tex">D = \left \{ x_1,...,x_N \right \}</script></li>
+<li>邻域参数<script type="math/tex">(\varepsilon, MinPts )</script></li>
+</ul>
+</blockquote>
+<p>算法流程</p>
+<blockquote>
+<ul>
+<li>找出所有的核心对象，放入集合中 <script type="math/tex">\Omega</script></li>
+<li>初始化未访问的样本集合：<script type="math/tex">\Gamma = D</script></li>
+<li>$while( \Omega \neq \varnothing)$<blockquote>
+<ul>
+<li>$ \Gamma_{old} = D$</li>
+<li>随机选取一个核心对象<script type="math/tex">o \in \Omega</script>，初始化<script type="math/tex">Q = <o></script></li>
+<li>$ \Gamma = \Gamma \setminus  \left \{ o \right \}$</li>
+<li>$while( Q \neq \varnothing)$<blockquote>
+<ul>
+<li>从 <script type="math/tex">Q</script>中取出样本<script type="math/tex">q</script></li>
+<li>$ if (q$是核心对象$) $<blockquote>
+<ul>
+<li>另<script type="math/tex">\Delta = N_{\varepsilon}(q) \cap \Gamma</script>， 即获取核心对象<script type="math/tex">q</script>邻域内的点</li>
+<li>将<script type="math/tex">\Delta</script>内的点加入到<script type="math/tex">Q</script>中</li>
+<li>$ \Gamma = \Gamma \setminus  \Delta $</li>
+</ul>
+</blockquote>
+</li>
+<li>$ end \quad if $</li>
+</ul>
+</blockquote>
+</li>
+<li>$ end \quad while $</li>
+<li>$ k = k+1 $,并且生成聚类簇<script type="math/tex">C_k = \Gamma_{old} \setminus  \Gamma</script></li>
+<li>$ \Omega = \Omega \setminus C_k $</li>
+</ul>
+</blockquote>
+</li>
+<li>$ end \quad while $</li>
+</ul>
+</blockquote>
+<p>输出</p>
+<blockquote>
+<p>簇划分<script type="math/tex">C = \left \{ C_1,...,C_K \right \}</script></p>
+</blockquote>
+</blockquote>
+<h2 id="算法的优缺点"><a href="#算法的优缺点" class="headerlink" title="算法的优缺点"></a>算法的优缺点</h2><p>优点：</p>
+<ul>
+<li>算法不需要指定聚类的数目，但是算法实际上需要另外两个参数<script type="math/tex">(\varepsilon, MinPts )</script>，所以这个优点也是勉强。</li>
+<li>可以聚成任意形状的类，就像开始的图所示</li>
+<li>能够识别出噪声点</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>对高维数据效果不算好</li>
+<li>如果样本的密度不均， 效果会不理想</li>
+</ul>
+<h2 id="实验验证"><a href="#实验验证" class="headerlink" title="实验验证"></a>实验验证</h2>
       
     </div>
     
@@ -541,7 +628,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DBSCAN"><span class="nav-number">2.</span> <span class="nav-text">DBSCAN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于密度的几个概念"><span class="nav-number">2.1.</span> <span class="nav-text">基于密度的几个概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体算法描述"><span class="nav-number">2.2.</span> <span class="nav-text">具体算法描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法的优缺点"><span class="nav-number">2.3.</span> <span class="nav-text">算法的优缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验验证"><span class="nav-number">2.4.</span> <span class="nav-text">实验验证</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -594,7 +681,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共41.2k字</span>
+  <span class="post-count">博客全站共42.0k字</span>
 </div>
         
 
