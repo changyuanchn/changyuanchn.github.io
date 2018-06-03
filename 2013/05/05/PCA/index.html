@@ -83,11 +83,11 @@
 <meta name="keywords" content="机器学习,无监督学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PCA（主成分分析）">
-<meta property="og:url" content="http://yoursite.com/2018/05/05/PCA/index.html">
+<meta property="og:url" content="http://yoursite.com/2013/05/05/PCA/index.html">
 <meta property="og:site_name" content="axis tech zone">
 <meta property="og:description" content="引言为什么会讲到PCA？ 前一阵在做一些featureselection的工作，想到PCA可以用来降维（在某些方面来说Feature selection也要降维），因此学习了一下PCA才发现这是完全不同的过程（PCA中的降维（计算主成分的目的是将高维数据投影到较低维空间）与特征选择中的降维（选取特征）是两个概念）。PCA应该算是feature extraction的过程，feature extra">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-03T09:00:57.228Z">
+<meta property="og:updated_time" content="2018-06-03T09:07:16.851Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PCA（主成分分析）">
 <meta name="twitter:description" content="引言为什么会讲到PCA？ 前一阵在做一些featureselection的工作，想到PCA可以用来降维（在某些方面来说Feature selection也要降维），因此学习了一下PCA才发现这是完全不同的过程（PCA中的降维（计算主成分的目的是将高维数据投影到较低维空间）与特征选择中的降维（选取特征）是两个概念）。PCA应该算是feature extraction的过程，feature extra">
@@ -120,7 +120,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/05/PCA/"/>
+  <link rel="canonical" href="http://yoursite.com/2013/05/05/PCA/"/>
 
 
 
@@ -253,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/05/PCA/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/05/05/PCA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -282,8 +282,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-05T00:00:00+08:00">
-                2018-05-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-05-05T00:00:00+08:00">
+                2013-05-05
               </time>
             
 
@@ -363,21 +363,15 @@
 <p>下面还有一个问题就是如何找到<script type="math/tex">e</script>的方向</p>
 <p>引入样本离差矩阵<script type="math/tex">S = \sum_{i=1}^n (X_i-\overline{X})(X_i-\overline{X})^T</script></p>
 <p>将<script type="math/tex">a_k =e^T(x_k-m)</script>带入到<script type="math/tex">J_1(a_1,...,a_n,e) =  \sum_{i=1}^n a_k^2||e||^2 -2\sum_{i=1}^n a_ke^T(x_k-m) + \sum_{i=1}^n ||m-X_k||^2</script>公式中，可以得到<script type="math/tex">J_1(e) = -e^TSe  + \sum_{i=1}^n ||X_k - m||^2</script>, 显然是<script type="math/tex">J_1</script>最小的那个向量<script type="math/tex">e</script>，能使<script type="math/tex">-e^TSe</script>最大。在约束条件<script type="math/tex">||e||^2 = 1</script>下，利用拉格朗日乘子法，有：</p>
-<script type="math/tex; mode=display">\mu = e^TSe - \lambda (e^Te-1)$$,对$$e $$求偏导，有$$\frac{\partial \mu}{\partial e} = 2Se-2\lambda e$$,另其为0，有$$Se =\lambda e$$,因此，矩阵$$ S $$最大的特征值对应的特征向量就是投影e的方向。
-
-从几何上来讲，样本点$$ X_1,X_2,...,X_n $$在$$ d $$维空间上形成一个$$ d $$维椭球形状的云团，样本离差矩阵$$ S $$的特征向量就是这个云团的主轴，主成分分析就是提取云团散布最大的那些方向的方法，达到对特征空间进行降维的目的。
-
-# 举个小例子直观说明一下PCA
-
-对于一个训练集，100个对象模板，特征是10维，那么它可以建立一个100*10的矩阵，作为样本。求这个样本的协方差矩阵，得到一个10*10的协方差矩阵，然后求出这个协方差矩阵的特征值和特征向量，应该有10个特征值和特征向量，我们根据特征值的大小，取前四个特征值所对应的特征向量，构成一个10*4的矩阵，这个矩阵就是我们要求的特征矩阵，100*10的样本矩阵乘以这个10*4的特征矩阵，就得到了一个100*4的新的降维之后的样本矩阵，每个特征的维数下降了。
-
-# 具体的应用（面部识别）
-
->训练阶段
->> - 假设训练集有两百个样本，由灰度图组成每个样本大小M*N，则样本训练矩阵为$$  x =(x_1,x_2,...,x_{200}) $$,$$  x_i  $$ 为灰度图像沿纵轴的拉伸
->> - 计算平均脸$$\Psi = \frac{1}{200} \sum_{i=1}^{200} x_i</script><blockquote>
+<p>$\mu = e^TSe - \lambda (e^Te-1)$,对<script type="math/tex">e</script>求偏导，有<script type="math/tex">\frac{\partial \mu}{\partial e} = 2Se-2\lambda e</script>,另其为0，有<script type="math/tex">Se =\lambda e</script>,因此，矩阵<script type="math/tex">S</script>最大的特征值对应的特征向量就是投影e的方向。</p>
+<p>从几何上来讲，样本点<script type="math/tex">X_1,X_2,...,X_n</script>在<script type="math/tex">d</script>维空间上形成一个<script type="math/tex">d</script>维椭球形状的云团，样本离差矩阵<script type="math/tex">S</script>的特征向量就是这个云团的主轴，主成分分析就是提取云团散布最大的那些方向的方法，达到对特征空间进行降维的目的。</p>
+<h1 id="举个小例子直观说明一下PCA"><a href="#举个小例子直观说明一下PCA" class="headerlink" title="举个小例子直观说明一下PCA"></a>举个小例子直观说明一下PCA</h1><p>对于一个训练集，100个对象模板，特征是10维，那么它可以建立一个100<em>10的矩阵，作为样本。求这个样本的协方差矩阵，得到一个10</em>10的协方差矩阵，然后求出这个协方差矩阵的特征值和特征向量，应该有10个特征值和特征向量，我们根据特征值的大小，取前四个特征值所对应的特征向量，构成一个10<em>4的矩阵，这个矩阵就是我们要求的特征矩阵，100</em>10的样本矩阵乘以这个10<em>4的特征矩阵，就得到了一个100</em>4的新的降维之后的样本矩阵，每个特征的维数下降了。</p>
+<h1 id="具体的应用（面部识别）"><a href="#具体的应用（面部识别）" class="headerlink" title="具体的应用（面部识别）"></a>具体的应用（面部识别）</h1><blockquote>
+<p>训练阶段</p>
 <blockquote>
 <ul>
+<li>假设训练集有两百个样本，由灰度图组成每个样本大小M*N，则样本训练矩阵为<script type="math/tex">x =(x_1,x_2,...,x_{200})</script>,<script type="math/tex">x_i</script> 为灰度图像沿纵轴的拉伸</li>
+<li>计算平均脸<script type="math/tex">\Psi = \frac{1}{200} \sum_{i=1}^{200} x_i</script> </li>
 <li>计算每一张脸与平均脸的差值<script type="math/tex">d_i = x_i -\Psi</script></li>
 <li>构造协方差矩阵<script type="math/tex">C = \frac{1}{200} \sum_{i=1}^{200}d_id_i^T</script></li>
 <li>求协方差矩阵的特征值与特征向量，构造特征脸空间</li>
@@ -435,18 +429,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/05/神经网络/" rel="next" title="神经网络">
-                <i class="fa fa-chevron-left"></i> 神经网络
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/05/08/神经网络之代价函数的选择/" rel="prev" title="神经网络之代价函数的选择">
-                神经网络之代价函数的选择 <i class="fa fa-chevron-right"></i>
+              <a href="/2013/10/07/读书笔记之The C Programming Language/" rel="prev" title="读书笔记之The C Programming Language">
+                读书笔记之The C Programming Language <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -604,7 +594,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA-统计学上"><span class="nav-number">2.</span> <span class="nav-text">PCA(统计学上)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA（machine-learning）"><span class="nav-number">3.</span> <span class="nav-text">PCA（machine learning）</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA-统计学上"><span class="nav-number">2.</span> <span class="nav-text">PCA(统计学上)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA（machine-learning）"><span class="nav-number">3.</span> <span class="nav-text">PCA（machine learning）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#举个小例子直观说明一下PCA"><span class="nav-number">4.</span> <span class="nav-text">举个小例子直观说明一下PCA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#具体的应用（面部识别）"><span class="nav-number">5.</span> <span class="nav-text">具体的应用（面部识别）</span></a></li></ol></div>
             
 
           </div>
@@ -657,7 +647,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共47.9k字</span>
+  <span class="post-count">博客全站共48.3k字</span>
 </div>
         
 
