@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://yoursite.com/2018/05/05/PCA/</loc>
+    <lastmod>2018-06-03T09:00:57.228Z</lastmod>
+    <data>
+        <display>
+        <title>PCA（主成分分析）</title>
+        <pubTime>2018-05-04T16:00:00.000Z</pubTime>
+        
+        <tag>机器学习</tag>
+         
+        <tag>无监督学习</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="http://yoursite.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2018/06/02/%E6%8F%90%E5%8D%87%E6%A0%91%EF%BC%8Cbagging%E4%B8%8E%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97/</loc>
     <lastmod>2018-06-02T13:17:47.444Z</lastmod>
     <data>
@@ -544,28 +566,6 @@
         <tag>机器学习</tag>
          
         <tag>过拟合</tag>
-         
-         
-           
-             
-              <breadCrumb title="机器学习" url="http://yoursite.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2014/03/05/PCA/</loc>
-    <lastmod>2018-05-07T15:28:37.250Z</lastmod>
-    <data>
-        <display>
-        <title>PCA（主成分分析）</title>
-        <pubTime>2014-03-04T16:00:00.000Z</pubTime>
-        
-        <tag>机器学习</tag>
-         
-        <tag>无监督学习</tag>
          
          
            
