@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="axis tech zone">
 <meta property="og:description" content="引言EM算法是一种迭代算法，用于含有隐藏变量的概率模型的参数估计，比如说高斯混合模型，隐马尔科夫链等等场景。EM算法是一个具有普遍意义的算法，通过不断的提高下界来逼近模型参数。EM算法包含两步，expectation和maximization，即求期望和最大值。EM两个字母完美的表述了EM算法的精髓。 隐变量首先我们来介绍下什么是隐变量。 所谓的隐变量就是模型中存在的无法直接观测的到的变量，而且这">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-06T14:46:36.292Z">
+<meta property="og:updated_time" content="2018-06-10T05:54:32.433Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EM算法">
 <meta name="twitter:description" content="引言EM算法是一种迭代算法，用于含有隐藏变量的概率模型的参数估计，比如说高斯混合模型，隐马尔科夫链等等场景。EM算法是一个具有普遍意义的算法，通过不断的提高下界来逼近模型参数。EM算法包含两步，expectation和maximization，即求期望和最大值。EM两个字母完美的表述了EM算法的精髓。 隐变量首先我们来介绍下什么是隐变量。 所谓的隐变量就是模型中存在的无法直接观测的到的变量，而且这">
@@ -397,7 +397,6 @@
 <p>去掉跟最大化<script type="math/tex">\theta</script>无关的项，有：</p>
 <script type="math/tex; mode=display">\theta_{i+1} = argmax_{\theta} B(\theta,\theta_i) = argmax_{\theta}(\sum_zP(Z|Y,\theta_i) log( \frac{P(Y|Z,\theta)P(Z|\theta)}{P(Z|Y,\theta_i)P(Y|\theta_i)}) )</script><script type="math/tex; mode=display">= argmax_{\theta}(\sum_zP(Z|Y,\theta_i) log( P(Y|Z,\theta)P(Z|\theta)) )</script><script type="math/tex; mode=display">= argmax_{\theta}(\sum_zP(Z|Y,\theta_i) log( P(Y,Z|\theta)) ) = argmax_{\theta}Q(\theta,\theta_i)</script><p>因此我们可以看出极大化<script type="math/tex">Q(\theta,\theta_i)</script>函数，就能使参数不断的逼近真实值。</p>
 <h1 id="EM算法存在的问题"><a href="#EM算法存在的问题" class="headerlink" title="EM算法存在的问题"></a>EM算法存在的问题</h1><p>EM算法作为一个迭代算法，需要指定初始值，那么实际上结果的好坏是跟初始值强相关的，因此如果我们能够得到初始值的一些信息的话，是有利于提升EM的效果的。</p>
-<h1 id="最开始的问题"><a href="#最开始的问题" class="headerlink" title="最开始的问题"></a>最开始的问题</h1><p>最后我们来回顾一下最开始的那个三硬币的问题，用EM算法来计算一下三硬币问题的参数估计。</p>
 
       
     </div>
@@ -437,6 +436,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/09/高斯混合模型/" rel="prev" title="高斯混合模型">
+                高斯混合模型 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -522,7 +525,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">45</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -544,7 +547,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -593,7 +596,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#隐变量"><span class="nav-number">2.</span> <span class="nav-text">隐变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么无法直接算出"><span class="nav-number">3.</span> <span class="nav-text">为什么无法直接算出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EM算法"><span class="nav-number">4.</span> <span class="nav-text">EM算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EM算法的导出"><span class="nav-number">5.</span> <span class="nav-text">EM算法的导出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EM算法存在的问题"><span class="nav-number">6.</span> <span class="nav-text">EM算法存在的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最开始的问题"><span class="nav-number">7.</span> <span class="nav-text">最开始的问题</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#隐变量"><span class="nav-number">2.</span> <span class="nav-text">隐变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么无法直接算出"><span class="nav-number">3.</span> <span class="nav-text">为什么无法直接算出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EM算法"><span class="nav-number">4.</span> <span class="nav-text">EM算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EM算法的导出"><span class="nav-number">5.</span> <span class="nav-text">EM算法的导出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EM算法存在的问题"><span class="nav-number">6.</span> <span class="nav-text">EM算法存在的问题</span></a></li></ol></div>
             
 
           </div>
@@ -646,7 +649,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共49.2k字</span>
+  <span class="post-count">博客全站共49.8k字</span>
 </div>
         
 
