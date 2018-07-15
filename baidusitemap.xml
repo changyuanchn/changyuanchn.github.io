@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://yoursite.com/2018/07/10/%E9%9A%90%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2018-07-15T09:04:06.085Z</lastmod>
+    <data>
+        <display>
+        <title>隐马尔科夫模型</title>
+        <pubTime>2018-07-09T16:00:00.000Z</pubTime>
+        
+        <tag>机器学习</tag>
+         
+        <tag>EM</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="http://yoursite.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2018/06/09/%E9%AB%98%E6%96%AF%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8B/</loc>
     <lastmod>2018-06-10T06:12:32.841Z</lastmod>
     <data>
@@ -675,9 +697,9 @@
         <title>读书笔记之C Traps and Pitfalls</title>
         <pubTime>2013-11-09T16:00:00.000Z</pubTime>
         
-        <tag>读书笔记</tag>
-         
         <tag>C语言</tag>
+         
+        <tag>读书笔记</tag>
          
          
            
@@ -697,9 +719,9 @@
         <title>读书笔记之The C Programming Language</title>
         <pubTime>2013-10-06T16:00:00.000Z</pubTime>
         
-        <tag>读书笔记</tag>
-         
         <tag>C语言</tag>
+         
+        <tag>读书笔记</tag>
          
          
            
