@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/markov.jpg">
 <meta property="og:image" content="http://yoursite.com/images/houxiang.jpg">
-<meta property="og:updated_time" content="2018-07-15T09:04:06.085Z">
+<meta property="og:updated_time" content="2018-07-15T10:32:33.203Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="隐马尔科夫模型">
 <meta name="twitter:description" content="引言隐马尔可夫模型是关于时许序列的概率模型。是由一个隐藏的马尔科夫链随机生成不可观测的状态序列，然后由状态序列生成一个观测序列的过程。 每个状态生成一个观测，同时每个状态会转移到下一个状态。因此马尔科夫过程有两个关键的序列，一个是状态序列，一个是观测序列。  上图就是一个标准的马尔科夫过程的观测输出以及状态转移过程。 隐马尔科夫模型由初始概率分布，转移状态矩阵概率分布，观测状态概率矩阵确定。 假设">
@@ -406,11 +406,8 @@
 <li>定义给定参数<script type="math/tex">O, \lambda</script>的情况下，时刻<script type="math/tex">t</script>处于状态<script type="math/tex">q_i</script>的概率为:</li>
 </ol>
 <script type="math/tex; mode=display">\gamma_t(i) =P(i_t = q_i|O, \lambda)</script><p>则：</p>
-<script type="math/tex; mode=display">\gamma_t(i) =P(i_t = q_i|O, \lambda) = \frac{P(i_t = q_i, O| \lambda)}{P(O|\lambda)}$$,
-
-由前向概率和后向概率
-
-$$ \alpha_t(i) = P(o_1,...,o_t, i_t = q_i|\lambda)</script><script type="math/tex; mode=display">\beta_t(i) = P(o_{t+1},...,o_T | i_t = q_i, \lambda)</script><p>可以得到：</p>
+<script type="math/tex; mode=display">\gamma_t(i) =P(i_t = q_i|O, \lambda) = \frac{P(i_t = q_i, O| \lambda)}{P(O|\lambda)}</script><p>由前向概率和后向概率</p>
+<script type="math/tex; mode=display">\alpha_t(i) = P(o_1,...,o_t, i_t = q_i|\lambda)</script><script type="math/tex; mode=display">\beta_t(i) = P(o_{t+1},...,o_T | i_t = q_i, \lambda)</script><p>可以得到：</p>
 <script type="math/tex; mode=display">P(i_t = q_i, O| \lambda) = P(o_1,...,o_t,...,o_T, i_t = q_i|\lambda)</script><script type="math/tex; mode=display">= P(o_1,...,o_t,...,o_T| i_t = q_i, \lambda) P( i_t = q_i| \lambda)</script><script type="math/tex; mode=display">= P(o_1,...,o_t| i_t = q_i, \lambda) P(o_{t+1},...,o_T|  i_t = q_i, \lambda) P( i_t = q_i| \lambda)</script><script type="math/tex; mode=display">= P(o_1,...,o_t| i_t = q_i, \lambda)P( i_t = q_i| \lambda) P(o_{t+1},...,o_T|  i_t = q_i, \lambda)</script><script type="math/tex; mode=display">= P(o_1,...,o_t, i_t = q_i|\lambda)  P(o_{t+1},...,o_T|  i_t = q_i, \lambda)</script><script type="math/tex; mode=display">= \alpha_t(i) \beta_t(i)</script><p>于是可以得到：</p>
 <script type="math/tex; mode=display">\gamma_t(i) =P(i_t = q_i|O, \lambda) = \frac{\alpha_t(i) \beta_t(i)}{\sum_j^N \alpha_t(j) \beta_t(j)}</script><ol>
 <li><p>定义给定参数<script type="math/tex">O, \lambda</script>的情况下，时刻<script type="math/tex">t</script>处于状态<script type="math/tex">q_i</script>且时刻<script type="math/tex">t+1</script>处于状态<script type="math/tex">q_j</script>的概率为:</p>
@@ -435,17 +432,14 @@ $$ \alpha_t(i) = P(o_1,...,o_t, i_t = q_i|\lambda)</script><script type="math/te
 <script type="math/tex; mode=display">P(I,O|\bar{\lambda}) = \pi_{i_1} b_{i_1}(o_1) a_{i_1i_2} b_{i_2}(o_2) ... a_{i_{T-1}i_T} b_{i_T}(o_T)</script><p>因此<script type="math/tex">Q(\lambda, \bar{\lambda})</script>函数可以写为：</p>
 <script type="math/tex; mode=display">Q(\lambda, \bar{\lambda}) = \sum_I log \pi_{i_1} P(I,O|\bar{\lambda}) + \sum_I(\sum_{t=1}^{T-1} log a_{i_t i_{t+1}}) P(O,I|\bar{\lambda}) + \sum_I(\sum_{t=1}^{T} log b_{i_t}(o_t)) P(O,I|\bar{\lambda})</script><p>E步完成后，就该M步的了：<br>由于我们需要极大话的三个项，分别在上面的三个分式中，因此单独极大化上面的分式即可。</p>
 <p>第一项：</p>
-<script type="math/tex; mode=display">\sum_I log \pi_{i_1} P(I,O|\bar{\lambda}) = \sum_1^N log\pi_iP(O,i_i=i|\bar(\lambda))</script><script type="math/tex; mode=display">\pi_i$$满足的约束条件为$$\sum_i^N \pi_i = 1$$,因此利用拉格朗日乘子法，可以得到拉格朗日函数
-
-$$ \sum_1^N log\pi_iP(O,i_i=i|\bar{\lambda)} + \gamma(\sum_i^N \pi_i - 1)</script><p>对其求偏导并令其结果为0，可以得到：</p>
+<script type="math/tex; mode=display">\sum_I log \pi_{i_1} P(I,O|\bar{\lambda}) = \sum_1^N log\pi_iP(O,i_i=i|\bar(\lambda))</script><p>参数<script type="math/tex">\pi_i</script>满足的约束条件为<script type="math/tex">\sum_i^N \pi_i = 1</script>,因此利用拉格朗日乘子法，可以得到拉格朗日函数</p>
+<script type="math/tex; mode=display">\sum_1^N log\pi_iP(O,i_i=i|\bar{\lambda)} + \gamma(\sum_i^N \pi_i - 1)</script><p>对其求偏导并令其结果为0，可以得到：</p>
 <script type="math/tex; mode=display">\frac{\partial }{\partial \pi_i} [\sum_1^N log\pi_iP(O,i_i=i|\bar{\lambda)} + \gamma(\sum_i^N \pi_i - 1)] = 0</script><p>得到：</p>
 <script type="math/tex; mode=display">P(O,i_i=i|\bar{\lambda}) + \gamma \pi_i =0</script><p>对i求和，可得：</p>
 <script type="math/tex; mode=display">\gamma  = - P(O|\bar{\lambda})</script><p>带如到上式有：</p>
 <script type="math/tex; mode=display">\pi_i  = \frac {P(O, i_1 = i|\bar{\lambda})}{P(O|\bar{\lambda})}</script><p>同理，可以得到另外两项的估计，如下所示：</p>
 <script type="math/tex; mode=display">a_{ij}  = \frac {\sum_{t=1}^{T-1} P(O, i_t = i, i_{t+1} = j |\bar{\lambda})}{ \sum_{t=1}^{T-1} P(O, i_t =i|\bar{\lambda})}</script><script type="math/tex; mode=display">b_{j}(k)  = \frac {\sum_{t=1}^{T} P(O, i_t = j |\bar{\lambda})I(o_t = v_k)}{ \sum_{t=1}^{T} P(O, i_t =j|\bar{\lambda})}</script><p>如果引入我们之前的统计量</p>
-<script type="math/tex; mode=display">\gamma_t(i) =P(i_t = q_i|O, \lambda) = \frac{P(i_t = q_i, O| \lambda)}{P(O|\lambda)}$$,
-
- $$ \xi_t(i, j) = \frac{P(i_t = q_i,i_{t+1} = q_j, O|\lambda)}{P(O|\lambda)}</script><p> 那么参数估计可以写为：</p>
+<script type="math/tex; mode=display">\gamma_t(i) =P(i_t = q_i|O, \lambda) = \frac{P(i_t = q_i, O| \lambda)}{P(O|\lambda)}</script><script type="math/tex; mode=display">\xi_t(i, j) = \frac{P(i_t = q_i,i_{t+1} = q_j, O|\lambda)}{P(O|\lambda)}</script><p> 那么参数估计可以写为：</p>
 <script type="math/tex; mode=display">a_{ij}  = \frac {\sum_{t=1}^{T-1} \xi_t(i, j)}{ \sum_{t=1}^{T-1} \gamma_t(i)}</script><script type="math/tex; mode=display">b_{j}(k)  = \frac {\sum_{t=1,o_t = v_k}^{T} \gamma_t(j)}{ \sum_{t=1}^{T} \gamma_t(j)}</script><script type="math/tex; mode=display">\pi_i  = \gamma_1(i)</script><h2 id="预测问题"><a href="#预测问题" class="headerlink" title="预测问题"></a>预测问题</h2><h3 id="近似算法"><a href="#近似算法" class="headerlink" title="近似算法"></a>近似算法</h3><p>所谓近似算法，就是每个时刻选择最优可能出现的状态，将她作为这个时刻的结果。</p>
 <p>给定<script type="math/tex">\lambda, O</script>，有</p>
 <script type="math/tex; mode=display">\gamma_t(i) = P(i_t=q_i|O,\lambda)  = \frac{P(i_t = q_i, O| \lambda)}{P(O|\lambda)} = \frac{\alpha_t(i) \beta_t(i)}{\sum_j^N \alpha_t(j) \beta_t(j)}</script><p>则，每个时刻的最优可能的状态：</p>
