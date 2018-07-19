@@ -88,7 +88,7 @@
 <meta property="og:description" content="引言为什么会讲到PCA？ 前一阵在做一些featureselection的工作，想到PCA可以用来降维（在某些方面来说Feature selection也要降维），因此学习了一下PCA才发现这是完全不同的过程（PCA中的降维（计算主成分的目的是将高维数据投影到较低维空间）与特征选择中的降维（选取特征）是两个概念）。PCA应该算是feature extraction的过程，feature extra">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/xiangliangneiji.jpg">
-<meta property="og:updated_time" content="2018-07-19T16:47:17.550Z">
+<meta property="og:updated_time" content="2018-07-19T16:53:52.441Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PCA（主成分分析）">
 <meta name="twitter:description" content="引言为什么会讲到PCA？ 前一阵在做一些featureselection的工作，想到PCA可以用来降维（在某些方面来说Feature selection也要降维），因此学习了一下PCA才发现这是完全不同的过程（PCA中的降维（计算主成分的目的是将高维数据投影到较低维空间）与特征选择中的降维（选取特征）是两个概念）。PCA应该算是feature extraction的过程，feature extra">
@@ -361,9 +361,9 @@
 <p>因此有<script type="math/tex">Y=\Sigma V^T</script>， 我们的得到了将<script type="math/tex">X</script>变换为<script type="math/tex">Y</script>的方式。</p>
 <p>其中<script type="math/tex">\Sigma</script>是对角矩阵，对角线上的值为矩阵<script type="math/tex">M</script>的奇异值，因此我们要将<script type="math/tex">X</script>映射到K为空间的话，那么只需要取前K个奇异值组成奇异值矩阵即可</p>
 <script type="math/tex; mode=display">Y_k =\Sigma_k V^T = I_{k*m}\Sigma V^T</script><p>那么还剩下一个问题，<script type="math/tex">V^T</script>是什么鬼。根据奇异值分解，我们知道：</p>
-<script type="math/tex; mode=display">V$$的列是$$ X^TX$$的单位正交特征向量 $$V$$的列是一组单位正交基。
-
-因此，给定了矩阵$$X$$，我们只要计算得到$$X$$的奇异值以及$$ XX^T$$的特征向量，那么就可以计算得到矩阵的主成分矩阵$$ Y</script><p>还有一个疑问点，<script type="math/tex">X^TX</script>是什么呢？ 这个就是<script type="math/tex">X</script>的协方差矩阵</p>
+<p>矩阵<script type="math/tex">V</script>的列是<script type="math/tex">X^TX</script>的单位正交特征向量 <script type="math/tex">V</script>的列是一组单位正交基。</p>
+<p>因此，给定了矩阵<script type="math/tex">X</script>，我们只要计算得到<script type="math/tex">X</script>的奇异值以及<script type="math/tex">XX^T</script>的特征向量，那么就可以计算得到矩阵的主成分矩阵<script type="math/tex">Y</script></p>
+<p>还有一个疑问点，<script type="math/tex">X^TX</script>是什么呢？ 这个就是<script type="math/tex">X</script>的协方差矩阵</p>
 <script type="math/tex; mode=display">Cov(x_i,x_j) = E((x_i - E(x_i))(x_j - E(x_j))) = E(XX^T) - \mu\mu^T</script><p>其中<script type="math/tex">\mu</script>是矩阵的列的均值向量。如果我们对矩阵首先按列归一化，那么就有<script type="math/tex">\mu = 0</script></p>
 <p>因此有<script type="math/tex">Cov(x_i,x_j) = E((x_i - E(x_i))(x_j - E(x_j))) = E(XX^T)</script>，即：</p>
 <script type="math/tex; mode=display">\Sigma = XX^T</script><p>以上就是PCA的数学表达。</p>
@@ -373,7 +373,7 @@
 <script type="math/tex; mode=display">A \cdot B = |A||B|cos(\theta)</script><p>如果<script type="math/tex">|B| = 1</script>，即<script type="math/tex">B</script>为单位向量，那么实际上<script type="math/tex">A \cdot B</script>就是在<script type="math/tex">B</script>上的映射。</p>
 <p><img src="/images/xiangliangneiji.jpg" alt="dot"></p>
 <p>因此我们可以得到，向量的内积本质上就是一个向量在另一个向量上的映射投影。这个很关键，要理解。</p>
-<p>对于我们的笛卡尔坐标系中的一个点<script type="math/tex">(x,y)</script>, 实际上可以表示为<code>$x\cdot (1,0)^T + y\cdot (0,1)^T$</code>。<code>$(1,0)$</code>和<code>$(0,1)$</code>就是一组正交基。</p>
+<p>对于我们的笛卡尔坐标系中的一个点<script type="math/tex">(x,y)</script>, 实际上可以表示为<script type="math/tex">x \cdot (1,0)^T + y \cdot (0,1)^T</script> ，其中<script type="math/tex">(1,0)</script>和<script type="math/tex">(0,1)</script>就是一组正交基。</p>
 <p>因此如果我们将<script type="math/tex">(x,y)</script>映射到一组新的基空间中，只需要用<script type="math/tex">(x,y)</script>与新的基向量做内积，就可以得到<script type="math/tex">(x,y)</script>在新的空间中的每个基向量上的坐标分量。</p>
 <p>将其推广到多维向量中，并且利用矩阵来表示：</p>
 <p>假设有M个N维向量，将其变换到R个N维向量表示的新空间中，那么可以将R个基组成矩阵<script type="math/tex">A_{N*R}</script>，向量按照行组成矩阵<script type="math/tex">B_{M*N}</script>,因此<script type="math/tex">BA</script>就可以得到向量在新空间中的向量表示。<script type="math/tex">BA</script>的第m行就是<script type="math/tex">B_{M*N}</script>中第m行变换的结果。</p>
@@ -687,7 +687,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共52.8k字</span>
+  <span class="post-count">博客全站共52.9k字</span>
 </div>
         
 
