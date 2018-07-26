@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://yoursite.com/2018/07/26/KernelPCA/</loc>
+    <lastmod>2018-07-26T15:04:29.809Z</lastmod>
+    <data>
+        <display>
+        <title>KernelPCA</title>
+        <pubTime>2018-07-25T16:00:00.000Z</pubTime>
+        
+        <tag>降维</tag>
+         
+        <tag>MDS</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="http://yoursite.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2018/07/25/%E6%A0%B8%E6%80%9D%E6%83%B3%EF%BC%88kernel%20trick%EF%BC%89/</loc>
     <lastmod>2018-07-26T13:59:03.868Z</lastmod>
     <data>
