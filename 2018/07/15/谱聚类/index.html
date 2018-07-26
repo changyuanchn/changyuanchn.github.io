@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="axis tech zone">
 <meta property="og:description" content="引言谱聚类（spectual clustering)是一类非常使用的聚类方法。因为算法基于谱图的理论基础上，因此成为谱聚类。与传统的聚类算法相比，它具有能在任意形状的样本空间上聚类且收敛于全局最优解的优点，因此应用广泛，同时是目前研究和应用最广泛的聚类算法。 谱聚类算法谱聚类思想谱聚类的本质思想就是将数据当做空间中的点，这些点之间可以用边连接，形成无向图。 其中，距离较远的点之间的权重较低，距离较">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-22T12:08:49.952Z">
+<meta property="og:updated_time" content="2018-07-22T12:43:20.443Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="谱聚类">
 <meta name="twitter:description" content="引言谱聚类（spectual clustering)是一类非常使用的聚类方法。因为算法基于谱图的理论基础上，因此成为谱聚类。与传统的聚类算法相比，它具有能在任意形状的样本空间上聚类且收敛于全局最优解的优点，因此应用广泛，同时是目前研究和应用最广泛的聚类算法。 谱聚类算法谱聚类思想谱聚类的本质思想就是将数据当做空间中的点，这些点之间可以用边连接，形成无向图。 其中，距离较远的点之间的权重较低，距离较">
@@ -359,7 +359,7 @@
 <p>第一种：</p>
 <script type="math/tex; mode=display">w_{ji} = w_{ij} =\left\{\begin{matrix} 0,  \ x_i \notin KNN(x_j) \ and \ x_j \notin KNN(x_j) \\ exp(-\frac{||x_i - x_j||^2}{2\sigma^2}), \ x_i \in KNN(x_j) \ or \ x_j \in KNN(x_j) \end{matrix}\right.</script><p>第二种：</p>
 <script type="math/tex; mode=display">w_{ji} = w_{ij} =\left\{\begin{matrix} 0,  \ x_i \notin KNN(x_j) \ or \ x_j \notin KNN(x_j) \\ exp(-\frac{||x_i - x_j||^2}{2\sigma^2}), \ x_i \in KNN(x_j) \ and \ x_j \in KNN(x_j) \end{matrix}\right.</script><h4 id="全连接法"><a href="#全连接法" class="headerlink" title="全连接法"></a>全连接法</h4><p>当然用的最多的还是全连接法，这个最简单：</p>
-<script type="math/tex; mode=display">w_{ji} = S_{ij} = exp(-\frac{||x_i - x_j||^2_2}{2\sigma^2})</script><h4 id="相似矩阵"><a href="#相似矩阵" class="headerlink" title="相似矩阵"></a>相似矩阵</h4><p>相似矩阵就是上面的S矩阵，其中：</p>
+<script type="math/tex; mode=display">w_{ji} = S_{ij} = exp(-\frac{||x_i - x_j||^2_2}{2\sigma^2})</script><h3 id="相似矩阵"><a href="#相似矩阵" class="headerlink" title="相似矩阵"></a>相似矩阵</h3><p>相似矩阵就是上面的S矩阵，其中：</p>
 <script type="math/tex; mode=display">S_{ij} = exp(-\frac{||x_i - x_j||^2_2}{2\sigma^2})</script><h3 id="拉普拉斯矩阵"><a href="#拉普拉斯矩阵" class="headerlink" title="拉普拉斯矩阵"></a>拉普拉斯矩阵</h3><script type="math/tex; mode=display">L = D - W</script><p>矩阵<script type="math/tex">L</script>就是laplace矩阵。laplace矩阵有几个优良性质：</p>
 <p>1） 矩阵<script type="math/tex">L</script>是对称矩阵</p>
 <p>2） 矩阵<script type="math/tex">L</script>的特征值都是实数</p>
@@ -465,6 +465,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/07/25/核思想（kernel trick）/" rel="prev" title="核思想（kernel trick）">
+                核思想（kernel trick） <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -549,7 +553,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -571,7 +575,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -620,7 +624,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#谱聚类算法"><span class="nav-number">2.</span> <span class="nav-text">谱聚类算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#谱聚类思想"><span class="nav-number">2.1.</span> <span class="nav-text">谱聚类思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">2.2.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#无向权重图"><span class="nav-number">2.2.1.</span> <span class="nav-text">无向权重图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#邻接矩阵"><span class="nav-number">2.2.2.</span> <span class="nav-text">邻接矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#epsilon近邻法"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">\epsilon近邻法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#k近邻法"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">k近邻法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全连接法"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">全连接法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#相似矩阵"><span class="nav-number">2.2.2.4.</span> <span class="nav-text">相似矩阵</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拉普拉斯矩阵"><span class="nav-number">2.2.3.</span> <span class="nav-text">拉普拉斯矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无向图切图"><span class="nav-number">2.2.4.</span> <span class="nav-text">无向图切图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切图"><span class="nav-number">2.3.</span> <span class="nav-text">切图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RatioCut"><span class="nav-number">2.3.1.</span> <span class="nav-text">RatioCut</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NCut切图"><span class="nav-number">2.3.2.</span> <span class="nav-text">NCut切图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谱聚类流程"><span class="nav-number">2.4.</span> <span class="nav-text">谱聚类流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谱聚类优缺点"><span class="nav-number">2.5.</span> <span class="nav-text">谱聚类优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">2.5.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">2.5.2.</span> <span class="nav-text">缺点</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#谱聚类算法"><span class="nav-number">2.</span> <span class="nav-text">谱聚类算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#谱聚类思想"><span class="nav-number">2.1.</span> <span class="nav-text">谱聚类思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">2.2.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#无向权重图"><span class="nav-number">2.2.1.</span> <span class="nav-text">无向权重图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#邻接矩阵"><span class="nav-number">2.2.2.</span> <span class="nav-text">邻接矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#epsilon近邻法"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">\epsilon近邻法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#k近邻法"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">k近邻法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全连接法"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">全连接法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相似矩阵"><span class="nav-number">2.2.3.</span> <span class="nav-text">相似矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拉普拉斯矩阵"><span class="nav-number">2.2.4.</span> <span class="nav-text">拉普拉斯矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无向图切图"><span class="nav-number">2.2.5.</span> <span class="nav-text">无向图切图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切图"><span class="nav-number">2.3.</span> <span class="nav-text">切图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RatioCut"><span class="nav-number">2.3.1.</span> <span class="nav-text">RatioCut</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NCut切图"><span class="nav-number">2.3.2.</span> <span class="nav-text">NCut切图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谱聚类流程"><span class="nav-number">2.4.</span> <span class="nav-text">谱聚类流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谱聚类优缺点"><span class="nav-number">2.5.</span> <span class="nav-text">谱聚类优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">2.5.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">2.5.2.</span> <span class="nav-text">缺点</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -673,7 +677,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共54.2k字</span>
+  <span class="post-count">博客全站共55.3k字</span>
 </div>
         
 
