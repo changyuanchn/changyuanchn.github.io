@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="机器学习,非监督学习,聚类," />
+  <meta name="keywords" content="相关分析,CCA," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="引言前面，我们介绍了一些聚类的方法，像k-means啊，密度聚类，LVQ啊，不管怎么样，都要首先随机指定k个中心点，然后用这些中心点逐步迭代找到最终的中心点。这就有问题了，如果随机选取的点不好，不具有代表性，那么就会很糟糕，轻则只是聚类慢，重则会导致聚类效果比较差。本节我们引入层次聚类，它不需要提前指定随机的中心点，能够有效的对初始样本进行聚类。 层次聚类本质上讲，层次聚类是自底向上的聚类方式，也">
-<meta name="keywords" content="机器学习,非监督学习,聚类">
+<meta name="description" content="CCA是数据挖掘中重要的算法，可以挖掘出数据间的关联关系的算法。 基础知识如何衡量两个变量之间的相关性呢？我们有相关系数，如下所示： \rho(X, Y) = \frac{cov(X,Y)}{\sqrt{DX}\sqrt{DY}}值\rho(X, Y)的绝对值越接近1，说明X与Y的线性相关性越高 值\rho(X, Y)的绝对值越接近0，说明X与Y的线性相关性越低 算法思想CCA将多维数据X,Y利用">
+<meta name="keywords" content="相关分析,CCA">
 <meta property="og:type" content="article">
-<meta property="og:title" content="层次聚类">
-<meta property="og:url" content="http://yoursite.com/2018/05/23/层次聚类/index.html">
+<meta property="og:title" content="典型相关分析（CCA）">
+<meta property="og:url" content="http://yoursite.com/2018/07/29/典型相关分析（CCA）/index.html">
 <meta property="og:site_name" content="axis tech zone">
-<meta property="og:description" content="引言前面，我们介绍了一些聚类的方法，像k-means啊，密度聚类，LVQ啊，不管怎么样，都要首先随机指定k个中心点，然后用这些中心点逐步迭代找到最终的中心点。这就有问题了，如果随机选取的点不好，不具有代表性，那么就会很糟糕，轻则只是聚类慢，重则会导致聚类效果比较差。本节我们引入层次聚类，它不需要提前指定随机的中心点，能够有效的对初始样本进行聚类。 层次聚类本质上讲，层次聚类是自底向上的聚类方式，也">
+<meta property="og:description" content="CCA是数据挖掘中重要的算法，可以挖掘出数据间的关联关系的算法。 基础知识如何衡量两个变量之间的相关性呢？我们有相关系数，如下所示： \rho(X, Y) = \frac{cov(X,Y)}{\sqrt{DX}\sqrt{DY}}值\rho(X, Y)的绝对值越接近1，说明X与Y的线性相关性越高 值\rho(X, Y)的绝对值越接近0，说明X与Y的线性相关性越低 算法思想CCA将多维数据X,Y利用">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-03T11:33:53.286Z">
+<meta property="og:updated_time" content="2018-07-29T15:07:51.490Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="层次聚类">
-<meta name="twitter:description" content="引言前面，我们介绍了一些聚类的方法，像k-means啊，密度聚类，LVQ啊，不管怎么样，都要首先随机指定k个中心点，然后用这些中心点逐步迭代找到最终的中心点。这就有问题了，如果随机选取的点不好，不具有代表性，那么就会很糟糕，轻则只是聚类慢，重则会导致聚类效果比较差。本节我们引入层次聚类，它不需要提前指定随机的中心点，能够有效的对初始样本进行聚类。 层次聚类本质上讲，层次聚类是自底向上的聚类方式，也">
+<meta name="twitter:title" content="典型相关分析（CCA）">
+<meta name="twitter:description" content="CCA是数据挖掘中重要的算法，可以挖掘出数据间的关联关系的算法。 基础知识如何衡量两个变量之间的相关性呢？我们有相关系数，如下所示： \rho(X, Y) = \frac{cov(X,Y)}{\sqrt{DX}\sqrt{DY}}值\rho(X, Y)的绝对值越接近1，说明X与Y的线性相关性越高 值\rho(X, Y)的绝对值越接近0，说明X与Y的线性相关性越低 算法思想CCA将多维数据X,Y利用">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/23/层次聚类/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/29/典型相关分析（CCA）/"/>
 
 
 
 
 
-  <title>层次聚类 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>典型相关分析（CCA） | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -253,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/23/层次聚类/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/29/典型相关分析（CCA）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -270,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">层次聚类</h1>
+          <h1 class="post-title" itemprop="name headline">典型相关分析（CCA）</h1>
         
 
         <div class="post-meta">
@@ -282,8 +282,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-23T00:00:00+08:00">
-                2018-05-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-29T00:00:00+08:00">
+                2018-07-29
               </time>
             
 
@@ -342,33 +342,43 @@
       
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>前面，我们介绍了一些聚类的方法，像k-means啊，密度聚类，LVQ啊，不管怎么样，都要首先随机指定k个中心点，然后用这些中心点逐步迭代找到最终的中心点。这就有问题了，如果随机选取的点不好，不具有代表性，那么就会很糟糕，轻则只是聚类慢，重则会导致聚类效果比较差。本节我们引入层次聚类，它不需要提前指定随机的中心点，能够有效的对初始样本进行聚类。</p>
-<h1 id="层次聚类"><a href="#层次聚类" class="headerlink" title="层次聚类"></a>层次聚类</h1><p>本质上讲，层次聚类是自底向上的聚类方式，也就是说最初我们假设每一个点都是一个类，然通过不断的合并，最终形成k个聚类中心点，实现聚类，就像三国时代，几十个诸侯通过不断的兼并，最终形成了三足鼎立，也就是三个聚类点。</p>
-<h2 id="簇距离的定义"><a href="#簇距离的定义" class="headerlink" title="簇距离的定义"></a>簇距离的定义</h2><p>既然是将不同的聚类簇进行合并，那么就必然要有合并的规则。一般我们都是将距离最近的两个簇进行合并。对于两个点，距离比较好计算，欧氏距离或者闵可夫斯基距离都可以。但是两个簇（簇中不仅包含一个点）的距离怎么定义呢？</p>
-<p>一般有下面的是定义</p>
-<p>最小距离：</p>
-<script type="math/tex; mode=display">d_{min}(C_i,C_j) = min_{x \subset C_i,y \subset C_j } dist(x,y)</script><p>最大距离：</p>
-<script type="math/tex; mode=display">d_{max}(C_i,C_j) = max_{x \subset C_i,y \subset C_j } dist(x,y)</script><p>平均距离：</p>
-<script type="math/tex; mode=display">d_{avg}(C_i,C_j) = \frac {1}{|C_i||C_j|} \sum_{x \subset C_i}\sum_{y \subset C_j } dist(x,y)</script><p>其实本质上还是利用簇中的点的聚类来定义的簇的距离。</p>
-<p>那么有了簇的距离的定义，那么就有了合并规则，那么只要按照规则合并聚类各个簇，直到达到终止条件即可（一般的终止条件是指定聚类成k个类）。</p>
-<p>从上面的描述看，层次聚类非常简单，确实简单，就是计算麻烦一点，下面我们来具体描述一下他的实现算法</p>
-<h2 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h2><blockquote>
-<p>输入：</p>
-<blockquote>
-<p>样本集 <script type="math/tex">\left \{ x_1,x_2,...,x_n \right \}</script><br>聚类度量函数<script type="math/tex">d</script><br>聚类个数<script type="math/tex">k</script>  </p>
-</blockquote>
-<p>算法过程：</p>
-<blockquote>
-<p>每个样本属于单独的一类，即<script type="math/tex">C_i  = \left \{x_i \right \}</script><br>计算样本与样本之间的距离，用矩阵<script type="math/tex">M</script>表示，其中<script type="math/tex">M_{ij} = dist(C_i,C_j)</script><br>另当前聚类数为q = n，开始簇合并聚类</p>
-<p>循环<script type="math/tex">while(q>k)</script></p>
-<blockquote>
-<p>找出距离最近的两个簇<script type="math/tex">C_{i*}</script>和<script type="math/tex">C_{j*}</script>，另<script type="math/tex">C_{i*}  = C_{i*} \bigcup C_{j*}</script><br>将<script type="math/tex">{j*}</script>后面的簇的编号向前移动一位<br>删除矩阵<script type="math/tex">M_{ij}</script>的第<script type="math/tex">{j*}</script>行和<script type="math/tex">{j*}</script>列<br>更新<script type="math/tex">M_{ij}</script>矩阵(主要更新<script type="math/tex">{i*}</script>簇与其他簇的距离)，<script type="math/tex">M_{i*j} = dist(C_{i*},C_j) \qquad  j=1:q-1</script><br>更新当前聚类个数<script type="math/tex">q=q-1</script></p>
-</blockquote>
-<p>输出生成的簇 <script type="math/tex">\left \{ C_1,C_2,...,C_k \right \}</script>  </p>
-</blockquote>
-</blockquote>
-<h2 id="层次聚类的优缺点"><a href="#层次聚类的优缺点" class="headerlink" title="层次聚类的优缺点"></a>层次聚类的优缺点</h2><p>本质上讲层次聚类不需要指定初始的聚类中心点，这点还是非常优秀的，但是依旧要指定聚类k数或者终止条件，如果不知道数据的细节，也很难得到好的聚类结果。很多时候在进行k_means聚类前，会应用层次聚类来确定初始的聚类点，这也是层次聚类的一个应用。</p>
-<h1 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h1>
+        <p>CCA是数据挖掘中重要的算法，可以挖掘出数据间的关联关系的算法。</p>
+<h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><p>如何衡量两个变量之间的相关性呢？我们有相关系数，如下所示：</p>
+<script type="math/tex; mode=display">\rho(X, Y) = \frac{cov(X,Y)}{\sqrt{DX}\sqrt{DY}}</script><p>值<script type="math/tex">\rho(X, Y)</script>的绝对值越接近1，说明X与Y的线性相关性越高</p>
+<p>值<script type="math/tex">\rho(X, Y)</script>的绝对值越接近0，说明X与Y的线性相关性越低</p>
+<h1 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h1><p>CCA将多维数据<script type="math/tex">X,Y</script>利用线性变换投影为1维的数据<script type="math/tex">X',Y'</script>，然后计算<script type="math/tex">X',Y'</script>的相关系数，进而得到二者的相关性。</p>
+<p>那么我们的投影标准就是：</p>
+<p>投影后，两组数据的相关系数最大。（这样我们就能挖掘出最相关的特征了。）</p>
+<h1 id="算法推导"><a href="#算法推导" class="headerlink" title="算法推导"></a>算法推导</h1><p>假设投影向量分别为<script type="math/tex">a,b</script>, 则投影后的数据为：</p>
+<script type="math/tex; mode=display">X' = a^TX ,Y' = b^TY</script><p>则：</p>
+<script type="math/tex; mode=display">arg_{a,b} max \rho (X',Y') = arg_{a,b} max \frac{cov(x', Y')}{\sqrt{DX'}\sqrt{DY'}}</script><p>假设我们的原始数据是标准化的，即均值为0，方差为1，则：</p>
+<script type="math/tex; mode=display">cov(X',Y') = cov(a^TX,b^TY) = a^TE(XY^T)b</script><script type="math/tex; mode=display">DX' = D(a^TX) = a^TDXa = a^TE(XX^T)a</script><script type="math/tex; mode=display">DY' = D(a^TY) = a^TDYa = a^TE(YY^T)a</script><p>因为均值为0，有：</p>
+<script type="math/tex; mode=display">DX = E(XX^T) , DY = E(YY^T)</script><script type="math/tex; mode=display">cov(X,Y) = E(XY^T) , cov(Y,X) = E(YX^T)</script><p>令<script type="math/tex">S_{XY} = cov(X,Y)</script></p>
+<p>我们的问题就转化为：</p>
+<script type="math/tex; mode=display">arg_{a,b} max \rho (X',Y') = arg_{a,b} max \frac{a^TS_{XY}b}{\sqrt{a^TS_{XX}a}\sqrt{b^TS_{YY}b}}</script><p>问题转化为：</p>
+<script type="math/tex; mode=display">arg_{a,b} max \rho (X',Y') = arg_{a,b} max \ a^TS_{XY}b</script><script type="math/tex; mode=display">s.t. a^TS_{XX}a=1 , b^TS_{YY}b =1</script><p>则根据拉格朗日乘子法，有：</p>
+<script type="math/tex; mode=display">J(a,b) = a^TS_{XY}b - \lambda_0(a^TS_{XX}a - 1) - \lambda_1(b^TS_{YY}b - 1)</script><p>求导有：</p>
+<script type="math/tex; mode=display">S_{XY}b = \lambda_0 S_{XX}a</script><script type="math/tex; mode=display">S_{YX}a = \lambda_1 S_{YY}b</script><p>所以有：</p>
+<script type="math/tex; mode=display">a^TS_{XY}b = \lambda_0 a^TS_{XX}a = \lambda_0</script><script type="math/tex; mode=display">b^TS_{YX}a = \lambda_1 b^TS_{YY}b = \lambda_1</script><p>所以有：</p>
+<script type="math/tex; mode=display">\lambda_0 = \lambda_1^T =  \lambda_1 = a^TS_{XY}b = \lambda</script><p>可以推出：</p>
+<script type="math/tex; mode=display">S_{XX}^{-1}S_{XY}b = \lambda a</script><script type="math/tex; mode=display">S_{YY}^{-1}S_{YX}a = \lambda b</script><p>因此有：</p>
+<script type="math/tex; mode=display">S_{XX}^{-1}S_{XY}S_{YY}^{-1}S_{YX}a = \lambda^2 a</script><p>对上面的式子进行特征值分解，那么特征值的平方根的最大值的特征向量就是我们求得的向量a</p>
+<p>同理可以求得向量b</p>
+<script type="math/tex; mode=display">S_{YY}^{-1}S_{YX}S_{XX}^{-1}S_{XY}b = \lambda^2 b</script><h2 id="基于SVD的推导"><a href="#基于SVD的推导" class="headerlink" title="基于SVD的推导"></a>基于SVD的推导</h2><p>其实算法也可以通过svd分解的算法求得，如下所示：</p>
+<script type="math/tex; mode=display">arg_{a,b} max \rho (X',Y') = arg_{a,b} max \ a^TS_{XY}b</script><script type="math/tex; mode=display">s.t. a^TS_{XX}a=1 , b^TS_{YY}b =1</script><p>令：</p>
+<script type="math/tex; mode=display">a=S_{XX}^{-\frac{1}{2}} \mu, b=S_{YY}^{-\frac{1}{2}} v</script><p>则问题转化为：</p>
+<script type="math/tex; mode=display">arg_{a,b} max \rho (X',Y') = arg_{a,b} max \ \mu^TS_{XX}^{-\frac{1}{2}} S_{XY}TS_{YY}^{-\frac{1}{2}}v</script><script type="math/tex; mode=display">s.t. \ \mu^T \mu=1 , v^Tv =1</script><p>这里<script type="math/tex">\mu, v</script>都是单位正交基。</p>
+<p>令：</p>
+<script type="math/tex; mode=display">M = S_{XX}^{-\frac{1}{2}} S_{XY}TS_{YY}^{-\frac{1}{2}}</script><p>对M进行奇异值分解,有：</p>
+<script type="math/tex; mode=display">M =U \Sigma V^T</script><p>因此有：</p>
+<script type="math/tex; mode=display">\mu^TMv =  \mu^T U \Sigma V^T v = \sigma_{\mu v}</script><p>因为<script type="math/tex">U, V</script>都是单位正交基矩阵， 且<script type="math/tex">\mu, v</script>都是单位正交基。</p>
+<p>所以有<script type="math/tex">\mu^TU, V^Tv</script>是只有一个标量值为1，其他值为0的向量。</p>
+<p>所以<script type="math/tex">\sigma_{\mu v}</script>只要是最大的奇异值即可。</p>
+<p>因此问题转换为对<script type="math/tex">M = S_{XX}^{-\frac{1}{2}} S_{XY}TS_{YY}^{-\frac{1}{2}}</script>做奇异值分解，得到<script type="math/tex">U, V</script>，进而得到<script type="math/tex">\mu, v</script></p>
+<p>进而得到：</p>
+<script type="math/tex; mode=display">a=S_{XX}^{-\frac{1}{2}} \mu</script><script type="math/tex; mode=display">b=S_{YY}^{-\frac{1}{2}} v</script><h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>我们看到CCA可以用作分析向量的相关性，一定意义上，也可以用作降维。</p>
+<p>但是CCA最重要的一个应用还是特征融合，即根据两组特征找到相关性最大的特征，这样可以利用较好的特征来从较差的特征中进行进一步的特征抽取，提高分类效果。</p>
+
       
     </div>
     
@@ -385,11 +395,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+            <a href="/tags/相关分析/" rel="tag"># 相关分析</a>
           
-            <a href="/tags/非监督学习/" rel="tag"># 非监督学习</a>
-          
-            <a href="/tags/聚类/" rel="tag"># 聚类</a>
+            <a href="/tags/CCA/" rel="tag"># CCA</a>
           
         </div>
       
@@ -402,8 +410,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/22/LVQ聚类算法/" rel="next" title="LVQ聚类算法">
-                <i class="fa fa-chevron-left"></i> LVQ聚类算法
+              <a href="/2018/07/29/LDA线性判别分析/" rel="next" title="LDA线性判别分析">
+                <i class="fa fa-chevron-left"></i> LDA线性判别分析
               </a>
             
           </div>
@@ -411,10 +419,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/24/机器学习书籍/" rel="prev" title="机器学习书籍">
-                机器学习书籍 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -571,7 +575,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#层次聚类"><span class="nav-number">2.</span> <span class="nav-text">层次聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#簇距离的定义"><span class="nav-number">2.1.</span> <span class="nav-text">簇距离的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法实现"><span class="nav-number">2.2.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#层次聚类的优缺点"><span class="nav-number">2.3.</span> <span class="nav-text">层次聚类的优缺点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验结果"><span class="nav-number">3.</span> <span class="nav-text">实验结果</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础知识"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法思想"><span class="nav-number">2.</span> <span class="nav-text">算法思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法推导"><span class="nav-number">3.</span> <span class="nav-text">算法推导</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于SVD的推导"><span class="nav-number">3.1.</span> <span class="nav-text">基于SVD的推导</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li></ol></div>
             
 
           </div>
