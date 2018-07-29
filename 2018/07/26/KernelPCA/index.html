@@ -90,7 +90,7 @@
 <meta property="og:image" content="http://yoursite.com/images/Kernel_pca_input.png">
 <meta property="og:image" content="http://yoursite.com/images/Kernel_pca_output.png">
 <meta property="og:image" content="http://yoursite.com/images/Kernel_pca_output_gaussian.png">
-<meta property="og:updated_time" content="2018-07-26T15:04:29.809Z">
+<meta property="og:updated_time" content="2018-07-29T07:40:37.681Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="KernelPCA">
 <meta name="twitter:description" content="算法思想之前的博文里面介绍了PCA算法，作为一个经典的基于线性代数的降维方法，PCA算法对线性数据效果良好。然而如果我们的数据是非线性的（这才是社会的现实啊），那么PCA算法就呵呵了。那么对于非线性问题怎么处理呢？上一章我们讲解了kernel的思想，核就是为了解决非线性问题而诞生的，其将非线性数据映射为高维的线性数据，这样就可以应用PCA了。因此将kernel引入到PCA的算法中，就诞生了Kern">
@@ -374,7 +374,7 @@
 <p>给定新的数据<script type="math/tex">X_{new}</script>,则其在高维空间的降维映射为：</p>
 <script type="math/tex; mode=display">\phi(X_{new}) W = \phi(X_{new}) \phi(X)^T \alpha = K(X_{new},X)A</script><h1 id="KernelPCA的效果"><a href="#KernelPCA的效果" class="headerlink" title="KernelPCA的效果"></a>KernelPCA的效果</h1><p>PCA只是对原始数据做了旋转操作</p>
 <p>而KernelPCA对原始数据投影到了线性可分的场景</p>
-<p>下图就是kernelPCA的效果：</p>
+<p>下图就是线性PCA的效果：</p>
 <p><img src="/images/Kernel_pca_input.png" alt="Kernel_pca"></p>
 <p>这个是多项式核的结果：</p>
 <p><img src="/images/Kernel_pca_output.png" alt="Kernel_pca1"></p>
@@ -421,6 +421,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/26/基于流形学习的数据降维/" rel="prev" title="基于流形学习的数据降维">
+                基于流形学习的数据降维 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -506,7 +510,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -528,7 +532,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">55</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -630,7 +634,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共56.1k字</span>
+  <span class="post-count">博客全站共57.7k字</span>
 </div>
         
 
