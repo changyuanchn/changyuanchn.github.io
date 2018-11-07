@@ -3,6 +3,7 @@
 
 
     
+    
   <url>
     <loc>http://yoursite.com/2018/07/29/Dijkstra%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2018-08-01T15:19:15.683Z</lastmod>
@@ -1073,11 +1074,11 @@
         
         <tag>穷举法</tag>
          
+        <tag>分治算法</tag>
+         
         <tag>贪婪算法</tag>
          
         <tag>动态规划算法</tag>
-         
-        <tag>分治算法</tag>
          
         <tag>分支限界算法</tag>
          
