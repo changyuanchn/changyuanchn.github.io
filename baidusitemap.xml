@@ -1002,11 +1002,11 @@
         <title>八皇后问题之python解法</title>
         <pubTime>2016-05-09T16:00:00.000Z</pubTime>
         
-        <tag>python</tag>
-         
         <tag>八皇后</tag>
          
         <tag>回溯算法</tag>
+         
+        <tag>python</tag>
          
          
            
@@ -1094,11 +1094,11 @@
         
         <tag>穷举法</tag>
          
+        <tag>分治算法</tag>
+         
         <tag>贪婪算法</tag>
          
         <tag>动态规划算法</tag>
-         
-        <tag>分治算法</tag>
          
         <tag>分支限界算法</tag>
          
