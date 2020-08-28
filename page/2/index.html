@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/26/KernelPCA/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/01/Vulkan之DepthBuffer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -281,7 +281,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/26/KernelPCA/" itemprop="url">KernelPCA</a></h1>
+                <a class="post-title-link" href="/2020/05/01/Vulkan之DepthBuffer/" itemprop="url">Vulkan之DepthBuffer</a></h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-26T00:00:00+08:00">
-                2018-07-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-01T00:00:00+08:00">
+                2020-05-01
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
                   </a>
                 </span>
 
@@ -355,11 +355,12 @@
       
         
           
-          算法思想之前的博文里面介绍了PCA算法，作为一个经典的基于线性代数的降维方法，PCA算法对线性数据效果良好。然而如果我们的数据是非线性的（这才是社会的现实啊），那么PCA算法就呵呵了。那么对于非线性问题怎么处理呢？上一章我们讲解了kernel的思想，核就是为了解决非线性问题而诞生的，其将非线性数据映
+          深度缓冲
+显示中的场景都是3d的，但是我们的图像只能展示2d的，这就必然会导致一些图元被另一些图元所盖住。而我们在渲染时是按照图元来渲染的，这就会导致一个问题，后渲染的图元会覆盖前面渲染的图元，但是有可能后渲染的图元在现实世界中是被前面图元覆盖的，这样就导致了渲染的错误，因此深度缓冲就是解决这个问题
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/07/26/KernelPCA/#more" rel="contents">
+            <a class="btn" href="/2020/05/01/Vulkan之DepthBuffer/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -410,7 +411,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/26/基于流形学习的数据降维/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/27/Vulkan之barrierExample/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -429,7 +430,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/26/基于流形学习的数据降维/" itemprop="url">基于流形学习的数据降维</a></h1>
+                <a class="post-title-link" href="/2020/04/27/Vulkan之barrierExample/" itemprop="url">Vulkan之barrierExample</a></h1>
         
 
         <div class="post-meta">
@@ -441,8 +442,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-26T00:00:00+08:00">
-                2018-07-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-27T00:00:00+08:00">
+                2020-04-27
               </time>
             
 
@@ -464,8 +465,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
                   </a>
                 </span>
 
@@ -503,11 +504,13 @@
       
         
           
-          流行是什么manifold就是局部具有欧氏空间性质的空间。在manifold上足够小的区域近似于欧几里得空间。具体说明我们的地球就是一个manifold。当我们在地面上，我们认为地球是平的，两点间的距离可以直接用欧氏距离直接计算，这个也不会引入太大的误差，而站在地球的角度上看，两点的距离这样算是不对
-          ...
+          资料来源：https://github.com/KhronosGroup/Vulkan-Docs/wiki/Synchronization-Examples
+翻译学习一下上面的链接，里面举了各种barrier的例子，有助于理解barrier。
+
+          
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/07/26/基于流形学习的数据降维/#more" rel="contents">
+            <a class="btn" href="/2020/04/27/Vulkan之barrierExample/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -558,7 +561,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/25/核思想（kernel trick）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/20/Vulkan之全局内存屏障/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -577,7 +580,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/25/核思想（kernel trick）/" itemprop="url">核思想（kernel trick）</a></h1>
+                <a class="post-title-link" href="/2020/04/20/Vulkan之全局内存屏障/" itemprop="url">Vulkan之全局内存屏障</a></h1>
         
 
         <div class="post-meta">
@@ -589,8 +592,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-25T00:00:00+08:00">
-                2018-07-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T00:00:00+08:00">
+                2020-04-20
               </time>
             
 
@@ -612,8 +615,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
                   </a>
                 </span>
 
@@ -651,14 +654,12 @@
       
         
           
-          核的定义根据李航的统计学习，对核有如下的定义：
-设\chi为输入空间，H为特征空间（希尔伯特空间），如果存在一个从\chi到H的映射:
-\phi(x): \chi \rightarrow H使得对所有的x,z函数K(x,z)满足条件
-K(x,z) = \phi(x) \cdot \phi(z)则称K
+          Execution Barrier只能控制执行的顺序，却不能控制memory的修改顺序，先执行的command不一定能先修改完memory，这是现代复杂的缓存机制导致的。因此我们需要更加深入的控制方式。
+为了解决Execution Barrier的问题，Memory Barrier正式登场。Memo
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/07/25/核思想（kernel trick）/#more" rel="contents">
+            <a class="btn" href="/2020/04/20/Vulkan之全局内存屏障/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -709,7 +710,7 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/15/谱聚类/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/19/Vulkan之ExcutionBarrier/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -728,7 +729,7 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/15/谱聚类/" itemprop="url">谱聚类</a></h1>
+                <a class="post-title-link" href="/2020/04/19/Vulkan之ExcutionBarrier/" itemprop="url">Vulkan之ExcutionBarrier</a></h1>
         
 
         <div class="post-meta">
@@ -740,8 +741,8 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-15T00:00:00+08:00">
-                2018-07-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-19T00:00:00+08:00">
+                2020-04-19
               </time>
             
 
@@ -763,8 +764,8 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
                   </a>
                 </span>
 
@@ -802,12 +803,11 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
       
         
           
-          引言谱聚类（spectual clustering)是一类非常使用的聚类方法。因为算法基于谱图的理论基础上，因此成为谱聚类。与传统的聚类算法相比，它具有能在任意形状的样本空间上聚类且收敛于全局最优解的优点，因此应用广泛，同时是目前研究和应用最广泛的聚类算法。
-谱聚类算法谱聚类思想谱聚类的本质思想就是
+          当vkCmdPipelineBarrier中的三个数组都为空的时候，这时barrier实际上就退化成为了一个Execution Barrier，实际上就是一个执行的屏障。以下面的例子举例：1234567891011121.vkCmdDispatch(...);2.vkCmdDispatch(...)
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/07/15/谱聚类/#more" rel="contents">
+            <a class="btn" href="/2020/04/19/Vulkan之ExcutionBarrier/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -858,7 +858,7 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/10/隐马尔科夫模型/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/12/Vulkan之Barrier/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -877,7 +877,7 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/10/隐马尔科夫模型/" itemprop="url">隐马尔科夫模型</a></h1>
+                <a class="post-title-link" href="/2020/04/12/Vulkan之Barrier/" itemprop="url">Vulkan之Barrier</a></h1>
         
 
         <div class="post-meta">
@@ -889,8 +889,8 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-10T00:00:00+08:00">
-                2018-07-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-12T00:00:00+08:00">
+                2020-04-12
               </time>
             
 
@@ -912,8 +912,8 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
                   </a>
                 </span>
 
@@ -951,14 +951,11 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
       
         
           
-          引言隐马尔可夫模型是关于时许序列的概率模型。是由一个隐藏的马尔科夫链随机生成不可观测的状态序列，然后由状态序列生成一个观测序列的过程。
-每个状态生成一个观测，同时每个状态会转移到下一个状态。因此马尔科夫过程有两个关键的序列，一个是状态序列，一个是观测序列。
-
-上图就是一个标准的马尔科夫过程的观测输出
+          Barrier，翻译是栅栏。是同一个queue中的command，或者同一个subpass中的command所明确指定的依赖关系。我们可以想象一下有一大串的command乱序执行（实际上可能是顺序开始，乱序结束），barrier就是在中间树立一道栅栏，要求栅栏前后保持一定的顺序，但是前后的内部之间的
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/07/10/隐马尔科夫模型/#more" rel="contents">
+            <a class="btn" href="/2020/04/12/Vulkan之Barrier/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1009,7 +1006,7 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/09/高斯混合模型/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/05/Vulkan之ImageLayout/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -1028,7 +1025,7 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/09/高斯混合模型/" itemprop="url">高斯混合模型</a></h1>
+                <a class="post-title-link" href="/2020/04/05/Vulkan之ImageLayout/" itemprop="url">Vulkan之ImageLayout</a></h1>
         
 
         <div class="post-meta">
@@ -1040,8 +1037,8 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-09T00:00:00+08:00">
-                2018-06-09
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-05T00:00:00+08:00">
+                2020-04-05
               </time>
             
 
@@ -1063,8 +1060,8 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
                   </a>
                 </span>
 
@@ -1102,13 +1099,12 @@ K(x,z) = \phi(x) \cdot \phi(z)则称K
       
         
           
-          引言前面我们介绍了EM算法，EM算法是对含有隐变量的参数估计的一种有效的迭代算法，EM算法的一个最重要的应用就是高斯混合模型的参数估计。高斯混合模型也是机器学习中一个极其重要的模型，可被用于估计数据的分布。
-高斯混合模型高斯混合模型是指具有下面概率分布的模型：
-P(y|\theta) = \sum_
+          图像的布局实际上就是vulkan内部的图像的存储方式。也就是不同的布局，对应着图像的不同的使用场景，因此多数场景下，我们在使用图像前，都要关注下它的布局，如果布局不对的话，是要做布局转换的。
+布局定义了数据在内存中的排列方式。图像的初始布局在创建时指定，在其生命周期内可以改变，有两种方式可以改变，一
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/09/高斯混合模型/#more" rel="contents">
+            <a class="btn" href="/2020/04/05/Vulkan之ImageLayout/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1159,7 +1155,7 @@ P(y|\theta) = \sum_
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/03/EM算法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/31/Vulkan之Image_ImageView_Sample/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -1178,7 +1174,7 @@ P(y|\theta) = \sum_
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/03/EM算法/" itemprop="url">EM算法</a></h1>
+                <a class="post-title-link" href="/2020/03/31/Vulkan之Image_ImageView_Sample/" itemprop="url">Vulkan之Image, ImageView and Sample</a></h1>
         
 
         <div class="post-meta">
@@ -1190,8 +1186,8 @@ P(y|\theta) = \sum_
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-03T00:00:00+08:00">
-                2018-06-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-31T00:00:00+08:00">
+                2020-03-31
               </time>
             
 
@@ -1213,8 +1209,8 @@ P(y|\theta) = \sum_
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
                   </a>
                 </span>
 
@@ -1252,11 +1248,13 @@ P(y|\theta) = \sum_
       
         
           
-          引言EM算法是一种迭代算法，用于含有隐藏变量的概率模型的参数估计，比如说高斯混合模型，隐马尔科夫链等等场景。EM算法是一个具有普遍意义的算法，通过不断的提高下界来逼近模型参数。EM算法包含两步，expectation和maximization，即求期望和最大值。EM两个字母完美的表述了EM算法的精髓
+          vulkan中的资源从大的分类来说就两种，一种是Buffer，一种是Image。Buffer可以用来存放顶点，材质等等信息，而Image一般则是用来做attachment或者纹理贴图。
+纹理贴图是需要从外界获取的，实际上他就是一张图片，因此我们需要首先将其加载到vulkan的缓存中
+1） 外部图像加
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/03/EM算法/#more" rel="contents">
+            <a class="btn" href="/2020/03/31/Vulkan之Image_ImageView_Sample/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1307,7 +1305,7 @@ P(y|\theta) = \sum_
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/02/提升树，bagging与随机森林/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/24/Vulkan之DescriptorSet/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -1326,7 +1324,7 @@ P(y|\theta) = \sum_
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/02/提升树，bagging与随机森林/" itemprop="url">提升树，bagging与随机森林</a></h1>
+                <a class="post-title-link" href="/2020/03/24/Vulkan之DescriptorSet/" itemprop="url">Vulkan之DescriptorSet</a></h1>
         
 
         <div class="post-meta">
@@ -1338,8 +1336,8 @@ P(y|\theta) = \sum_
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-02T00:00:00+08:00">
-                2018-06-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-24T00:00:00+08:00">
+                2020-03-24
               </time>
             
 
@@ -1361,8 +1359,8 @@ P(y|\theta) = \sum_
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
                   </a>
                 </span>
 
@@ -1400,14 +1398,11 @@ P(y|\theta) = \sum_
       
         
           
-          提升树是一种以分类树或者回归树为基本分类器的提升方法。
-对于分类树只需将adaboost算法中的基函数设置为二分类二叉树即可。
-而回归树则是根据残差来训练下一个分类器的回归二叉树。下面主要介绍一下回归提升树的算法。
-回归提升树回忆一下，回归树就是将输入空间分割成M个不相关的区域R_1,...,R_M
+          我们通过vertexBuffer将顶点数据传送给shader，这是因为不同的顶点它的值是不同的，因此需要一个个的传递。那么对于所有顶点都共享的相同的数据呢？比如说mvp矩阵，纹理图像，这些都是顶点的属性，如果每个顶点都传递一份，那么这个内存估计就该爆炸了。因此vulkan提出了descriptorS
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/02/提升树，bagging与随机森林/#more" rel="contents">
+            <a class="btn" href="/2020/03/24/Vulkan之DescriptorSet/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1458,7 +1453,7 @@ P(y|\theta) = \sum_
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/31/adaboost提升算法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/17/Vulkan之VertexBuffer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -1477,7 +1472,7 @@ P(y|\theta) = \sum_
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/31/adaboost提升算法/" itemprop="url">adaboost提升算法</a></h1>
+                <a class="post-title-link" href="/2020/03/17/Vulkan之VertexBuffer/" itemprop="url">Vulkan之VertexBuffer</a></h1>
         
 
         <div class="post-meta">
@@ -1489,8 +1484,8 @@ P(y|\theta) = \sum_
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T00:00:00+08:00">
-                2018-05-31
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-17T00:00:00+08:00">
+                2020-03-17
               </time>
             
 
@@ -1512,8 +1507,8 @@ P(y|\theta) = \sum_
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
                   </a>
                 </span>
 
@@ -1551,11 +1546,11 @@ P(y|\theta) = \sum_
       
         
           
-          引言俗话说得好，三个臭皮匠赛过诸葛亮。更主要的是三个臭皮匠好找，一个诸葛亮太难找了。在机器学习里面也是一样的。我们可以设计出各种分类器，然而分类器的效果确实不一而同的，相对而言，效果较差的分类器比效果很好的分类器更好设计，后者很多时候可遇而不可求。那么是否有什么方法能够将一系列的弱分类器组合，使其能
+          vertexBuffer，它是一个Buffer，这个buffer装的是vertex信息。所以实际上我们的所有的图元的顶点信息都是放到了vertexBuffer中。而对于vulkan而言，内存的管理是由我们自己控制的，因此内存管理是一项很重要的内容。扯远了，下面我们就来看下vertexBuffer的创
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/05/31/adaboost提升算法/#more" rel="contents">
+            <a class="btn" href="/2020/03/17/Vulkan之VertexBuffer/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1606,7 +1601,7 @@ P(y|\theta) = \sum_
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/30/极大似然估计与贝叶斯估计/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/10/Vulkan之CommandBuffer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -1625,7 +1620,7 @@ P(y|\theta) = \sum_
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/30/极大似然估计与贝叶斯估计/" itemprop="url">极大似然估计与贝叶斯估计</a></h1>
+                <a class="post-title-link" href="/2020/03/10/Vulkan之CommandBuffer/" itemprop="url">Vulkan之CommandBuffer</a></h1>
         
 
         <div class="post-meta">
@@ -1637,8 +1632,8 @@ P(y|\theta) = \sum_
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-30T00:00:00+08:00">
-                2018-05-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-10T00:00:00+08:00">
+                2020-03-10
               </time>
             
 
@@ -1660,8 +1655,8 @@ P(y|\theta) = \sum_
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
                   </a>
                 </span>
 
@@ -1699,11 +1694,12 @@ P(y|\theta) = \sum_
       
         
           
-          引言在机器学习任务中，最最经常遇到的一个问题就是给定一组训练样本，学习到生成这组样本的模型的参数，这也是统计学习的根本任务。我们知道统计学上分频率学派和贝叶斯学派，那么自然的，对这个问题的解决就有两种模型，一种是频率学派推崇的极大似然估计，一种是贝叶斯学派主张的贝叶斯估计，下面我们就来介绍下这两种估
+          0）引言我们的渲染操作，实际上是通过一系列的命令的形式来实现的。命令记录在commandBuffer里面，讲命令记录完毕后，会将命令提交到某个队列中执行，以实现渲染。
+而vulkan的实际操作中并不是直接创建commandBuffer（这样比较低效，同时不利于buffer的管理），而是通过创建com
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/05/30/极大似然估计与贝叶斯估计/#more" rel="contents">
+            <a class="btn" href="/2020/03/10/Vulkan之CommandBuffer/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1745,7 +1741,7 @@ P(y|\theta) = \sum_
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1795,7 +1791,7 @@ P(y|\theta) = \sum_
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-count">90</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1806,7 +1802,7 @@ P(y|\theta) = \sum_
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1817,7 +1813,7 @@ P(y|\theta) = \sum_
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -1903,7 +1899,7 @@ P(y|\theta) = \sum_
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共64.9k字</span>
+  <span class="post-count">博客全站共94.4k字</span>
 </div>
         
 
