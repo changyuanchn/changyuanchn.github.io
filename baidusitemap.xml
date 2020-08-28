@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://yoursite.com/2020/01/01/fence/</loc>
+    <lastmod>2020-08-28T15:06:39.407Z</lastmod>
+    <data>
+        <display>
+        <title>Vulkan之fence</title>
+        <pubTime>2019-12-31T16:00:00.000Z</pubTime>
+        
+        <tag>vulkan</tag>
+         
+         
+           
+             
+              <breadCrumb title="计算机图形学, vulkan" url="http://yoursite.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6-vulkan/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2019/07/07/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/</loc>
     <lastmod>2020-08-28T14:45:40.952Z</lastmod>
     <data>
@@ -1046,11 +1066,11 @@
         <title>八皇后问题之python解法</title>
         <pubTime>2016-05-09T16:00:00.000Z</pubTime>
         
+        <tag>python</tag>
+         
         <tag>八皇后</tag>
          
         <tag>回溯算法</tag>
-         
-        <tag>python</tag>
          
          
            
