@@ -4,8 +4,28 @@
 
     
   <url>
+    <loc>http://yoursite.com/2020/01/05/Vulkan%E4%B9%8BInstance/</loc>
+    <lastmod>2020-08-28T15:21:19.105Z</lastmod>
+    <data>
+        <display>
+        <title>Vulkan之Instance</title>
+        <pubTime>2020-01-04T16:00:00.000Z</pubTime>
+        
+        <tag>vulkan</tag>
+         
+         
+           
+             
+              <breadCrumb title="vulkan" url="http://yoursite.com/categories/vulkan/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2020/01/01/fence/</loc>
-    <lastmod>2020-08-28T15:06:39.407Z</lastmod>
+    <lastmod>2020-08-28T15:08:30.641Z</lastmod>
     <data>
         <display>
         <title>Vulkan之fence</title>
@@ -16,7 +36,7 @@
          
            
              
-              <breadCrumb title="计算机图形学, vulkan" url="http://yoursite.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6-vulkan/"/>
+              <breadCrumb title="计算机图形学" url="http://yoursite.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/"/>
           
         </display>
     </data>
