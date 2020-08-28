@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="数据结构与算法  leetcode," />
+  <meta name="keywords" content="数据结构与算法,leetcode," />
 
 
 
@@ -80,7 +80,7 @@
 
 
 <meta name="description" content="单调栈栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。 那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。 以上就是单调栈的全部描述。 这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。 leetcode上的实例739 每日温度 这道题实际上就是求比当前数更大的数的位置。那么我们需要维持一个单调">
-<meta name="keywords" content="数据结构与算法  leetcode">
+<meta name="keywords" content="数据结构与算法,leetcode">
 <meta property="og:type" content="article">
 <meta property="og:title" content="单调栈">
 <meta property="og:url" content="http://yoursite.com/2019/07/01/单调栈/index.html">
@@ -88,7 +88,7 @@
 <meta property="og:description" content="单调栈栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。 那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。 以上就是单调栈的全部描述。 这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。 leetcode上的实例739 每日温度 这道题实际上就是求比当前数更大的数的位置。那么我们需要维持一个单调">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/monoStack.png">
-<meta property="og:updated_time" content="2020-07-07T15:41:33.289Z">
+<meta property="og:updated_time" content="2020-07-10T15:09:05.656Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="单调栈">
 <meta name="twitter:description" content="单调栈栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。 那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。 以上就是单调栈的全部描述。 这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。 leetcode上的实例739 每日温度 这道题实际上就是求比当前数更大的数的位置。那么我们需要维持一个单调">
@@ -375,7 +375,7 @@
 <p><a href="https://leetcode-cn.com/problems/largest-rectangle-in-histogram/" target="_blank" rel="noopener">84 柱状图中最大的矩形</a></p>
 <p>这道题就有点难度了，不是直观的用单调栈可以直接看出来的了。下面我们分析一下，要求最大的矩形的面积，那么矩形的面积由宽和高决定。高是确定的，那么我们就可以很容易的确定以当前高度为高的矩形的面积，这只要向左右两边扩散，找到边界点即可（所谓的边界点的高度一定是小于当前的矩形的高度的）。我们看一下暴力解法的操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">int largestRectangleArea(int* heights, int heightsSize)&#123;</span><br><span class="line"></span><br><span class="line">    if(heightsSize==0) return 0;</span><br><span class="line"></span><br><span class="line">    int* newHeights = (int*)malloc((heightsSize+1)*sizeof(int));</span><br><span class="line">    for(int i=0; i&lt;heightsSize; i++) &#123;</span><br><span class="line">        newHeights[i] = heights[i];</span><br><span class="line">    &#125;</span><br><span class="line">    newHeights[heightsSize] = 0;</span><br><span class="line"></span><br><span class="line">    int result = heights[0];</span><br><span class="line">    for(int i=0; i&lt;heightsSize; i++)&#123;</span><br><span class="line">        int left = -1;</span><br><span class="line">        int right = heightsSize;</span><br><span class="line">        for(int j=i-1; j&gt;=0; j--)&#123;</span><br><span class="line">            if(newHeights[j] &lt; newHeights[i])&#123;</span><br><span class="line">                left = j;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        for(int j=i+1; j&lt;heightsSize+1; j++)&#123;</span><br><span class="line">            if(newHeights[j] &lt; newHeights[i])&#123;</span><br><span class="line">                right = j;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        result = fmax(result, (right-left-1)*newHeights[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    free(newHeights);</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>暴力解法有个问题啊，那就是他的时间复杂度有点高o(n^2), 而且我们可以看出来暴力解法中存在着大量的重复计算，我们无法利用已经计算过的结果。</p>
-<p>我们以例子中的数组为例[2,1,5,6,2,3]<br><img src="/images/monoStack.png" alt="好看的照片"></p>
+<p>我们以例子中的数组为例[2,1,5,6,2,3]<br><img src="/images/monoStack.png" alt="monoStack"></p>
 <p>以2为高度的矩形，我们继续向后遍历，下一个值为1， 那么以2为高度的矩形的面积就可以确定了。然后1为高度的矩形，我们向后遍历，下一个值为5，确定不了。我们先不管他，继续向后遍历，以5为高度的矩形，我们还是确定不了它的面积，继续向后遍历，以6为高度的矩形，我们可以确定他的面积大小了（因为他的下一个值比他小）。然后我们可以确定5了，但是1还是确定不了，所以我们要继续向下遍历，找到1的边界。</p>
 <p>因此我们可以总结一下，这就是一个单调递增的栈，栈里面存放的元素就是我们暂时还无法确定其右边界的元素啊。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">这道题目可以用动态规划以及单调栈来做：</span><br><span class="line">单调栈实际上需要考虑的是出栈的条件，因为入栈的条件就是遍历的i，那么出栈的条件是什么呢？就是找到了以当前元素为高的最大矩形的右边界</span><br><span class="line"></span><br><span class="line">*/</span><br><span class="line">int largestRectangleArea(int* heights, int heightsSize)&#123;</span><br><span class="line">    if(heightsSize==0) return 0;</span><br><span class="line">    int result = heights[0];</span><br><span class="line"></span><br><span class="line">    int* newHeights = (int*)malloc((heightsSize+1)*sizeof(int));</span><br><span class="line">    for(int i=0; i&lt;heightsSize; i++) &#123;</span><br><span class="line">        newHeights[i] = heights[i];</span><br><span class="line">    &#125;</span><br><span class="line">    newHeights[heightsSize] = 0;</span><br><span class="line"></span><br><span class="line">    int* monoStack = (int*)malloc(heightsSize*sizeof(int));</span><br><span class="line">    int head = -1;</span><br><span class="line"></span><br><span class="line">    for (int i=0; i&lt;heightsSize+1; i++) &#123;</span><br><span class="line"></span><br><span class="line">        while(head!=-1 &amp;&amp; newHeights[monoStack[head]] &gt;= newHeights[i]) &#123;</span><br><span class="line">            head--;</span><br><span class="line">            int leftSide = head == -1 ? -1 : monoStack[head];</span><br><span class="line">            int currArea = (i - leftSide - 1) * newHeights[monoStack[head+1]];</span><br><span class="line">            result = fmax(result, currArea);</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        monoStack[++head] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    free(newHeights);</span><br><span class="line">    free(monoStack);</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -402,7 +402,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数据结构与算法-leetcode/" rel="tag"># 数据结构与算法  leetcode</a>
+            <a href="/tags/数据结构与算法/" rel="tag"># 数据结构与算法</a>
+          
+            <a href="/tags/leetcode/" rel="tag"># leetcode</a>
           
         </div>
       
@@ -424,6 +426,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/07/滑动窗口/" rel="prev" title="滑动窗口">
+                滑动窗口 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -509,7 +515,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-count">58</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -531,7 +537,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-count">61</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -633,7 +639,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共62.2k字</span>
+  <span class="post-count">博客全站共63.1k字</span>
 </div>
         
 
