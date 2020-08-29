@@ -3,6 +3,51 @@
 
 
     
+    
+  <url>
+    <loc>http://yoursite.com/2018/07/29/%E5%85%B8%E5%9E%8B%E7%9B%B8%E5%85%B3%E5%88%86%E6%9E%90%EF%BC%88CCA%EF%BC%89/</loc>
+    <lastmod>2020-08-29T14:23:36.132Z</lastmod>
+    <data>
+        <display>
+        <title>典型相关分析（CCA）</title>
+        <pubTime>2018-07-28T16:00:00.000Z</pubTime>
+        
+        <tag>机器学习</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="http://yoursite.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2018/05/30/%E6%9E%81%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1%E4%B8%8E%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%BC%B0%E8%AE%A1/</loc>
+    <lastmod>2020-08-29T14:23:06.610Z</lastmod>
+    <data>
+        <display>
+        <title>极大似然估计与贝叶斯估计</title>
+        <pubTime>2018-05-29T16:00:00.000Z</pubTime>
+        
+        <tag>机器学习</tag>
+         
+        <tag>Bayes</tag>
+         
+        <tag>极大似然估计</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="http://yoursite.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
     <loc>http://yoursite.com/2016/06/10/%E4%BA%94%E5%A4%A7%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/</loc>
     <lastmod>2020-08-29T12:07:32.842Z</lastmod>
@@ -124,26 +169,6 @@
         <pubTime>2018-07-28T16:00:00.000Z</pubTime>
         
         <tag>机器学习</tag>
-         
-         
-           
-             
-              <breadCrumb title="机器学习" url="http://yoursite.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2018/07/29/%E5%85%B8%E5%9E%8B%E7%9B%B8%E5%85%B3%E5%88%86%E6%9E%90%EF%BC%88CCA%EF%BC%89/</loc>
-    <lastmod>2020-08-29T12:04:22.094Z</lastmod>
-    <data>
-        <display>
-        <title>典型相关分析（CCA）</title>
-        <pubTime>2018-07-28T16:00:00.000Z</pubTime>
-        
-        <tag>m机器学习</tag>
          
          
            
@@ -1441,7 +1466,6 @@
     </url>
 
     
-    
   <url>
     <loc>http://yoursite.com/2018/07/29/SpringBoot%E5%AD%A6%E4%B9%A0--%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%BB%A5%E5%8F%8AHello%20World%E7%A8%8B%E5%BA%8F/</loc>
     <lastmod>2018-10-14T14:18:25.975Z</lastmod>
@@ -1607,30 +1631,6 @@
         <tag>监督学习</tag>
          
         <tag>决策树</tag>
-         
-         
-           
-             
-              <breadCrumb title="机器学习" url="http://yoursite.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2018/05/30/%E6%9E%81%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1%E4%B8%8E%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%BC%B0%E8%AE%A1/</loc>
-    <lastmod>2018-05-30T14:55:48.327Z</lastmod>
-    <data>
-        <display>
-        <title>极大似然估计与贝叶斯估计</title>
-        <pubTime>2018-05-29T16:00:00.000Z</pubTime>
-        
-        <tag>机器学习</tag>
-         
-        <tag>贝叶斯估计</tag>
-         
-        <tag>极大似然估计</tag>
          
          
            
