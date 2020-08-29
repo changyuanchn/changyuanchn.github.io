@@ -2,6 +2,132 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2018/07/26/%E5%9F%BA%E4%BA%8E%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4/</loc>
+    
+    <lastmod>2020-08-29T12:04:42.290Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/07/29/Dijkstra%E7%AE%97%E6%B3%95/</loc>
+    
+    <lastmod>2020-08-29T12:04:37.266Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/07/26/KernelPCA/</loc>
+    
+    <lastmod>2020-08-29T12:04:34.575Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/07/29/LDA%E7%BA%BF%E6%80%A7%E5%88%A4%E5%88%AB%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2020-08-29T12:04:28.876Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/07/29/%E5%85%B8%E5%9E%8B%E7%9B%B8%E5%85%B3%E5%88%86%E6%9E%90%EF%BC%88CCA%EF%BC%89/</loc>
+    
+    <lastmod>2020-08-29T12:04:22.094Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/07/10/%E9%9A%90%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E6%A8%A1%E5%9E%8B/</loc>
+    
+    <lastmod>2020-08-29T12:03:31.472Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/06/09/%E9%AB%98%E6%96%AF%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8B/</loc>
+    
+    <lastmod>2020-08-29T12:03:26.778Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/07/27/%E5%A4%9A%E7%BB%B4%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95%EF%BC%88MDS%EF%BC%89/</loc>
+    
+    <lastmod>2020-08-29T12:03:17.570Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/07/25/%E6%A0%B8%E6%80%9D%E6%83%B3%EF%BC%88kernel%20trick%EF%BC%89/</loc>
+    
+    <lastmod>2020-08-29T12:03:11.822Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/05/17/k-means%E7%AE%97%E6%B3%95/</loc>
+    
+    <lastmod>2020-08-29T12:02:20.476Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/06/02/%E6%8F%90%E5%8D%87%E6%A0%91%EF%BC%8Cbagging%E4%B8%8E%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97/</loc>
+    
+    <lastmod>2020-08-29T12:02:12.713Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/05/31/adaboost%E6%8F%90%E5%8D%87%E7%AE%97%E6%B3%95/</loc>
+    
+    <lastmod>2020-08-29T12:01:59.094Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/05/16/logistic%E5%9B%9E%E5%BD%92/</loc>
+    
+    <lastmod>2020-08-29T12:01:40.506Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/05/08/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8B%E4%BB%A3%E4%BB%B7%E5%87%BD%E6%95%B0%E7%9A%84%E9%80%89%E6%8B%A9/</loc>
+    
+    <lastmod>2020-08-29T12:01:31.394Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/05/12/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95%E4%B8%8E%E8%BF%9B%E5%8C%96%E7%AE%97%E6%B3%95/</loc>
+    
+    <lastmod>2020-08-29T12:01:27.214Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/05/11/%E6%97%A9%E6%9C%9F%E6%B7%B1%E5%BA%A6%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
+    
+    <lastmod>2020-08-29T12:01:17.392Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/05/08/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8BsoftMax%E7%A5%9E%E7%BB%8F%E5%85%83/</loc>
+    
+    <lastmod>2020-08-29T12:01:00.310Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/05/09/%E8%BF%87%E6%8B%9F%E5%90%88/</loc>
+    
+    <lastmod>2020-08-29T12:00:54.186Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2016/05/15/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</loc>
     
     <lastmod>2020-08-29T11:48:32.370Z</lastmod>
@@ -110,41 +236,6 @@
     <loc>http://yoursite.com/2013/11/20/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/</loc>
     
     <lastmod>2020-08-29T11:46:22.205Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/07/26/%E5%9F%BA%E4%BA%8E%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4/</loc>
-    
-    <lastmod>2020-08-29T11:45:50.640Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/07/29/Dijkstra%E7%AE%97%E6%B3%95/</loc>
-    
-    <lastmod>2020-08-29T11:45:24.654Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/07/26/KernelPCA/</loc>
-    
-    <lastmod>2020-08-29T11:45:13.407Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/07/29/LDA%E7%BA%BF%E6%80%A7%E5%88%A4%E5%88%AB%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2020-08-29T11:44:56.574Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/07/29/%E5%85%B8%E5%9E%8B%E7%9B%B8%E5%85%B3%E5%88%86%E6%9E%90%EF%BC%88CCA%EF%BC%89/</loc>
-    
-    <lastmod>2020-08-29T11:44:42.038Z</lastmod>
     
   </url>
   
@@ -408,20 +499,6 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2018/07/27/%E5%A4%9A%E7%BB%B4%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95%EF%BC%88MDS%EF%BC%89/</loc>
-    
-    <lastmod>2018-07-27T14:57:35.124Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/07/25/%E6%A0%B8%E6%80%9D%E6%83%B3%EF%BC%88kernel%20trick%EF%BC%89/</loc>
-    
-    <lastmod>2018-07-26T13:59:03.868Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2018/07/15/%E8%B0%B1%E8%81%9A%E7%B1%BB/</loc>
     
     <lastmod>2018-07-22T12:43:20.443Z</lastmod>
@@ -432,20 +509,6 @@
     <loc>http://yoursite.com/2013/05/05/PCA/</loc>
     
     <lastmod>2018-07-19T16:53:52.441Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/07/10/%E9%9A%90%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E6%A8%A1%E5%9E%8B/</loc>
-    
-    <lastmod>2018-07-15T10:32:33.203Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/06/09/%E9%AB%98%E6%96%AF%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8B/</loc>
-    
-    <lastmod>2018-06-10T06:12:32.841Z</lastmod>
     
   </url>
   
@@ -467,20 +530,6 @@
     <loc>http://yoursite.com/2018/05/23/%E5%B1%82%E6%AC%A1%E8%81%9A%E7%B1%BB/</loc>
     
     <lastmod>2018-06-03T11:33:53.286Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/06/02/%E6%8F%90%E5%8D%87%E6%A0%91%EF%BC%8Cbagging%E4%B8%8E%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97/</loc>
-    
-    <lastmod>2018-06-02T13:17:47.444Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/05/31/adaboost%E6%8F%90%E5%8D%87%E7%AE%97%E6%B3%95/</loc>
-    
-    <lastmod>2018-06-02T05:50:32.868Z</lastmod>
     
   </url>
   
@@ -527,13 +576,6 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2018/05/17/k-means%E7%AE%97%E6%B3%95/</loc>
-    
-    <lastmod>2018-05-17T16:18:51.471Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2018/05/17/KNN%E7%AE%97%E6%B3%95/</loc>
     
     <lastmod>2018-05-16T17:11:30.912Z</lastmod>
@@ -541,51 +583,9 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2018/05/16/logistic%E5%9B%9E%E5%BD%92/</loc>
-    
-    <lastmod>2018-05-16T16:33:06.406Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/05/08/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8B%E4%BB%A3%E4%BB%B7%E5%87%BD%E6%95%B0%E7%9A%84%E9%80%89%E6%8B%A9/</loc>
-    
-    <lastmod>2018-05-15T15:17:31.571Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/05/12/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95%E4%B8%8E%E8%BF%9B%E5%8C%96%E7%AE%97%E6%B3%95/</loc>
-    
-    <lastmod>2018-05-15T15:17:14.831Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/05/11/%E6%97%A9%E6%9C%9F%E6%B7%B1%E5%BA%A6%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
-    
-    <lastmod>2018-05-11T16:31:37.913Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2018/05/05/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</loc>
     
     <lastmod>2018-05-10T15:06:08.643Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/05/08/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B9%8BsoftMax%E7%A5%9E%E7%BB%8F%E5%85%83/</loc>
-    
-    <lastmod>2018-05-10T15:06:00.228Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/05/09/%E8%BF%87%E6%8B%9F%E5%90%88/</loc>
-    
-    <lastmod>2018-05-09T15:44:12.095Z</lastmod>
     
   </url>
   
