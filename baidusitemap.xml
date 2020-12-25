@@ -3,6 +3,106 @@
 
 
     
+  <url>
+    <loc>http://yoursite.com/2020/07/15/%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2/</loc>
+    <lastmod>2020-12-25T15:59:32.025Z</lastmod>
+    <data>
+        <display>
+        <title>矩阵变换</title>
+        <pubTime>2020-07-14T16:00:00.000Z</pubTime>
+        
+        <tag>计算机图形学</tag>
+         
+         
+           
+             
+              <breadCrumb title="计算机图形学" url="http://yoursite.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2020/07/10/MVP%E7%9F%A9%E9%98%B5%E2%80%94%E5%9B%BE%E5%BD%A2%E7%9A%84%E7%A9%BA%E9%97%B4%E5%8F%98%E6%8D%A2/</loc>
+    <lastmod>2020-12-25T15:55:39.491Z</lastmod>
+    <data>
+        <display>
+        <title>MVP矩阵—图形的空间变换</title>
+        <pubTime>2020-07-09T16:00:00.000Z</pubTime>
+        
+        <tag>计算机图形学</tag>
+         
+         
+           
+             
+              <breadCrumb title="计算机图形学" url="http://yoursite.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2020/07/05/Camera/</loc>
+    <lastmod>2020-12-25T15:51:02.284Z</lastmod>
+    <data>
+        <display>
+        <title>Camera</title>
+        <pubTime>2020-07-04T16:00:00.000Z</pubTime>
+        
+        <tag>计算机图形学</tag>
+         
+         
+           
+             
+              <breadCrumb title="计算机图形学" url="http://yoursite.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2016/06/30/%E5%BC%95%E7%94%A8/</loc>
+    <lastmod>2020-12-25T15:43:35.528Z</lastmod>
+    <data>
+        <display>
+        <title>引用</title>
+        <pubTime>2016-06-29T16:00:00.000Z</pubTime>
+        
+        <tag>C++</tag>
+         
+         
+           
+             
+              <breadCrumb title="C++" url="http://yoursite.com/categories/C/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2016/06/28/const%E9%99%90%E5%AE%9A%E7%AC%A6/</loc>
+    <lastmod>2020-12-25T15:42:08.046Z</lastmod>
+    <data>
+        <display>
+        <title>const限定符</title>
+        <pubTime>2016-06-27T16:00:00.000Z</pubTime>
+        
+        <tag>C++</tag>
+         
+         
+           
+             
+              <breadCrumb title="C++" url="http://yoursite.com/categories/C/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
     
   <url>
     <loc>http://yoursite.com/2018/07/29/%E5%85%B8%E5%9E%8B%E7%9B%B8%E5%85%B3%E5%88%86%E6%9E%90%EF%BC%88CCA%EF%BC%89/</loc>
