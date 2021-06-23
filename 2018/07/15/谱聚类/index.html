@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="非监督学习,聚类,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引言谱聚类（spectual clustering)是一类非常使用的聚类方法。因为算法基于谱图的理论基础上，因此成为谱聚类。与传统的聚类算法相比，它具有能在任意形状的样本空间上聚类且收敛于全局最优解的优点，因此应用广泛，同时是目前研究和应用最广泛的聚类算法。 谱聚类算法谱聚类思想谱聚类的本质思想就是将数据当做空间中的点，这些点之间可以用边连接，形成无向图。 其中，距离较远的点之间的权重较低，距离较">
+<meta name="keywords" content="非监督学习,聚类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谱聚类">
+<meta property="og:url" content="http://yoursite.com/2018/07/15/谱聚类/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="引言谱聚类（spectual clustering)是一类非常使用的聚类方法。因为算法基于谱图的理论基础上，因此成为谱聚类。与传统的聚类算法相比，它具有能在任意形状的样本空间上聚类且收敛于全局最优解的优点，因此应用广泛，同时是目前研究和应用最广泛的聚类算法。 谱聚类算法谱聚类思想谱聚类的本质思想就是将数据当做空间中的点，这些点之间可以用边连接，形成无向图。 其中，距离较远的点之间的权重较低，距离较">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.663Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="谱聚类">
+<meta name="twitter:description" content="引言谱聚类（spectual clustering)是一类非常使用的聚类方法。因为算法基于谱图的理论基础上，因此成为谱聚类。与传统的聚类算法相比，它具有能在任意形状的样本空间上聚类且收敛于全局最优解的优点，因此应用广泛，同时是目前研究和应用最广泛的聚类算法。 谱聚类算法谱聚类思想谱聚类的本质思想就是将数据当做空间中的点，这些点之间可以用边连接，形成无向图。 其中，距离较远的点之间的权重较低，距离较">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/15/谱聚类/">
+
+
+
+
+
+  <title>谱聚类 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blogs</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/15/谱聚类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuanchn">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">谱聚类</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-15T00:00:00+08:00">
+                2018-07-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,346
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>谱聚类（spectual clustering)是一类非常使用的聚类方法。因为算法基于谱图的理论基础上，因此成为谱聚类。与传统的聚类算法相比，它具有能在任意形状的样本空间上聚类且收敛于全局最优解的优点，因此应用广泛，同时是目前研究和应用最广泛的聚类算法。</p>
+<h1 id="谱聚类算法"><a href="#谱聚类算法" class="headerlink" title="谱聚类算法"></a>谱聚类算法</h1><h2 id="谱聚类思想"><a href="#谱聚类思想" class="headerlink" title="谱聚类思想"></a>谱聚类思想</h2><p>谱聚类的本质思想就是将数据当做空间中的点，这些点之间可以用边连接，形成无向图。</p>
+<p>其中，距离较远的点之间的权重较低，距离较近的点之间的权重较高，</p>
+<p>对图进行切图，让不同的子图之间的权重和尽可能的低，子图内的权重尽可能的高，进而达到聚类的目的。</p>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><h3 id="无向权重图"><a href="#无向权重图" class="headerlink" title="无向权重图"></a>无向权重图</h3><p>我们用<script type="math/tex">G = (V, E)</script>来表示无向权重图。其中<script type="math/tex">V = (v_1, v_2 ,..,v_n)</script> 表示点，<script type="math/tex">E</script>表示边，边连接两个点，我们定义边的值为权重<script type="math/tex">w_{ij}</script>,因为是无向图，因此<script type="math/tex">w_{ij} = w_{ji}</script>,</p>
+<p>对于有边连接的点，有<script type="math/tex">w_{ij} > 0</script><br>对于没有边连接的点，有<script type="math/tex">w_{ij} = 0</script></p>
+<p>对于点<script type="math/tex">v_i</script>,我们定义它的度为与它相连接的所有的边的权重的和，即：</p>
+<script type="math/tex; mode=display">d_{i} = \sum_{j=1}^n w_{ij}</script><p>因此对于无向图，我们可以定义相应的度矩阵：</p>
+<script type="math/tex; mode=display">D = \begin{pmatrix} d_1 &  &  & \\  &  d_2&  & \\  &  &  ...& \\  &  &  & d_n \end{pmatrix}</script><p>对于度矩阵，只有主对角线上有值。值表示每一个点的度。</p>
+<h3 id="邻接矩阵"><a href="#邻接矩阵" class="headerlink" title="邻接矩阵"></a>邻接矩阵</h3><p>邻接矩阵<script type="math/tex">W</script>,其中<script type="math/tex">w_{ij}</script>为<script type="math/tex">v_i</script>与<script type="math/tex">v_j</script>之间的权重</p>
+<p>那么我们如何定义权重呢？一般场景下，我们利用两点之间的距离来构建邻接矩阵。</p>
+<p>一般有三种方法：<script type="math/tex">\epsilon</script>近邻法，k近邻法，全连接法</p>
+<h4 id="epsilon近邻法"><a href="#epsilon近邻法" class="headerlink" title="\epsilon近邻法"></a><script type="math/tex">\epsilon</script>近邻法</h4><script type="math/tex; mode=display">w_{ij} =\left\{\begin{matrix} 0,  \ S_{ij}>\epsilon \\ \epsilon,\ S_{ij}\leq \epsilon \end{matrix}\right.</script><p>其中<script type="math/tex">S_{ij} =||x_i - x_j ||^2</script></p>
+<h4 id="k近邻法"><a href="#k近邻法" class="headerlink" title="k近邻法"></a><script type="math/tex">k</script>近邻法</h4><p>取每个样本最近的k个点作为近邻，只有和样本距离最近的k个点间的<script type="math/tex">w_{ij} > 0</script>。一般为了对称性，采用下面的公式处理</p>
+<p>第一种：</p>
+<script type="math/tex; mode=display">w_{ji} = w_{ij} =\left\{\begin{matrix} 0,  \ x_i \notin KNN(x_j) \ and \ x_j \notin KNN(x_j) \\ exp(-\frac{||x_i - x_j||^2}{2\sigma^2}), \ x_i \in KNN(x_j) \ or \ x_j \in KNN(x_j) \end{matrix}\right.</script><p>第二种：</p>
+<script type="math/tex; mode=display">w_{ji} = w_{ij} =\left\{\begin{matrix} 0,  \ x_i \notin KNN(x_j) \ or \ x_j \notin KNN(x_j) \\ exp(-\frac{||x_i - x_j||^2}{2\sigma^2}), \ x_i \in KNN(x_j) \ and \ x_j \in KNN(x_j) \end{matrix}\right.</script><h4 id="全连接法"><a href="#全连接法" class="headerlink" title="全连接法"></a>全连接法</h4><p>当然用的最多的还是全连接法，这个最简单：</p>
+<script type="math/tex; mode=display">w_{ji} = S_{ij} = exp(-\frac{||x_i - x_j||^2_2}{2\sigma^2})</script><h3 id="相似矩阵"><a href="#相似矩阵" class="headerlink" title="相似矩阵"></a>相似矩阵</h3><p>相似矩阵就是上面的S矩阵，其中：</p>
+<script type="math/tex; mode=display">S_{ij} = exp(-\frac{||x_i - x_j||^2_2}{2\sigma^2})</script><h3 id="拉普拉斯矩阵"><a href="#拉普拉斯矩阵" class="headerlink" title="拉普拉斯矩阵"></a>拉普拉斯矩阵</h3><script type="math/tex; mode=display">L = D - W</script><p>矩阵<script type="math/tex">L</script>就是laplace矩阵。laplace矩阵有几个优良性质：</p>
+<p>1） 矩阵<script type="math/tex">L</script>是对称矩阵</p>
+<p>2） 矩阵<script type="math/tex">L</script>的特征值都是实数</p>
+<p>3） 对于任意向量<script type="math/tex">f</script>，都有</p>
+<script type="math/tex; mode=display">f^TLf = \frac{1}{2} \sum_{i=1,j =1}^N w_{ij}(f_i - f_j)^2</script><p>证明如下：</p>
+<script type="math/tex; mode=display">f^TLf = f^TDf - f^TWf = \sum_{i=1}^N d_if_i^2 - \sum_{i=1,j=1}^{N} w_{ij}f_if_j  =\frac{1}{2}(\sum_{i=1}^N d_if_i^2 - 2\sum_{i=1,j=1}^{N} w_{ij}f_if_j + \sum_{i=1}^N d_jf_j^2)= \frac{1}{2} \sum_{i=1,j =1}^N w_{ij}(f_i - f_j)^2</script><p>4） 矩阵<script type="math/tex">L</script>是半正定矩阵</p>
+<h3 id="无向图切图"><a href="#无向图切图" class="headerlink" title="无向图切图"></a>无向图切图</h3><p>将G切分成相互没有连接的k个子图，每个子图的点的集合<script type="math/tex">A_1,A_2,...,A_k</script>,满足<script type="math/tex">A_i \bigcap  A_j = \phi</script> 且 <script type="math/tex">A_1 \bigcup A_2 \bigcup ... \bigcup A_k = V</script> </p>
+<p>对于任意两个子图，其切图的权重为：</p>
+<script type="math/tex; mode=display">W(A,B) = \sum_{i \in A, j \in B} w_{ij}</script><p>定义<script type="math/tex">cut(A_1,A_2,...,A_k) = \frac{1}{2}\sum_{i=1}^k W(A_i, \overline A_i)</script></p>
+<p>切图的目的就是使子图内的点的权重的和尽可能的高，子图间的点的权重和尽可能的低。</p>
+<p>因此可以通过最小化<script type="math/tex">cut(A_1,A_2,...,A_k)</script>实现，但是单纯最小化<script type="math/tex">cut(A_1,A_2,...,A_k)</script>是有问题的，会导致切图得到不理想的结果，如将某一个点切为一个图，剩余的点切为一个图等等，因此需要对切图进行一定的约束。</p>
+<h2 id="切图"><a href="#切图" class="headerlink" title="切图"></a>切图</h2><p>有了点之间的度量，那么我们还剩下一个问题，就是按照什么规则将点划分到不同的区域，既然谱聚类是基于图算法，那么我们就利用切图的算法，将点划分到不同的子类中。</p>
+<h3 id="RatioCut"><a href="#RatioCut" class="headerlink" title="RatioCut"></a>RatioCut</h3><p>Ratio切图不仅要最小化<script type="math/tex">cut(A_1,A_2,...,A_k)</script>，还要最大化每个子图中点的个数，因此可以用下面的公式来表示：</p>
+<script type="math/tex; mode=display">RationCut(A_1,A_2,...,A_k) = \frac{1}{2} \sum_{i=1}^k \frac{ W(A_i, \overline A_i)}{|A_i|}</script><p>其中<script type="math/tex">{|A_i|}</script>是A中的点的个数</p>
+<p>那么我们该如何解析这个函数呢？我们引入指示变量<script type="math/tex">h_j = (h_1,...,h_k), j=1,2,...,k</script>,<script type="math/tex">h_j</script>是一个n维向量，定义<script type="math/tex">h_{ji}</script>:</p>
+<script type="math/tex; mode=display">h_{ji} =\left\{\begin{matrix} 0,  \ v_{i}\notin A_j \\ \frac{1}{\sqrt{|A_j|}},\ v_i \in A_j \end{matrix}\right.</script><script type="math/tex; mode=display">h_i^TLh_i  = \frac{1}{2} \sum_{m=1}\sum_{n=1} w_{mn}(h_{im} -h_{in})^2 = \frac{1}{2} (\sum_{m \in A_i, n \notin A_i} w_{mn}(\frac{1}{\sqrt{|A_i|}} - 0)^2</script><script type="math/tex; mode=display">+ \sum_{m \notin A_i, n \in A_i} w_{mn}(\frac{1}{|A_j|}))</script><script type="math/tex; mode=display">=\frac{1}{2}(\sum_{m \in A_i, n \notin A_i} w_{mn}\frac{1}{|A_i|}) + \sum_{m \notin A_i, n \in A_i} w_{mn}\frac{1}{|A_i|}))</script><script type="math/tex; mode=display">=\frac{1}{2}(cut(A_i,\overline A_i)\frac{1}{|A_i|} + cut(\overline A_i,A_i)\frac{1}{|A_i|}) = \frac{cut(A_i,\overline A_i)}{|A_i|}</script><p>因此有：</p>
+<script type="math/tex; mode=display">RationCut(A_1,A_2,...,A_k) = \sum_{i=1}^k h_i^TLh_i =  \sum_{i=1}^k (H^TLH)_{ii} = tr(H^TLH)</script><p>因此问题转化为：</p>
+<script type="math/tex; mode=display">argmin_H \ tr(H^TLH) , \ s.t. H^TH = I</script><p>这是一个NP-hard问题，我们可以近似来解决这个问题。可以对<script type="math/tex">H^TLH</script>做特征值分解，找到k个最小的特征值，这些特征值对应的特征向量组成的n*k维矩阵就是H（类似于PCA的过程）。</p>
+<p>由于上面的方式损失了少量的信息，导致对应的H不能完全只是个样本的归属，一次你得到n*k矩阵后需要对每一行进行一个常规的聚类，如k-means。</p>
+<h3 id="NCut切图"><a href="#NCut切图" class="headerlink" title="NCut切图"></a>NCut切图</h3><script type="math/tex; mode=display">NCut(A_1,A_2,...,A_k) = \frac{1}{2} \sum_{i=1}^k \frac{ W(A_i, \overline A_i)}{vol(A_i)}</script><p>也就是将RatioCut的分母用<script type="math/tex">vol(A_i)</script>代替。</p>
+<script type="math/tex; mode=display">vol(A_i) = \sum_{i \ in A_i} d_i</script><p>即用权重和来代替点的个数，因为点多，权重不一定大。</p>
+<p>这里我们引入指示向量</p>
+<script type="math/tex; mode=display">h_{ji} =\left\{\begin{matrix} 0,  \ v_{i}\notin A_j \\ \frac{1}{\sqrt{vol(A_j)}},\ v_i \in A_j \end{matrix}\right.</script><p>同理有：</p>
+<script type="math/tex; mode=display">h_i^TLh_i = ... = \frac{cut(A_i,\overline A_i)}{vol(A_i)} = Ncut(A_i, \overline A_i)</script><p>优化的目标依旧是<script type="math/tex">tr(H^TLH)</script>，问题转化为：</p>
+<script type="math/tex; mode=display">argmin_H \ tr(H^TLH) , \ s.t. H^TDH = I</script><p>因为：</p>
+<script type="math/tex; mode=display">h_i^TDh_i = \sum_{j=1}^{n} h_{ij}^2d_j = \frac{1}{vol(A_i)} \sum_{v_k \ in A_i} w_{v_j} = \frac{1}{vol(A_i)} vol(A_i) = 1</script><p>令<script type="math/tex">H= D^{-\frac{1}{2}}F</script>，因此目标为：</p>
+<script type="math/tex; mode=display">argmin_H \ tr(F^TD^{-\frac{1}{2}}LD^{\frac{1}{2}}F) , \ s.t. F^TF = I</script><p>也就是求<script type="math/tex">D^{-\frac{1}{2}}LD^{\frac{1}{2}}</script>的前k个最小特征值及其对应的特征向量并标准化，得到矩阵F，对F做k-means即可。</p>
+<p>一般来说：</p>
+<script type="math/tex; mode=display">D^{-\frac{1}{2}}LD^{\frac{1}{2}}$$相当于$$\frac{L_{ij}}{\sqrt{d_i*d_j}}</script><h2 id="谱聚类流程"><a href="#谱聚类流程" class="headerlink" title="谱聚类流程"></a>谱聚类流程</h2><blockquote>
+<p>输入</p>
+<blockquote>
+<ul>
+<li>样本集<script type="math/tex">D=(x_1,x_2,..,x_n)</script></li>
+<li>降维后的维度k</li>
+<li>聚类后的簇数m</li>
+</ul>
+</blockquote>
+<p>算法</p>
+<blockquote>
+<ul>
+<li>利用全连接RBF核生成相似矩阵S</li>
+<li>根据相似矩阵构建邻接矩阵W和度矩阵D</li>
+<li><script type="math/tex; mode=display">L = D - W</script></li>
+<li>标准化<script type="math/tex">D^{-\frac{1}{2}}LD^{\frac{1}{2}}</script></li>
+<li>计算<script type="math/tex">D^{-\frac{1}{2}}LD^{\frac{1}{2}}</script>的最小k个特征值及其特征向量f</li>
+<li>将f按行标准化，得到n*k的矩阵F</li>
+<li>将F中的每一行作为K维的样本，利用k-means聚类为m</li>
+<li>得到m个簇划分</li>
+</ul>
+</blockquote>
+</blockquote>
+<h2 id="谱聚类优缺点"><a href="#谱聚类优缺点" class="headerlink" title="谱聚类优缺点"></a>谱聚类优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><blockquote>
+<ul>
+<li>对稀疏数据很有效</li>
+<li>算法流程进行了降维，因此对高维数据效果较好</li>
+</ul>
+</blockquote>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><blockquote>
+<ul>
+<li>若降维幅度不够，则运行速度和效果会较差</li>
+<li>聚类效果依赖于相似矩阵，相似矩阵不同，效果不同</li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/非监督学习/" rel="tag"># 非监督学习</a>
+          
+            <a href="/tags/聚类/" rel="tag"># 聚类</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/10/隐马尔科夫模型/" rel="next" title="隐马尔科夫模型">
+                <i class="fa fa-chevron-left"></i> 隐马尔科夫模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/25/核思想（kernel trick）/" rel="prev" title="核思想（kernel trick）">
+                核思想（kernel trick） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuanchn">
+            
+              <p class="site-author-name" itemprop="name">changyuanchn</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">111</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#谱聚类算法"><span class="nav-number">2.</span> <span class="nav-text">谱聚类算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#谱聚类思想"><span class="nav-number">2.1.</span> <span class="nav-text">谱聚类思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">2.2.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#无向权重图"><span class="nav-number">2.2.1.</span> <span class="nav-text">无向权重图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#邻接矩阵"><span class="nav-number">2.2.2.</span> <span class="nav-text">邻接矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#epsilon近邻法"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">\epsilon近邻法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#k近邻法"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">k近邻法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全连接法"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">全连接法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相似矩阵"><span class="nav-number">2.2.3.</span> <span class="nav-text">相似矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拉普拉斯矩阵"><span class="nav-number">2.2.4.</span> <span class="nav-text">拉普拉斯矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无向图切图"><span class="nav-number">2.2.5.</span> <span class="nav-text">无向图切图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切图"><span class="nav-number">2.3.</span> <span class="nav-text">切图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RatioCut"><span class="nav-number">2.3.1.</span> <span class="nav-text">RatioCut</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NCut切图"><span class="nav-number">2.3.2.</span> <span class="nav-text">NCut切图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谱聚类流程"><span class="nav-number">2.4.</span> <span class="nav-text">谱聚类流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谱聚类优缺点"><span class="nav-number">2.5.</span> <span class="nav-text">谱聚类优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">2.5.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">2.5.2.</span> <span class="nav-text">缺点</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuanchn</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">118.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共118.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

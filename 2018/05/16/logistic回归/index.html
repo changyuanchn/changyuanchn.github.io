@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,回归,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引言logistic回归是一种很早期的回归模型，属于广义的线性回归，用于数据挖掘，经济预测等多种场景。本章我们首先引入线性回归模型，然后给出逻辑回归的定义，以及二次逻辑回归，同时给出logistic回归的参数训练方法，最后给出logistic回归于神经网络的关系 线性回归所谓的线性回归，其实就是用下面的公式来对数据进行分类或者回归的模型。 z = w_0+w_1x_1+w_2x_2+...+w_n">
+<meta name="keywords" content="机器学习,回归">
+<meta property="og:type" content="article">
+<meta property="og:title" content="logistic回归">
+<meta property="og:url" content="http://yoursite.com/2018/05/16/logistic回归/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="引言logistic回归是一种很早期的回归模型，属于广义的线性回归，用于数据挖掘，经济预测等多种场景。本章我们首先引入线性回归模型，然后给出逻辑回归的定义，以及二次逻辑回归，同时给出logistic回归的参数训练方法，最后给出logistic回归于神经网络的关系 线性回归所谓的线性回归，其实就是用下面的公式来对数据进行分类或者回归的模型。 z = w_0+w_1x_1+w_2x_2+...+w_n">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/LinearRegression.jpg">
+<meta property="og:image" content="http://yoursite.com/images/logisticDistribute.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180505210156.jpg">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.640Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="logistic回归">
+<meta name="twitter:description" content="引言logistic回归是一种很早期的回归模型，属于广义的线性回归，用于数据挖掘，经济预测等多种场景。本章我们首先引入线性回归模型，然后给出逻辑回归的定义，以及二次逻辑回归，同时给出logistic回归的参数训练方法，最后给出logistic回归于神经网络的关系 线性回归所谓的线性回归，其实就是用下面的公式来对数据进行分类或者回归的模型。 z = w_0+w_1x_1+w_2x_2+...+w_n">
+<meta name="twitter:image" content="http://yoursite.com/images/LinearRegression.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/16/logistic回归/">
+
+
+
+
+
+  <title>logistic回归 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blogs</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/16/logistic回归/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuanchn">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">logistic回归</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-16T00:00:00+08:00">
+                2018-05-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  821
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>logistic回归是一种很早期的回归模型，属于广义的线性回归，用于数据挖掘，经济预测等多种场景。本章我们首先引入线性回归模型，然后给出逻辑回归的定义，以及二次逻辑回归，同时给出logistic回归的参数训练方法，最后给出logistic回归于神经网络的关系</p>
+<h1 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h1><p>所谓的线性回归，其实就是用下面的公式来对数据进行分类或者回归的模型。</p>
+<script type="math/tex; mode=display">z = w_0+w_1x_1+w_2x_2+...+w_nx_n = wx</script><p>图示如下所示：</p>
+<p><img src="/images/LinearRegression.jpg" alt="线性回归"></p>
+<p>本质上讲就是利用线性方程来划分分类平面的模型</p>
+<h1 id="二项logistic回归"><a href="#二项logistic回归" class="headerlink" title="二项logistic回归"></a>二项logistic回归</h1><p>二项logistic回归就是如下的条件概率分布</p>
+<script type="math/tex; mode=display">P(Y=1|x) = \frac{e^{wx}}{1 + e^{wx}}</script><script type="math/tex; mode=display">P(Y=0|x) = \frac{1}{1 + e^{wx}}</script><p>其中<script type="math/tex">wx = w_0+w_1x_1+w_2x_2+...+w_nx_n</script> 就是上面的线性分类器</p>
+<p>因此二项logistic回归就是利用logistic函数，根据输出，将目标分成两类。logistic回归是一种概率化的模型。训练二项logistic回归，本质上就是通过给定的输入<script type="math/tex">x</script>训练模型参数<script type="math/tex">w</script>。后面我们会讲解如何训练模型参数，下面我们先介绍一下logistic分布。</p>
+<h1 id="logistic分布"><a href="#logistic分布" class="headerlink" title="logistic分布"></a>logistic分布</h1><p>假设<script type="math/tex">X</script>为连续随机变量，<script type="math/tex">X</script>服从logistic分布是指<script type="math/tex">X</script>具有下面的分布函数和密度函数：</p>
+<script type="math/tex; mode=display">F(X) = P(X \leq x) = \frac{1}{1 + e^{\frac {-(x- \mu)}{\gamma}}}</script><script type="math/tex; mode=display">f(X) = F'( x) = \frac{e^{\frac {-(x- \mu)}{\gamma}}}{\gamma(1 + e^{\frac {-(x- \mu)}{\gamma}})^2}</script><p>看着函数比较复杂，其实画出其图像就简单了</p>
+<p><img src="/images/logisticDistribute.jpg" alt="logisticDistribute"></p>
+<p>其实概率密度函数是一个描述这个随机变量的输出值，在某个确定的取值点附近的可能性的函数。随机变量的取值落在某个区域之内的概率则为概率密度函数在这个区域上的积分</p>
+<p>因此通过分布函数我们可以推导出上面的二项logistic回归，同样的也可以推导出多项logistic回归方程，如下所示，</p>
+<h1 id="多项logistic回归"><a href="#多项logistic回归" class="headerlink" title="多项logistic回归"></a>多项logistic回归</h1><p>多项logistic回归有下面的模型</p>
+<script type="math/tex; mode=display">P(Y=k |x) = \frac{e^{w_k x}}{1 + \sum^{K-1}_{k=1}{e^{wx}}} \qquad 其中 k=1,2,...,K-1</script><script type="math/tex; mode=display">P(Y=K |x) = \frac{1}{1 + \sum^{K-1}_{k=1}{e^{wx}}}</script><h1 id="参数学习"><a href="#参数学习" class="headerlink" title="参数学习"></a>参数学习</h1><p>下面我们已二项logistic回归为例子，用极大似然估计来推导logistic回归的参数学习。</p>
+<p>另：</p>
+<script type="math/tex; mode=display">P(Y=1|x,\theta) = \frac{e^{\theta x}}{1 + e^{\theta x}} =h_{\theta}(x)</script><script type="math/tex; mode=display">P(Y=0|x,\theta) = \frac{1}{1 + e^{\theta x}} =1-h_{\theta}(x)</script><p>则条件概率分布:</p>
+<script type="math/tex; mode=display">P(y|x; \theta) = (h_{\theta})^y(1-h_{\theta})^{1-y}</script><p>假设用于训练的m个样本独立，所以样本的条件概率分布的似然函数如下所示：</p>
+<script type="math/tex; mode=display">L(\theta) =  \prod_{i=1}^{m} P(y^i|x^i; \theta) = (h_{\theta})^{y_i}(1-h_{\theta})^{1-y_i}</script><p>我们的目标就是最大化这个函数<script type="math/tex">L(\theta)</script></p>
+<p>将上面的等式取对数有</p>
+<script type="math/tex; mode=display">l(\theta) =  log(\prod_{i=1}^{m} P(y^i|x^i; \theta) )= \sum_{i=1}^{m} (log( (h_{\theta})^{y_i}) +log( (1-h_{\theta})^{1-y_i}) )</script><script type="math/tex; mode=display">l(\theta) = \sum_{i=1}^{m} ({y_i}log (h_{\theta}) +{(1-y_i)} log(1-h_{\theta}) )</script><p>因此目标转变为了最大化函数<script type="math/tex">l(\theta)</script>，也可以转换为最小化下面的函数</p>
+<script type="math/tex; mode=display">-l(\theta) = \frac{1}{m}\sum_{i=1}^{m} ({y_i}log (h_{\theta}) +{(1-y_i)} log(1-h_{\theta}) )</script><p>这个函数好熟悉啊，这个不就是之前在<a href="/_posts/logistic回归.md">神经网络之代价函数的选择</a>这一章节引入的交叉熵代价函数么，好巧啊，那么我们也可以用梯度下降算法来学习参数了啊。</p>
+<h1 id="logistic回归与神经网络的关系"><a href="#logistic回归与神经网络的关系" class="headerlink" title="logistic回归与神经网络的关系"></a>logistic回归与神经网络的关系</h1><p>我们将神经网络进行简化，去掉隐藏层，输出层为1个神经元，神经元选择为logistic神经元，我们发现这是的神经网络就是logistic回归。</p>
+<p><img src="/images/20180505210156.jpg" alt="logistic回归"></p>
+<p>只不过神经网络的输出为<script type="math/tex">\sigma = \frac{1}{1+e^{-z}}</script>， 这正好对应着二项logistic中的<script type="math/tex">P(Y=0|x)</script></p>
+<p>因此我们可以按照神经网络中的<a href="/_posts/神经网络.md">梯度下降算法</a>来更新logistic回归模型里面的参数。</p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>logistic回归模型更新权重的方法还有迭代尺度法和拟牛顿法，这个后面有时间在更新。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/回归/" rel="tag"># 回归</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/12/遗传算法与进化算法/" rel="next" title="遗传算法与进化算法">
+                <i class="fa fa-chevron-left"></i> 遗传算法与进化算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/17/模糊聚类/" rel="prev" title="模糊聚类">
+                模糊聚类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuanchn">
+            
+              <p class="site-author-name" itemprop="name">changyuanchn</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">111</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线性回归"><span class="nav-number">2.</span> <span class="nav-text">线性回归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二项logistic回归"><span class="nav-number">3.</span> <span class="nav-text">二项logistic回归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#logistic分布"><span class="nav-number">4.</span> <span class="nav-text">logistic分布</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多项logistic回归"><span class="nav-number">5.</span> <span class="nav-text">多项logistic回归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数学习"><span class="nav-number">6.</span> <span class="nav-text">参数学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#logistic回归与神经网络的关系"><span class="nav-number">7.</span> <span class="nav-text">logistic回归与神经网络的关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">8.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuanchn</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">118.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共118.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

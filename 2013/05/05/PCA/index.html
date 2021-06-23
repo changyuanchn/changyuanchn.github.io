@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,非监督学习,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引言为什么会讲到PCA？ 前一阵在做一些featureselection的工作，想到PCA可以用来降维（在某些方面来说Feature selection也要降维），因此学习了一下PCA才发现这是完全不同的过程（PCA中的降维（计算主成分的目的是将高维数据投影到较低维空间）与特征选择中的降维（选取特征）是两个概念）。PCA应该算是feature extraction的过程，feature extra">
+<meta name="keywords" content="机器学习,非监督学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PCA（主成分分析）">
+<meta property="og:url" content="http://yoursite.com/2013/05/05/PCA/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="引言为什么会讲到PCA？ 前一阵在做一些featureselection的工作，想到PCA可以用来降维（在某些方面来说Feature selection也要降维），因此学习了一下PCA才发现这是完全不同的过程（PCA中的降维（计算主成分的目的是将高维数据投影到较低维空间）与特征选择中的降维（选取特征）是两个概念）。PCA应该算是feature extraction的过程，feature extra">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/xiangliangneiji.jpg">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.625Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PCA（主成分分析）">
+<meta name="twitter:description" content="引言为什么会讲到PCA？ 前一阵在做一些featureselection的工作，想到PCA可以用来降维（在某些方面来说Feature selection也要降维），因此学习了一下PCA才发现这是完全不同的过程（PCA中的降维（计算主成分的目的是将高维数据投影到较低维空间）与特征选择中的降维（选取特征）是两个概念）。PCA应该算是feature extraction的过程，feature extra">
+<meta name="twitter:image" content="http://yoursite.com/images/xiangliangneiji.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/05/05/PCA/">
+
+
+
+
+
+  <title>PCA（主成分分析） | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blogs</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/05/05/PCA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuanchn">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PCA（主成分分析）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-05-05T00:00:00+08:00">
+                2013-05-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,089
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>为什么会讲到PCA？</p>
+<p>前一阵在做一些featureselection的工作，想到PCA可以用来降维（在某些方面来说Feature selection也要降维），因此学习了一下PCA才发现这是完全不同的过程（PCA中的降维（计算主成分的目的是将高维数据投影到较低维空间）与特征选择中的降维（选取特征）是两个概念）。PCA应该算是feature extraction的过程，feature extraction是通过变换把原始特征从最初的度量空间中变换到另一个维度减少了的度量空间（the original features in the measurement space areinitially transformed into a new dimension-reduced space via some specifiedtransformation）的过程，虽然通过featureextraction的方法是维度减少很多，但是转换后的feature几乎包含原始数据的全部信息。而feature selection则是选择一个subset，使得所选取的特征能够去掉原数据的冗余信息，是分类更好，有利于创建好的model等。扯远了，言归正传。</p>
+<p>PCA（Principal Component Analysis）即主成分分析，是一种掌握事物主要矛盾的统计分析方法，是一种经典的用于数据降维的统计学方法。在本人所接触到的应用中，PCA被应用于面部识别，是面部识别领域经典的方法。下面便总结一下ＰＣＡ的算法与技术</p>
+<h1 id="PCA-统计学上"><a href="#PCA-统计学上" class="headerlink" title="PCA(统计学上)"></a>PCA(统计学上)</h1><h2 id="奇异值分解"><a href="#奇异值分解" class="headerlink" title="奇异值分解"></a>奇异值分解</h2><p>在讲解PCA之前，首先我们介绍一下什么是奇异值分解，对于一个方阵来说，可以对其进行特征值分解，而对于非方阵来说，我们没有办法进行特征值分解，因此引入了奇异值分解。</p>
+<script type="math/tex; mode=display">M = U \Sigma V^T</script><p>也就是说给定一个矩阵<script type="math/tex">M</script>， 他可以分解为由三个矩阵相乘。其中这三个矩阵满足下面的条件：</p>
+<p>其中<script type="math/tex">U</script>的列是<script type="math/tex">MM^T</script>的单位正交特征向量 <script type="math/tex">U</script>的列是一组单位正交基</p>
+<p>其中<script type="math/tex">\Sigma</script>是对角矩阵，对角线上的值为矩阵<script type="math/tex">M</script>的奇异值</p>
+<p>其中<script type="math/tex">V</script>的列是<script type="math/tex">M^TM</script>的单位正交特征向量 <script type="math/tex">V</script>的列是一组单位正交基</p>
+<p>PCA算法就用到了矩阵的这个性质</p>
+<h2 id="PCA算法的矩阵解释"><a href="#PCA算法的矩阵解释" class="headerlink" title="PCA算法的矩阵解释"></a>PCA算法的矩阵解释</h2><p>给定我们一个机器学习问题，当我们提取完特征后，一般会将特征保存为一个矩阵进行存储，这个矩阵的行表示样本，列表示特征。假设我们的这个矩阵为<script type="math/tex">X</script>，根据上面介绍的奇异值分解，我们可以有：</p>
+<script type="math/tex; mode=display">X = W \Sigma V^T</script><p>其中<script type="math/tex">W</script>的列是<script type="math/tex">XX^T</script>的单位正交特征向量 <script type="math/tex">W</script>的列是一组正交基</p>
+<p>由于<script type="math/tex">W</script>是一组单位正交基，那么我们可以将矩阵<script type="math/tex">X</script>（矩阵实际上是数据在一组默认的正交基空间（就是单位矩阵）中的映射）映射到<script type="math/tex">W</script>的单位正交基上，可以得到矩阵<script type="math/tex">X</script>在新的正交基上的表示<script type="math/tex">Y</script>，即:</p>
+<script type="math/tex; mode=display">Y^T=X^TW</script><p>将<script type="math/tex">X = W \Sigma V^T</script>带入有：</p>
+<script type="math/tex; mode=display">Y^T=X^TW = V \Sigma^T W^TW = V\Sigma^T</script><p>因为<script type="math/tex">W</script>是单位正交矩阵，所以<script type="math/tex">W^TW = WW^T = I</script></p>
+<p>因此有<script type="math/tex">Y=\Sigma V^T</script>， 我们的得到了将<script type="math/tex">X</script>变换为<script type="math/tex">Y</script>的方式。</p>
+<p>其中<script type="math/tex">\Sigma</script>是对角矩阵，对角线上的值为矩阵<script type="math/tex">M</script>的奇异值，因此我们要将<script type="math/tex">X</script>映射到K为空间的话，那么只需要取前K个奇异值组成奇异值矩阵即可</p>
+<script type="math/tex; mode=display">Y_k =\Sigma_k V^T = I_{k*m}\Sigma V^T</script><p>那么还剩下一个问题，<script type="math/tex">V^T</script>是什么鬼。根据奇异值分解，我们知道：</p>
+<p>矩阵<script type="math/tex">V</script>的列是<script type="math/tex">X^TX</script>的单位正交特征向量 <script type="math/tex">V</script>的列是一组单位正交基。</p>
+<p>因此，给定了矩阵<script type="math/tex">X</script>，我们只要计算得到<script type="math/tex">X</script>的奇异值以及<script type="math/tex">XX^T</script>的特征向量，那么就可以计算得到矩阵的主成分矩阵<script type="math/tex">Y</script></p>
+<p>还有一个疑问点，<script type="math/tex">X^TX</script>是什么呢？ 这个就是<script type="math/tex">X</script>的协方差矩阵</p>
+<script type="math/tex; mode=display">Cov(x_i,x_j) = E((x_i - E(x_i))(x_j - E(x_j))) = E(XX^T) - \mu\mu^T</script><p>其中<script type="math/tex">\mu</script>是矩阵的列的均值向量。如果我们对矩阵首先按列归一化，那么就有<script type="math/tex">\mu = 0</script></p>
+<p>因此有<script type="math/tex">Cov(x_i,x_j) = E((x_i - E(x_i))(x_j - E(x_j))) = E(XX^T)</script>，即：</p>
+<script type="math/tex; mode=display">\Sigma = XX^T</script><p>以上就是PCA的数学表达。</p>
+<p>没看懂？ 没看懂就对了。因为这里面省略了太多的细节，并且也隐藏了太多的数学上的意义。因此下面我们来更加详细的看下，为什么要这样做。</p>
+<h2 id="PCA算法的更加详细的数学解释"><a href="#PCA算法的更加详细的数学解释" class="headerlink" title="PCA算法的更加详细的数学解释"></a>PCA算法的更加详细的数学解释</h2><h3 id="向量的内积"><a href="#向量的内积" class="headerlink" title="向量的内积"></a>向量的内积</h3><p>首先我们都学过向量的内积，那么向量的内积有什么意义呢？</p>
+<p>我们知道向量的内积有如下的公式：</p>
+<script type="math/tex; mode=display">A \cdot B = |A||B|cos(\theta)</script><p>如果<script type="math/tex">|B| = 1</script>，即<script type="math/tex">B</script>为单位向量，那么实际上<script type="math/tex">A \cdot B</script>就是在<script type="math/tex">B</script>上的映射。</p>
+<p><img src="/images/xiangliangneiji.jpg" alt="dot"></p>
+<p>因此我们可以得到，向量的内积本质上就是一个向量在另一个向量上的映射投影。这个很关键，要理解。</p>
+<p>对于我们的笛卡尔坐标系中的一个点<script type="math/tex">(x,y)</script>, 实际上可以表示为<script type="math/tex">x \cdot (1,0)^T + y \cdot (0,1)^T</script> ，其中<script type="math/tex">(1,0)</script>和<script type="math/tex">(0,1)</script>就是一组正交基。</p>
+<p>因此如果我们将<script type="math/tex">(x,y)</script>映射到一组新的基空间中，只需要用<script type="math/tex">(x,y)</script>与新的基向量做内积，就可以得到<script type="math/tex">(x,y)</script>在新的空间中的每个基向量上的坐标分量。</p>
+<p>将其推广到多维向量中，并且利用矩阵来表示：</p>
+<p>假设有M个N维向量，将其变换到R个N维向量表示的新空间中，那么可以将R个基组成矩阵<script type="math/tex">A_{N*R}</script>，向量按照行组成矩阵<script type="math/tex">B_{M*N}</script>,因此<script type="math/tex">BA</script>就可以得到向量在新空间中的向量表示。<script type="math/tex">BA</script>的第m行就是<script type="math/tex">B_{M*N}</script>中第m行变换的结果。</p>
+<p>两个矩阵相乘，本质上就是左边矩阵的每一个行向量变换到右边矩阵的每个列向量为基所表示的空间中。这是也很关键，要理解。</p>
+<p>那么现在有一个问题啊，怎么选择基呢。一个原则是“投影后的投影值尽可能的分散”</p>
+<p>（因为如果投影后的投影值都挤在了一起，那么我们就没法分别不同的点了，也就没意义了，因此要尽可能的分散）</p>
+<p>而方差是用来表示数据的离散程度的量，因此如果是一个二维的矩阵，如果要将其映射为一维，那么问题就可以转化为寻找一个一维基，使得所有的数据变换后，在这个基上的坐标，方差值最大。</p>
+<p>推广到多维向量呢？那么问题就会变为：</p>
+<p>将一组N维向量降到k维，目标就是选择k个单位正交基，使得变换后的不同特征的数据两两之间协方差为0，而特征内，方差尽可能的大。<br>（协方差为0保证了变换后的数据是线性不相关的，也就是特征之间没有冗余信息）</p>
+<p>假设有2个样本的矩阵：</p>
+<script type="math/tex; mode=display">X = \begin{pmatrix} a_1 & b_1  \\ a_2 &  b_2&  \\ ... &   ...  \\ a_n &  b_n \end{pmatrix}</script><p>那么<script type="math/tex">\frac{1}{m}XX^T = \begin{pmatrix} \frac{1}{m} \sum a_i^2  & \frac{1}{m} \sum a_i b_i \\ \frac{1}{m} \sum a_i b_i  & \frac{1}{m} \sum b_i^2 \end{pmatrix}</script></p>
+<p>我们可以看到主对角线上是方差，其他的值为协方差。那么我们只要令主对角线上的值最大化，其他值为0，即可达到我们的目标。</p>
+<p>假设原始数据为X， 其对应的协方差矩阵为C，P为基变换矩阵，那么有：</p>
+<script type="math/tex; mode=display">Y = PX</script><p>Y为变换后的矩阵，其协方差矩阵为D，那么我们的目的就是变换后的矩阵的协方差矩阵的主对角线的值最大化，其他值为0。因此有：</p>
+<script type="math/tex; mode=display">D = \frac{1}{m}YY^T = \frac{1}{m}(PX)(PX)^T = P(\frac{1}{m} XX^T )P^T = PCP^T</script><p>因此转换矩阵P就是能让原数据的协方差矩阵对角化的矩阵。</p>
+<p>而P矩阵按特征值的大小排列的前k行主成的矩阵<script type="math/tex">P_k</script>乘以矩阵<script type="math/tex">X</script>就是X从n维降到k维的变换，<script type="math/tex">P_kX</script>就是前k个主成分组成的矩阵。</p>
+<h2 id="PCA的本质"><a href="#PCA的本质" class="headerlink" title="PCA的本质"></a>PCA的本质</h2><p>PCA的本质就是将方差最大的方向作为主要特征，并且在各个正交方向上数据没有相关性。</p>
+<h2 id="主成分分析定理"><a href="#主成分分析定理" class="headerlink" title="主成分分析定理"></a>主成分分析定理</h2><p>关于主成分的求法有下面定理：</p>
+<p>设<script type="math/tex">X</script>为<script type="math/tex">p</script>维随机变量，且<script type="math/tex">\Sigma = D(X)</script>存在，则<script type="math/tex">X</script>的第<script type="math/tex">i</script>个主成分<script type="math/tex">Y_i</script>与方差<script type="math/tex">D(Y_i)</script>分别为<script type="math/tex">Y_i=t_i^TX, D(Y_i)= \lambda_i</script><br>其中<script type="math/tex">D(Y_2)</script>为的特征值，<script type="math/tex">t_i^T</script>为对应的单位特征向量。</p>
+<p>看到这里如果你还没晕就证明你的统计学知识还是不错的，但当我们在machine learning或patternrecognition中用到PCA时，如果用上面的思想脉络总是感觉怪怪的，统计学家们一直在说做machine learning的人是在reinventingthe wheel，但我感觉做机器学习的人在一些方法的应用上更好理解，更能让人明白。</p>
+<h1 id="PCA（machine-learning）"><a href="#PCA（machine-learning）" class="headerlink" title="PCA（machine learning）"></a>PCA（machine learning）</h1><p>从上面我们可知，降维就是把高维的数据投影到低维的空间中，而线性方法的本质就在这里，所以上面我们用线性组合还表示数据。在machine leaning中，PCA的目的是找到在最小均方意义下最能代表原始数据的方法（在machine leaning中这个“最小均方”无处不在啊！）。</p>
+<p>有<script type="math/tex">n</script>个<script type="math/tex">d</script>维的样本<script type="math/tex">X_1,X_2,...,X_n</script>，我们希望找到一个<script type="math/tex">X_0</script>来表示，即使平方误差准则函数<script type="math/tex">J_0 = \sum_{i=1}^n ||X_0-X_k||^2</script>达到最小，容易得到，这个值就是样本均值<script type="math/tex">X_0=m= \frac{1}{n}  \sum_{i=1}^n X_k</script>。</p>
+<p>通过把全部样本向通过样本均值的一条直线做投影，我们能够得到样本均值的直线上的一维向量</p>
+<p>这条直线是<script type="math/tex">X = m+ae</script>， （e是通过样本均值的直线上的单位向量，a是一个实数）如果我们用<script type="math/tex">m+a_ke</script>来表示<script type="math/tex">X_k</script>，那么通过最小化均方误差准则函数，我们可以得到一组最优的<script type="math/tex">a_k</script>的集合，如下：</p>
+<script type="math/tex; mode=display">J_1(a_1,...,a_n,e) = \sum_{i=1}^n ||(m+a_ke)-X_k||^2 = \sum_{i=1}^n ||a_ke-(X_k-m)||^2</script><script type="math/tex; mode=display">= \sum_{i=1}^n a_k^2||e||^2 -2\sum_{i=1}^n a_ke^T(x_k-m) + \sum_{i=1}^n ||m-X_k||^2</script><p>对<script type="math/tex">a_k</script>求导，可以得到<script type="math/tex">a_k =e^T(x_k-m)</script></p>
+<p>其实就是用一组数<script type="math/tex">a_k (k=1,2,...,n)</script>来表示原来的<script type="math/tex">n</script>个<script type="math/tex">d</script>维的样本<script type="math/tex">X_1,X_2,...,X_n</script>。</p>
+<p>下面还有一个问题就是如何找到<script type="math/tex">e</script>的方向</p>
+<p>引入样本离差矩阵<script type="math/tex">S = \sum_{i=1}^n (X_i-\overline{X})(X_i-\overline{X})^T</script></p>
+<p>将<script type="math/tex">a_k =e^T(x_k-m)</script>带入到<script type="math/tex">J_1(a_1,...,a_n,e) =  \sum_{i=1}^n a_k^2||e||^2 -2\sum_{i=1}^n a_ke^T(x_k-m) + \sum_{i=1}^n ||m-X_k||^2</script>公式中，可以得到<script type="math/tex">J_1(e) = -e^TSe  + \sum_{i=1}^n ||X_k - m||^2</script>, 显然是<script type="math/tex">J_1</script>最小的那个向量<script type="math/tex">e</script>，能使<script type="math/tex">-e^TSe</script>最大。在约束条件<script type="math/tex">||e||^2 = 1</script>下，利用拉格朗日乘子法，有：</p>
+<p>$\mu = e^TSe - \lambda (e^Te-1)$,对<script type="math/tex">e</script>求偏导，有<script type="math/tex">\frac{\partial \mu}{\partial e} = 2Se-2\lambda e</script>,另其为0，有<script type="math/tex">Se =\lambda e</script>,因此，矩阵<script type="math/tex">S</script>最大的特征值对应的特征向量就是投影e的方向。</p>
+<p>从几何上来讲，样本点<script type="math/tex">X_1,X_2,...,X_n</script>在<script type="math/tex">d</script>维空间上形成一个<script type="math/tex">d</script>维椭球形状的云团，样本离差矩阵<script type="math/tex">S</script>的特征向量就是这个云团的主轴，主成分分析就是提取云团散布最大的那些方向的方法，达到对特征空间进行降维的目的。</p>
+<h1 id="举个小例子直观说明一下PCA"><a href="#举个小例子直观说明一下PCA" class="headerlink" title="举个小例子直观说明一下PCA"></a>举个小例子直观说明一下PCA</h1><p>对于一个训练集，100个对象模板，特征是10维，那么它可以建立一个100<em>10的矩阵，作为样本。求这个样本的协方差矩阵，得到一个10</em>10的协方差矩阵，然后求出这个协方差矩阵的特征值和特征向量，应该有10个特征值和特征向量，我们根据特征值的大小，取前四个特征值所对应的特征向量，构成一个10<em>4的矩阵，这个矩阵就是我们要求的特征矩阵，100</em>10的样本矩阵乘以这个10<em>4的特征矩阵，就得到了一个100</em>4的新的降维之后的样本矩阵，每个特征的维数下降了。</p>
+<h1 id="具体的应用（面部识别）"><a href="#具体的应用（面部识别）" class="headerlink" title="具体的应用（面部识别）"></a>具体的应用（面部识别）</h1><blockquote>
+<p>训练阶段</p>
+<blockquote>
+<ul>
+<li>假设训练集有两百个样本，由灰度图组成每个样本大小M*N，则样本训练矩阵为<script type="math/tex">x =(x_1,x_2,...,x_{200})</script>,<script type="math/tex">x_i</script> 为灰度图像沿纵轴的拉伸</li>
+<li>计算平均脸<script type="math/tex">\Psi = \frac{1}{200} \sum_{i=1}^{200} x_i</script> </li>
+<li>计算每一张脸与平均脸的差值<script type="math/tex">d_i = x_i -\Psi</script></li>
+<li>构造协方差矩阵<script type="math/tex">C = \frac{1}{200} \sum_{i=1}^{200}d_id_i^T</script></li>
+<li>求协方差矩阵的特征值与特征向量，构造特征脸空间</li>
+<li>根据贡献率选取前p个最大特征值及其对应的特征向量,其中贡献率为<script type="math/tex">\varphi =\frac{\sum_{i=1}^{p} \lambda_i}{\sum_{i=1}^{p} \lambda_i} \geq a</script>，其中贡献率<script type="math/tex">a</script>  取99%， 即训练样本的前p个特征向量集上的投影有99%的能量，特征脸空间为<script type="math/tex">w = (\mu_1,...,\mu_p)</script></li>
+<li>将每一幅人脸与平均脸的差值矢量投影到“特征脸”空间，即<script type="math/tex">\Omega =w^Td_i</script> </li>
+</ul>
+</blockquote>
+<p>识别阶段</p>
+<blockquote>
+<ul>
+<li>将待识别人脸与平均脸的差值投影到特征空间，得到其特征向量表示<script type="math/tex">\Omega^\Gamma  =w^T( \Gamma -\Psi )</script> </li>
+<li>定义阈值 <script type="math/tex">\theta =\frac{1}{2}max\left \{ ||\Omega_i - \Omega_j|| \right \},i,j=1,2,...,200</script> </li>
+<li>采用欧式距离计算<script type="math/tex">\Omega^\Gamma</script>与每个人脸的距离<script type="math/tex">\varepsilon^2=||\Omega_i  - \Omega^\Gamma  ||^2 ,i=1,2,...,200</script></li>
+<li>为了区分人脸和非人脸，还需要计算原始图像<script type="math/tex">\Gamma</script>与由特征脸空间重建的图像<script type="math/tex">\Gamma_f</script>之间的距离<script type="math/tex">\varepsilon</script>，其中<script type="math/tex">\varepsilon^2 = ||\Gamma -\Gamma_f ||^2,\Gamma_f = w\Omega^\Gamma +\Psi</script>；</li>
+<li>根据以下规则对人脸进行分类<blockquote>
+<ul>
+<li>若<script type="math/tex">\varepsilon \geq \theta</script>则输入图像不是人脸图像</li>
+<li>若<script type="math/tex">\varepsilon \geq \theta</script>且<script type="math/tex">\forall i,\varepsilon_i \geq 0</script>则输入图像包含未知人脸</li>
+<li>若<script type="math/tex">\varepsilon < \theta</script>且<script type="math/tex">\forall i,\varepsilon_i < 0</script>则输入图像是库中第<script type="math/tex">k</script>个人的人脸</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/非监督学习/" rel="tag"># 非监督学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/10/07/读书笔记之The C Programming Language/" rel="prev" title="读书笔记之The C Programming Language">
+                读书笔记之The C Programming Language <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuanchn">
+            
+              <p class="site-author-name" itemprop="name">changyuanchn</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">111</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA-统计学上"><span class="nav-number">2.</span> <span class="nav-text">PCA(统计学上)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#奇异值分解"><span class="nav-number">2.1.</span> <span class="nav-text">奇异值分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PCA算法的矩阵解释"><span class="nav-number">2.2.</span> <span class="nav-text">PCA算法的矩阵解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PCA算法的更加详细的数学解释"><span class="nav-number">2.3.</span> <span class="nav-text">PCA算法的更加详细的数学解释</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#向量的内积"><span class="nav-number">2.3.1.</span> <span class="nav-text">向量的内积</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PCA的本质"><span class="nav-number">2.4.</span> <span class="nav-text">PCA的本质</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主成分分析定理"><span class="nav-number">2.5.</span> <span class="nav-text">主成分分析定理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA（machine-learning）"><span class="nav-number">3.</span> <span class="nav-text">PCA（machine learning）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#举个小例子直观说明一下PCA"><span class="nav-number">4.</span> <span class="nav-text">举个小例子直观说明一下PCA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#具体的应用（面部识别）"><span class="nav-number">5.</span> <span class="nav-text">具体的应用（面部识别）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuanchn</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">118.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共118.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

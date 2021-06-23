@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vulkan,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="vulkan中的资源从大的分类来说就两种，一种是Buffer，一种是Image。Buffer可以用来存放顶点，材质等等信息，而Image一般则是用来做attachment或者纹理贴图。 纹理贴图是需要从外界获取的，实际上他就是一张图片，因此我们需要首先将其加载到vulkan的缓存中 1） 外部图像加载可以直接使用stb_image库来加载图像，只需要下载并将stb_image.h文件配置到工程里，">
+<meta name="keywords" content="vulkan">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vulkan之Image, ImageView and Sample">
+<meta property="og:url" content="http://yoursite.com/2020/03/31/Vulkan之Image_ImageView_Sample/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="vulkan中的资源从大的分类来说就两种，一种是Buffer，一种是Image。Buffer可以用来存放顶点，材质等等信息，而Image一般则是用来做attachment或者纹理贴图。 纹理贴图是需要从外界获取的，实际上他就是一张图片，因此我们需要首先将其加载到vulkan的缓存中 1） 外部图像加载可以直接使用stb_image库来加载图像，只需要下载并将stb_image.h文件配置到工程里，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.632Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vulkan之Image, ImageView and Sample">
+<meta name="twitter:description" content="vulkan中的资源从大的分类来说就两种，一种是Buffer，一种是Image。Buffer可以用来存放顶点，材质等等信息，而Image一般则是用来做attachment或者纹理贴图。 纹理贴图是需要从外界获取的，实际上他就是一张图片，因此我们需要首先将其加载到vulkan的缓存中 1） 外部图像加载可以直接使用stb_image库来加载图像，只需要下载并将stb_image.h文件配置到工程里，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/03/31/Vulkan之Image_ImageView_Sample/">
+
+
+
+
+
+  <title>Vulkan之Image, ImageView and Sample | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blogs</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/31/Vulkan之Image_ImageView_Sample/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuanchn">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vulkan之Image, ImageView and Sample</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-31T00:00:00+08:00">
+                2020-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,379
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>vulkan中的资源从大的分类来说就两种，一种是Buffer，一种是Image。Buffer可以用来存放顶点，材质等等信息，而Image一般则是用来做attachment或者纹理贴图。</p>
+<p>纹理贴图是需要从外界获取的，实际上他就是一张图片，因此我们需要首先将其加载到vulkan的缓存中</p>
+<h2 id="1）-外部图像加载"><a href="#1）-外部图像加载" class="headerlink" title="1） 外部图像加载"></a>1） 外部图像加载</h2><p>可以直接使用stb_image库来加载图像，只需要下载并将stb_image.h文件配置到工程里，就可以直接使用这个库了。<br>stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &amp;texWidth, &amp;texHeight, &amp;texChannels, STBI_rgb_alpha);<br>其中texWidth，texHeight，texChannels分别表示加载的图像的宽，高以及通道。STBI_rgb_alpha参数表示强制生成alpha通道，因为我们在vulkan用的大多数图像都是4通道的。最终我们加载的图像信息存放在了pixels里面，这是一块内存，并不直接是图像。</p>
+<h2 id="2）创建stagingBuffer"><a href="#2）创建stagingBuffer" class="headerlink" title="2）创建stagingBuffer"></a>2）创建stagingBuffer</h2><p>更vertexBuffer的原理一样，这里也是需要用到stagingBuffer，原因也是一样的，因为Image实际上会被shader频繁采样，所以不能设置为CPU直接访问的格式，因此需要staging缓冲一下。<br>首先创建stagingBuffer，并分配stagingBufferMemory。然后做GPU的内存映射到CPU可访问的地址，然后执行memcpy，最后free掉pixels内存占用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">VkBuffer stagingBuffer;</span><br><span class="line">VkDeviceMemory stagingBufferMemory;</span><br><span class="line">createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);</span><br><span class="line"></span><br><span class="line">void* data;</span><br><span class="line">vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &amp;data);</span><br><span class="line">memcpy(data, pixels, static_cast&lt;size_t&gt;(imageSize));</span><br><span class="line">vkUnmapMemory(device, stagingBufferMemory);</span><br><span class="line"></span><br><span class="line">stbi_image_free(pixels);</span><br></pre></td></tr></table></figure></p>
+<h2 id="3）创建纹理图像"><a href="#3）创建纹理图像" class="headerlink" title="3）创建纹理图像"></a>3）创建纹理图像</h2><p>跟创建Buffer很像，也是要先创建Image对象，然后allocate存储空间<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkCreateImage(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    const VkImageCreateInfo*                    pCreateInfo,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator,</span><br><span class="line">    VkImage*                                    pImage);</span><br></pre></td></tr></table></figure></p>
+<h3 id="a）创建所需的结构体VkImageCreateInfo"><a href="#a）创建所需的结构体VkImageCreateInfo" class="headerlink" title="a）创建所需的结构体VkImageCreateInfo"></a>a）创建所需的结构体VkImageCreateInfo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkImageCreateInfo &#123;</span><br><span class="line">    VkStructureType          sType;   // VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO</span><br><span class="line">    const void*              pNext;   // 指向扩展结构体</span><br><span class="line">    VkImageCreateFlags       flags;   // 图像属性的标志位</span><br><span class="line">    VkImageType              imageType;  // 图像类型，1D,2D,3D</span><br><span class="line">    VkFormat                 format; // 图像格式， 比如VK_FORMAT_R8G8B8A8_SRGB</span><br><span class="line">    VkExtent3D               extent;   // 存放图像的width，height，depth信息</span><br><span class="line">    uint32_t                 mipLevels;  // mipMap级别</span><br><span class="line">    uint32_t                 arrayLayers; // 图像的层数</span><br><span class="line">    VkSampleCountFlagBits    samples; // 采样的次数，如果不需要多重采样，就设置为VK_SAMPLE_COUNT_1_BIT</span><br><span class="line">    VkImageTiling            tiling;  // 图像的使用方式</span><br><span class="line">    VkImageUsageFlags        usage;   // 图像的用途</span><br><span class="line">    VkSharingMode            sharingMode; // 是否可以多个Queue共享</span><br><span class="line">    uint32_t                 queueFamilyIndexCount;  // 当VkSharingMode为VK_SHARING_MODE_CONCURRENT需要设置pQueueFamilyIndices，表示那些队列会用到数据，否则不需要设置</span><br><span class="line">    const uint32_t*          pQueueFamilyIndices;</span><br><span class="line">    VkImageLayout            initialLayout; // 初始的布局</span><br><span class="line">&#125; VkImageCreateInfo;</span><br></pre></td></tr></table></figure>
+<p>这个结构体也是很重要的，这里我们详细分析一下：</p>
+<p>tiling的格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkImageTiling &#123;</span><br><span class="line">    VK_IMAGE_TILING_OPTIMAL = 0,</span><br><span class="line">    VK_IMAGE_TILING_LINEAR = 1,</span><br><span class="line">    VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT = 1000158000,</span><br><span class="line">    VK_IMAGE_TILING_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkImageTiling;</span><br></pre></td></tr></table></figure></p>
+<p>VK_IMAGE_TILING_LINEAR就表示图像是采用平铺的形式在内存中存储，也就是图像从左到右，从上到下依次的线性存放。这种存储方式对于图像的访问效率是不高的。<br>VK_IMAGE_TILING_OPTIMAL是对上面的存储方式进行优化，不同的设备不同，主要目的就是提升device对图像的读取效率。</p>
+<p>usage表示图像的用途，有如下的一些定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkImageUsageFlagBits &#123;</span><br><span class="line">    VK_IMAGE_USAGE_TRANSFER_SRC_BIT = 0x00000001,  // 用作传输的源</span><br><span class="line">    VK_IMAGE_USAGE_TRANSFER_DST_BIT = 0x00000002,  // 用作传输的目的</span><br><span class="line">    VK_IMAGE_USAGE_SAMPLED_BIT = 0x00000004,    // 其生成ImageView用作给shader来采样</span><br><span class="line">    VK_IMAGE_USAGE_STORAGE_BIT = 0x00000008,    //  其生成ImageView适合作为</span><br><span class="line">    VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = 0x00000010,    // 其生成ImageView用作FrameBuffer中的color attachment或者resolve attachement</span><br><span class="line">    VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = 0x00000020,    // 其生成ImageView的用于FrameBuffer中的depth/stencil</span><br><span class="line">    VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = 0x00000040, </span><br><span class="line">    VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = 0x00000080,    // 其生成的ImageView与VkDescriptorSet中的VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT对应，用于shader的input或者framebuffer中的input attachment</span><br><span class="line">    VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV = 0x00000100,    // </span><br><span class="line">    VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT = 0x00000200,    // </span><br><span class="line">    VK_IMAGE_USAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkImageUsageFlagBits;</span><br></pre></td></tr></table></figure></p>
+<p>VkImageLayout图像布局：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">在typedef enum VkImageLayout定义，格式有点多，挑几个常用的：</span><br><span class="line">    VK_IMAGE_LAYOUT_UNDEFINED = 0,   // 适合</span><br><span class="line">    VK_IMAGE_LAYOUT_GENERAL = 1,   // 通用格式，device可以访问</span><br><span class="line">    VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = 2,   // 适合用作color attachment</span><br><span class="line">    VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL = 3, // 适用于depth/stencil attachement</span><br><span class="line">    VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = 6,   // 使用与传输操作</span><br><span class="line">    VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = 7,</span><br><span class="line">    VK_IMAGE_LAYOUT_PRESENT_SRC_KHR = 1000001002,  // 使用与向屏幕显示</span><br></pre></td></tr></table></figure></p>
+<h3 id="b）然后我们调用下面的函数获取Image所需的存储空间大小"><a href="#b）然后我们调用下面的函数获取Image所需的存储空间大小" class="headerlink" title="b）然后我们调用下面的函数获取Image所需的存储空间大小"></a>b）然后我们调用下面的函数获取Image所需的存储空间大小</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkGetImageMemoryRequirements(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    VkImage                                     image,</span><br><span class="line">    VkMemoryRequirements*                       pMemoryRequirements);</span><br></pre></td></tr></table></figure>
+<h3 id="c）然后分配图像的存储空间pMemory"><a href="#c）然后分配图像的存储空间pMemory" class="headerlink" title="c）然后分配图像的存储空间pMemory"></a>c）然后分配图像的存储空间pMemory</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkAllocateMemory(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    const VkMemoryAllocateInfo*                 pAllocateInfo,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator,</span><br><span class="line">    VkDeviceMemory*                             pMemory);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkMemoryAllocateInfo &#123;</span><br><span class="line">    VkStructureType    sType; // VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO</span><br><span class="line">    const void*        pNext;</span><br><span class="line">    VkDeviceSize       allocationSize; // 空间大小</span><br><span class="line">    uint32_t           memoryTypeIndex; // memoryType的Index，这个需要从physicalDevice获取</span><br><span class="line">&#125; VkMemoryAllocateInfo;</span><br></pre></td></tr></table></figure>
+<p>我们首先调用下面的函数从physicalDevice获取我们支持的Device Memory Proporty，然后pMemoryProperties数组中的每一个值跟我们需要的属性进行与运算，返回符合条件的pMemoryProperties数组的内容的索引<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkGetPhysicalDeviceMemoryProperties(</span><br><span class="line">    VkPhysicalDevice                            physicalDevice,</span><br><span class="line">    VkPhysicalDeviceMemoryProperties*           pMemoryProperties);</span><br></pre></td></tr></table></figure></p>
+<p>类型主要有下面的定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkMemoryPropertyFlagBits &#123;</span><br><span class="line">    VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = 0x00000001,  // device可以最高效的访问数据</span><br><span class="line">    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = 0x00000002,  // 这种格式可以用vkMapMemory将device内存映射为host可以访问的地址上</span><br><span class="line">    VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = 0x00000004, // 主机对内存的写入是可见的（反之亦然），而不需要刷新内存缓存</span><br><span class="line">    VK_MEMORY_PROPERTY_HOST_CACHED_BIT = 0x00000008,   // 表示此类型的内存中的数据由主机缓存</span><br><span class="line">    VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = 0x00000010,</span><br><span class="line">    VK_MEMORY_PROPERTY_PROTECTED_BIT = 0x00000020,</span><br><span class="line">    VK_MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD = 0x00000040,</span><br><span class="line">    VK_MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD = 0x00000080,</span><br><span class="line">    VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkMemoryPropertyFlagBits;</span><br><span class="line">typedef VkFlags VkMemoryPropertyFlags;</span><br></pre></td></tr></table></figure></p>
+<h3 id="d）最后将image和imageMemory绑定"><a href="#d）最后将image和imageMemory绑定" class="headerlink" title="d）最后将image和imageMemory绑定"></a>d）最后将image和imageMemory绑定</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkBindImageMemory(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    VkImage                                     image,</span><br><span class="line">    VkDeviceMemory                              memory,</span><br><span class="line">    VkDeviceSize                                memoryOffset); // 偏移，一般为0。</span><br></pre></td></tr></table></figure>
+<h2 id="4）-将stagingBuffer中的内容写入到创建的image中"><a href="#4）-将stagingBuffer中的内容写入到创建的image中" class="headerlink" title="4） 将stagingBuffer中的内容写入到创建的image中"></a>4） 将stagingBuffer中的内容写入到创建的image中</h2><p>由于在设备内存中操作，因此需要使用传输命令的方式来进行copy<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdCopyBufferToImage(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    VkBuffer                                    srcBuffer,   // stagingBuffer</span><br><span class="line">    VkImage                                     dstImage,    // 上面创建的Image对象</span><br><span class="line">    VkImageLayout                               dstImageLayout, // 目的图像的布局</span><br><span class="line">    uint32_t                                    regionCount,</span><br><span class="line">    const VkBufferImageCopy*                    pRegions);  // 定义需要copy的区域信息</span><br></pre></td></tr></table></figure></p>
+<p>因为是command，所以这个流程还是要有command pool分配内存，vkQueueSubmit提交命令的操作的。</p>
+<h2 id="5）-ImageView"><a href="#5）-ImageView" class="headerlink" title="5） ImageView"></a>5） ImageView</h2><p>在vulkan中图像是存储资源，没法被frameBuffer或者shader什么的使用，能够被使用的是ImageView，因此我们需要通过Image来创建ImageView<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkCreateImageView(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    const VkImageViewCreateInfo*                pCreateInfo,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator,</span><br><span class="line">    VkImageView*                                pView);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkImageViewCreateInfo &#123;</span><br><span class="line">    VkStructureType            sType;   // 类型信息VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO</span><br><span class="line">    const void*                pNext;   // 扩展</span><br><span class="line">    VkImageViewCreateFlags     flags;   // </span><br><span class="line">    VkImage                    image;   // 图像资源</span><br><span class="line">    VkImageViewType            viewType; //指定图像被看作是一维纹理、二维纹理、三维纹理还是立方体贴图</span><br><span class="line">    VkFormat                   format;   // 图像的格式</span><br><span class="line">    VkComponentMapping         components;  //图像颜色通道的映射</span><br><span class="line">    VkImageSubresourceRange    subresourceRange;</span><br><span class="line">&#125; VkImageViewCreateInfo;</span><br></pre></td></tr></table></figure>
+<p>subresourceRange成员变量用于指定图像的用途和图像的哪一部分可以被访问<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkImageSubresourceRange &#123;</span><br><span class="line">    VkImageAspectFlags    aspectMask;   // 需要用到的图像资源的的层的位表示</span><br><span class="line">    uint32_t              baseMipLevel;  // 从mipMap的那个层开始</span><br><span class="line">    uint32_t              levelCount;    // 包含多少个mipMap层</span><br><span class="line">    uint32_t              baseArrayLayer;  // 起始层</span><br><span class="line">    uint32_t              layerCount;   //层数</span><br><span class="line">&#125; VkImageSubresourceRange;</span><br></pre></td></tr></table></figure></p>
+<h2 id="6）Sampler"><a href="#6）Sampler" class="headerlink" title="6）Sampler"></a>6）Sampler</h2><p>对于纹理图像，我们一般不直接用ImageView，而是用一种被称作采样器的东西来访问纹理数据，采样器可以自动地对纹理数据进行过滤和变换处理。<br>实际上纹理采样的水很深，要出好的效果需要做各种的优化，甚至有些效果还需要权衡，因此不用ImageView自己读取纹理而是直接使用Sampler是最明智的方式。</p>
+<p>创建采样器的函数如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkCreateSampler(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    const VkSamplerCreateInfo*                  pCreateInfo,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator,</span><br><span class="line">    VkSampler*                                  pSampler);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkSamplerCreateInfo &#123;</span><br><span class="line">    VkStructureType         sType;  // VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO</span><br><span class="line">    const void*             pNext;</span><br><span class="line">    VkSamplerCreateFlags    flags;</span><br><span class="line">    VkFilter                magFilter;</span><br><span class="line">    VkFilter                minFilter;</span><br><span class="line">    VkSamplerMipmapMode     mipmapMode;</span><br><span class="line">    VkSamplerAddressMode    addressModeU;</span><br><span class="line">    VkSamplerAddressMode    addressModeV;</span><br><span class="line">    VkSamplerAddressMode    addressModeW;</span><br><span class="line">    float                   mipLodBias;</span><br><span class="line">    VkBool32                anisotropyEnable;</span><br><span class="line">    float                   maxAnisotropy;</span><br><span class="line">    VkBool32                compareEnable;</span><br><span class="line">    VkCompareOp             compareOp;</span><br><span class="line">    float                   minLod;</span><br><span class="line">    float                   maxLod;</span><br><span class="line">    VkBorderColor           borderColor;</span><br><span class="line">    VkBool32                unnormalizedCoordinates;</span><br><span class="line">&#125; VkSamplerCreateInfo;</span><br></pre></td></tr></table></figure>
+<p>这个结构实际上就是设置我们的纹理采样到底是怎样做。</p>
+<p>magFilter 和minFilter用于指定纹理需要放大和缩小时使用的插值方法。纹理放大会出现采样过密的问题，纹理缩小会出现采样过疏的问题。<br>纹理放大实际上就是纹理图像小，需要生成的图像大，这样就会导致临近多个采样点采出来的值是一样的，这回导致马赛克的效果<br>纹理缩小实际上就是纹理图像大，需要生成的图像小，这样就会导致幻影等效果，因为相邻的像素点采样的值差距过大。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkFilter &#123;</span><br><span class="line">    VK_FILTER_NEAREST = 0,</span><br><span class="line">    VK_FILTER_LINEAR = 1,</span><br><span class="line">    VK_FILTER_CUBIC_IMG = 1000015000,</span><br><span class="line">    VK_FILTER_CUBIC_EXT = VK_FILTER_CUBIC_IMG,</span><br><span class="line">    VK_FILTER_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkFilter;</span><br></pre></td></tr></table></figure></p>
+<p>addressModeU/addressModeV/addressModeW 用于图像的三个方向，当采样超出范围后，该如何处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkSamplerAddressMode &#123;</span><br><span class="line">    VK_SAMPLER_ADDRESS_MODE_REPEAT = 0,  // 采样超出图像范围时重复纹理</span><br><span class="line">    VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = 1,   // 采样超出图像范围时重复镜像后的纹理</span><br><span class="line">    VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = 2,    // 采样出图像范围时使用距离最近的边界纹素</span><br><span class="line">    VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = 3,  // 采样超出图像范围时使用镜像后距离最近的边界纹素</span><br><span class="line">    VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = 4,  // 采样超出图像返回时返回设置的边界颜色</span><br><span class="line">    VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE_KHR = VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE,</span><br><span class="line">    VK_SAMPLER_ADDRESS_MODE_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkSamplerAddressMode;</span><br></pre></td></tr></table></figure></p>
+<p>mipmapMode、mipLodBias、minLod和maxLod 用于设置mipmap，这几个参数的意义我们在mipMap的章节会来分析</p>
+<p>anisotropyEnable和maxAnisotropy 是关于各向异性的，这个在各项异性的章节来介绍他们的含义</p>
+<p>compareEnable和compareOp 用于将样本和一个设定的值进行比较，然后将比较结果用于之后的过滤操作。通常我们在进行阴影贴图时会使用它</p>
+<p>borderColor 用于指定使用VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER寻址模式时采样超出图像范围时返回的边界颜色。边界颜色并非可以设置为任意颜色。它可以被设置为浮点或整型格式的黑色、白色或透明色</p>
+<p>unnormalizedCoordinates 量用于指定采样使用的坐标系统，一般设置为VK_FALSE</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vulkan/" rel="tag"># vulkan</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/24/Vulkan之DescriptorSet/" rel="next" title="Vulkan之DescriptorSet">
+                <i class="fa fa-chevron-left"></i> Vulkan之DescriptorSet
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/05/Vulkan之ImageLayout/" rel="prev" title="Vulkan之ImageLayout">
+                Vulkan之ImageLayout <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuanchn">
+            
+              <p class="site-author-name" itemprop="name">changyuanchn</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">111</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1）-外部图像加载"><span class="nav-number">1.</span> <span class="nav-text">1） 外部图像加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2）创建stagingBuffer"><span class="nav-number">2.</span> <span class="nav-text">2）创建stagingBuffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3）创建纹理图像"><span class="nav-number">3.</span> <span class="nav-text">3）创建纹理图像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a）创建所需的结构体VkImageCreateInfo"><span class="nav-number">3.1.</span> <span class="nav-text">a）创建所需的结构体VkImageCreateInfo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#b）然后我们调用下面的函数获取Image所需的存储空间大小"><span class="nav-number">3.2.</span> <span class="nav-text">b）然后我们调用下面的函数获取Image所需的存储空间大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c）然后分配图像的存储空间pMemory"><span class="nav-number">3.3.</span> <span class="nav-text">c）然后分配图像的存储空间pMemory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#d）最后将image和imageMemory绑定"><span class="nav-number">3.4.</span> <span class="nav-text">d）最后将image和imageMemory绑定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4）-将stagingBuffer中的内容写入到创建的image中"><span class="nav-number">4.</span> <span class="nav-text">4） 将stagingBuffer中的内容写入到创建的image中</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5）-ImageView"><span class="nav-number">5.</span> <span class="nav-text">5） ImageView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6）Sampler"><span class="nav-number">6.</span> <span class="nav-text">6）Sampler</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuanchn</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">118.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共118.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据结构与算法,leetcode,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="单调栈栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。 那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。 以上就是单调栈的全部描述。 这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。 leetcode上的实例739 每日温度 这道题实际上就是求比当前数更大的数的位置。那么我们需要维持一个单调">
+<meta name="keywords" content="数据结构与算法,leetcode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单调栈">
+<meta property="og:url" content="http://yoursite.com/2019/07/01/单调栈/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="单调栈栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。 那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。 以上就是单调栈的全部描述。 这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。 leetcode上的实例739 每日温度 这道题实际上就是求比当前数更大的数的位置。那么我们需要维持一个单调">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/monoStack.png">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.647Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="单调栈">
+<meta name="twitter:description" content="单调栈栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。 那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。 以上就是单调栈的全部描述。 这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。 leetcode上的实例739 每日温度 这道题实际上就是求比当前数更大的数的位置。那么我们需要维持一个单调">
+<meta name="twitter:image" content="http://yoursite.com/images/monoStack.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/01/单调栈/">
+
+
+
+
+
+  <title>单调栈 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blogs</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/01/单调栈/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuanchn">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">单调栈</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-01T00:00:00+08:00">
+                2019-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,579
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="单调栈"><a href="#单调栈" class="headerlink" title="单调栈"></a>单调栈</h2><p>栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。</p>
+<p>那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。</p>
+<p>以上就是单调栈的全部描述。</p>
+<p>这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。</p>
+<h2 id="leetcode上的实例"><a href="#leetcode上的实例" class="headerlink" title="leetcode上的实例"></a>leetcode上的实例</h2><p><a href="https://leetcode-cn.com/problems/daily-temperatures/" target="_blank" rel="noopener">739 每日温度</a></p>
+<p>这道题实际上就是求比当前数更大的数的位置。那么我们需要维持一个单调递减的栈，当将要入栈的元素大于栈顶的元素时，栈顶元素出栈，我们就计算这两个数的索引的差值。</p>
+<p>需要注意的是栈里存放的是元素的索引，而不是元素的值，这一点是需要注意的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">int* dailyTemperatures(int* T, int TSize, int* returnSize)&#123;</span><br><span class="line">    *returnSize = TSize;</span><br><span class="line">    if(TSize==0) return NULL;</span><br><span class="line"></span><br><span class="line">    int* result = (int*)malloc(TSize*sizeof(int));</span><br><span class="line"></span><br><span class="line">    int* monoStack = (int*)malloc(TSize*sizeof(int));</span><br><span class="line">    int head = -1;</span><br><span class="line"></span><br><span class="line">    for(int i=0; i&lt;TSize; i++)&#123;</span><br><span class="line">        result[i]=0;</span><br><span class="line">        while(head!=-1 &amp;&amp; T[monoStack[head]] &lt; T[i])&#123;</span><br><span class="line">            result[monoStack[head]] = i - monoStack[head];</span><br><span class="line">            head--;</span><br><span class="line">        &#125;</span><br><span class="line">        monoStack[++head]=i;</span><br><span class="line">    &#125;</span><br><span class="line">    free(monoStack);</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://leetcode-cn.com/problems/online-stock-span/" target="_blank" rel="noopener">901 股票价格跨度</a></p>
+<p>这个题目跟739是一样的问题。只不过这里的描述改为了股票跨度问题罢了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// 维护一个单调递减栈</span><br><span class="line">// 还有一个index存放比num[i]小的天数</span><br><span class="line">typedef struct &#123;</span><br><span class="line">    int index[10001];</span><br><span class="line">    int monoStack[10001];</span><br><span class="line">    int head;</span><br><span class="line">    </span><br><span class="line">&#125; StockSpanner;</span><br><span class="line"></span><br><span class="line">StockSpanner* stockSpannerCreate() &#123;</span><br><span class="line">    StockSpanner* stock =  (StockSpanner*)malloc(sizeof(StockSpanner));</span><br><span class="line">    stock-&gt;head = -1;</span><br><span class="line">    return stock;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int stockSpannerNext(StockSpanner* obj, int price) &#123;</span><br><span class="line">    int i=1;</span><br><span class="line">    while(obj-&gt;head != -1 &amp;&amp; obj-&gt;monoStack[obj-&gt;head] &lt;= price)&#123;</span><br><span class="line">        i += obj-&gt;index[obj-&gt;head];</span><br><span class="line">        (obj-&gt;head)--;</span><br><span class="line">    &#125;</span><br><span class="line">    obj-&gt;monoStack[++(obj-&gt;head)] = price;</span><br><span class="line">    obj-&gt;index[(obj-&gt;head)]  = i;</span><br><span class="line">    return i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void stockSpannerFree(StockSpanner* obj) &#123;</span><br><span class="line">    free(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://leetcode-cn.com/problems/next-greater-element-i/" target="_blank" rel="noopener">496 下一个更大元素I</a></p>
+<p>这个题目稍微有一点难度了，这个不再是在一个数组中比较，而是在两个数组中比较了，然而实际上这个也不难，实际上我们只需要求得nums2中的每个元素的下一个最大值即可，而num1是num2的子集，所以我们只需要做下hash映射，就可以得到 nums1 中每个元素在 nums2 中的下一个比其大的值。</p>
+<p>所以我们需要维持一个单调递减栈， 然后维持一个数组，用来存放当前元素的下一个最大元素。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">int* nextGreaterElement(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize)&#123;</span><br><span class="line"></span><br><span class="line">    *returnSize = nums1Size;</span><br><span class="line">    int* result = (int*)calloc(nums1Size, sizeof(int));</span><br><span class="line">    for (int i=0; i&lt;nums1Size; i++) &#123;</span><br><span class="line">        result[i] = -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int* monoStack = (int*)calloc(nums2Size, sizeof(int));</span><br><span class="line">    int head = -1;</span><br><span class="line"></span><br><span class="line">    int* tmp = (int*)calloc(nums2Size, sizeof(int));</span><br><span class="line">    for (int i=0; i&lt;nums2Size; i++) &#123;</span><br><span class="line">        tmp[i] = -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (int i=0; i&lt;nums2Size; i++) &#123;</span><br><span class="line">        while(head != -1 &amp;&amp; nums2[monoStack[head]] &lt; nums2[i])&#123;</span><br><span class="line">            tmp[monoStack[head]] = i;</span><br><span class="line">            head--;</span><br><span class="line">        &#125;</span><br><span class="line">        monoStack[++head] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // C语言，此处直接遍历，没有用hash</span><br><span class="line">    for (int i=0; i&lt;nums1Size; i++) &#123;</span><br><span class="line">        for (int j=0; j&lt;nums2Size; j++) &#123;</span><br><span class="line">            if(nums1[i] == nums2[j] &amp;&amp; tmp[j] != -1)&#123;</span><br><span class="line">                result[i] = nums2[tmp[j]];</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    free(monoStack);</span><br><span class="line">    free(tmp);</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://leetcode-cn.com/problems/next-greater-element-ii/" target="_blank" rel="noopener">503 下一个更大元素 II</a></p>
+<p>这个题目看起来是很简单的，就是单调栈的经典模型，求下一个的最大元素罢了，唯一有一点改变的就是对于后面的元素，要循环遍历，而不是直接终止。</p>
+<p>那么一个解决方案就是对后面的找不到最大值得元素，再进行一遍遍历。</p>
+<p>实际上我们可以将数组复制一遍，变为原来的数组的两倍大小，然后进行单调栈遍历。这也是处理循环问题的标准套路。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">int* nextGreaterElements(int* nums, int numsSize, int* returnSize)&#123;</span><br><span class="line">    *returnSize = numsSize;</span><br><span class="line">    if(numsSize==0) return NULL;</span><br><span class="line"></span><br><span class="line">    int* numTmp = (int*)malloc(2*numsSize*sizeof(int));</span><br><span class="line">    for(int i=0; i&lt;numsSize; i++)&#123;</span><br><span class="line">        numTmp[i] = nums[i];</span><br><span class="line">    &#125;</span><br><span class="line">    for(int i=numsSize; i&lt;2*numsSize; i++)&#123;</span><br><span class="line">        numTmp[i] = nums[i - numsSize];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int* result = (int*)malloc(2*numsSize*sizeof(int));</span><br><span class="line"></span><br><span class="line">    int* monoStack = (int*)malloc(2*numsSize*sizeof(int));</span><br><span class="line">    int head = -1;</span><br><span class="line"></span><br><span class="line">    for(int i=0; i&lt;2*numsSize; i++)&#123;</span><br><span class="line">        result[i] = -1;</span><br><span class="line">        while(head != -1 &amp;&amp; numTmp[monoStack[head]] &lt; numTmp[i])&#123;</span><br><span class="line">            result[monoStack[head]] = numTmp[i];</span><br><span class="line">            head--;</span><br><span class="line">        &#125;</span><br><span class="line">        monoStack[++head] = i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    free(monoStack);</span><br><span class="line">    free(numTmp);</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://leetcode-cn.com/problems/largest-rectangle-in-histogram/" target="_blank" rel="noopener">84 柱状图中最大的矩形</a></p>
+<p>这道题就有点难度了，不是直观的用单调栈可以直接看出来的了。下面我们分析一下，要求最大的矩形的面积，那么矩形的面积由宽和高决定。高是确定的，那么我们就可以很容易的确定以当前高度为高的矩形的面积，这只要向左右两边扩散，找到边界点即可（所谓的边界点的高度一定是小于当前的矩形的高度的）。我们看一下暴力解法的操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">int largestRectangleArea(int* heights, int heightsSize)&#123;</span><br><span class="line"></span><br><span class="line">    if(heightsSize==0) return 0;</span><br><span class="line"></span><br><span class="line">    int* newHeights = (int*)malloc((heightsSize+1)*sizeof(int));</span><br><span class="line">    for(int i=0; i&lt;heightsSize; i++) &#123;</span><br><span class="line">        newHeights[i] = heights[i];</span><br><span class="line">    &#125;</span><br><span class="line">    newHeights[heightsSize] = 0;</span><br><span class="line"></span><br><span class="line">    int result = heights[0];</span><br><span class="line">    for(int i=0; i&lt;heightsSize; i++)&#123;</span><br><span class="line">        int left = -1;</span><br><span class="line">        int right = heightsSize;</span><br><span class="line">        for(int j=i-1; j&gt;=0; j--)&#123;</span><br><span class="line">            if(newHeights[j] &lt; newHeights[i])&#123;</span><br><span class="line">                left = j;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        for(int j=i+1; j&lt;heightsSize+1; j++)&#123;</span><br><span class="line">            if(newHeights[j] &lt; newHeights[i])&#123;</span><br><span class="line">                right = j;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        result = fmax(result, (right-left-1)*newHeights[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    free(newHeights);</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>暴力解法有个问题啊，那就是他的时间复杂度有点高o(n^2), 而且我们可以看出来暴力解法中存在着大量的重复计算，我们无法利用已经计算过的结果。</p>
+<p>我们以例子中的数组为例[2,1,5,6,2,3]<br><img src="/images/monoStack.png" alt="monoStack"></p>
+<p>以2为高度的矩形，我们继续向后遍历，下一个值为1， 那么以2为高度的矩形的面积就可以确定了。然后1为高度的矩形，我们向后遍历，下一个值为5，确定不了。我们先不管他，继续向后遍历，以5为高度的矩形，我们还是确定不了它的面积，继续向后遍历，以6为高度的矩形，我们可以确定他的面积大小了（因为他的下一个值比他小）。然后我们可以确定5了，但是1还是确定不了，所以我们要继续向下遍历，找到1的边界。</p>
+<p>因此我们可以总结一下，这就是一个单调递增的栈，栈里面存放的元素就是我们暂时还无法确定其右边界的元素啊。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">这道题目可以用动态规划以及单调栈来做：</span><br><span class="line">单调栈实际上需要考虑的是出栈的条件，因为入栈的条件就是遍历的i，那么出栈的条件是什么呢？就是找到了以当前元素为高的最大矩形的右边界</span><br><span class="line"></span><br><span class="line">*/</span><br><span class="line">int largestRectangleArea(int* heights, int heightsSize)&#123;</span><br><span class="line">    if(heightsSize==0) return 0;</span><br><span class="line">    int result = heights[0];</span><br><span class="line"></span><br><span class="line">    int* newHeights = (int*)malloc((heightsSize+1)*sizeof(int));</span><br><span class="line">    for(int i=0; i&lt;heightsSize; i++) &#123;</span><br><span class="line">        newHeights[i] = heights[i];</span><br><span class="line">    &#125;</span><br><span class="line">    newHeights[heightsSize] = 0;</span><br><span class="line"></span><br><span class="line">    int* monoStack = (int*)malloc(heightsSize*sizeof(int));</span><br><span class="line">    int head = -1;</span><br><span class="line"></span><br><span class="line">    for (int i=0; i&lt;heightsSize+1; i++) &#123;</span><br><span class="line"></span><br><span class="line">        while(head!=-1 &amp;&amp; newHeights[monoStack[head]] &gt;= newHeights[i]) &#123;</span><br><span class="line">            head--;</span><br><span class="line">            int leftSide = head == -1 ? -1 : monoStack[head];</span><br><span class="line">            int currArea = (i - leftSide - 1) * newHeights[monoStack[head+1]];</span><br><span class="line">            result = fmax(result, currArea);</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        monoStack[++head] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    free(newHeights);</span><br><span class="line">    free(monoStack);</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://leetcode-cn.com/problems/trapping-rain-water/" target="_blank" rel="noopener">42 接雨水</a></p>
+<p>这道题目是上面题目的变形，实际上如果我们的想法是看两个柱子之间能容纳多少水的话，这个题目就有点复杂了。如果我们换个思路，我们题也可以这样考虑，我们只要计算每个柱子上能容纳多少水就可以了。如图所示，第一个柱子上没水，第二个柱子上没水，第三个柱子上1个水，第四个柱子上没水……， 那么这个题目就比较清晰了。这个问题实际上还是需要确定当前高度的左右边界问题，跟上面的问题的思想是一样的。</p>
+<p>这个有个比较清晰的<a href="https://leetcode-cn.com/problems/largest-rectangle-in-histogram/solution/zhu-zhuang-tu-zhong-zui-da-de-ju-xing-by-leetcode-/" target="_blank" rel="noopener">图示</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">//如果当前元素小于栈顶元素，则把当前元素的索引入栈，如果当前元素大于栈顶元素，则说明栈顶元素对应的值肯定是在当前元素和其下面元素之间。那么我么您就可以计算得到这一部分的雨水量。</span><br><span class="line">int trap(int* height, int heightSize)&#123;</span><br><span class="line">    if(heightSize == 0) return 0;</span><br><span class="line">    int ans = 0;</span><br><span class="line">    int stack[heightSize];</span><br><span class="line">    int head = -1;</span><br><span class="line">    int current = 0;</span><br><span class="line">    while(current &lt;heightSize) &#123;</span><br><span class="line">        while(head != -1 &amp;&amp; height[current] &gt;height[stack[head]]) &#123;</span><br><span class="line">            int top = stack[head];</span><br><span class="line">            head--;</span><br><span class="line">            if(head == -1)&#123;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            int distance = current - stack[head] - 1;</span><br><span class="line">            int value = fmin(height[stack[head]], height[current]) - height[top];</span><br><span class="line">            ans += value*distance;</span><br><span class="line">        &#125;</span><br><span class="line">        stack[++head] = current++;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>实际上这道题还有不这么烧脑的解法，就是我们对于每个点，用动态规划的方法，提前算出来他的左右边界就好了，很简单吧。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">int trap(int* height, int heightSize)&#123;</span><br><span class="line">    if(heightSize == 0) return 0;</span><br><span class="line">    int leftMax[heightSize];</span><br><span class="line">    int RightMax[heightSize];</span><br><span class="line">    leftMax[0] = height[0];</span><br><span class="line">    for(int i=1; i&lt;heightSize; i++) &#123;</span><br><span class="line">        leftMax[i] = fmax(leftMax[i-1], height[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    RightMax[heightSize-1] = height[heightSize-1];</span><br><span class="line">    for(int i = heightSize-2; i&gt;=0; i--) &#123;</span><br><span class="line">        RightMax[i] = fmax(RightMax[i+1], height[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int ans = 0;</span><br><span class="line">    for(int i=1; i&lt;heightSize-1; i++) &#123;</span><br><span class="line">        ans += fmin(leftMax[i], RightMax[i]) - height[i];</span><br><span class="line">    &#125;</span><br><span class="line">    return ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="多余的话"><a href="#多余的话" class="headerlink" title="多余的话"></a>多余的话</h2><p>实际上遇到问题的话，最容易想到的就是暴力解法。暴力解法重来都不是什么问题，所谓的解题思路都是从暴力解法开始的，因为暴力解法存在着各种各样的重复计算，所以才使人们不断的想出新的算法，以空间换时间或者其他的方式，来优化解决方案。</p>
+<h2 id="写在最后的话"><a href="#写在最后的话" class="headerlink" title="写在最后的话"></a>写在最后的话</h2><p>实际上单调栈分析简单的问题是很容易想到的，但是分析后两个这种有难度的问题还是比较烧脑的，也是比较难想到的。实际上很多类似的问题可以用动态规划来解决，这个难度就降了不少了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构与算法/" rel="tag"># 数据结构与算法</a>
+          
+            <a href="/tags/leetcode/" rel="tag"># leetcode</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/29/Dijkstra算法/" rel="next" title="Dijkstra算法">
+                <i class="fa fa-chevron-left"></i> Dijkstra算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/07/滑动窗口/" rel="prev" title="滑动窗口">
+                滑动窗口 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuanchn">
+            
+              <p class="site-author-name" itemprop="name">changyuanchn</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">111</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#单调栈"><span class="nav-number">1.</span> <span class="nav-text">单调栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#leetcode上的实例"><span class="nav-number">2.</span> <span class="nav-text">leetcode上的实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多余的话"><span class="nav-number">3.</span> <span class="nav-text">多余的话</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在最后的话"><span class="nav-number">4.</span> <span class="nav-text">写在最后的话</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuanchn</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">118.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共118.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

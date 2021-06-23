@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vulkan,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="上文我们创建了实例，根据上文的那张图，创建完实例，我们需要查找实例相兼容的物理设置。因为毕竟没有物理设备的支持，只有软件，我们也是没有办法渲染出图像的。这里的物理设备就是指显卡（当然不一定只是显卡）。 实际上我们这里要查找系统支持的物理设备，然后才能进行下一步的操作，这里用到了下面的函数12345// Provided by VK_VERSION_1_0VkResult vkEnumeratePh">
+<meta name="keywords" content="vulkan">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vulkan之PhysicalDevice">
+<meta property="og:url" content="http://yoursite.com/2020/01/20/Vulkan之PhysicalDevice/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="上文我们创建了实例，根据上文的那张图，创建完实例，我们需要查找实例相兼容的物理设置。因为毕竟没有物理设备的支持，只有软件，我们也是没有办法渲染出图像的。这里的物理设备就是指显卡（当然不一定只是显卡）。 实际上我们这里要查找系统支持的物理设备，然后才能进行下一步的操作，这里用到了下面的函数12345// Provided by VK_VERSION_1_0VkResult vkEnumeratePh">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.633Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vulkan之PhysicalDevice">
+<meta name="twitter:description" content="上文我们创建了实例，根据上文的那张图，创建完实例，我们需要查找实例相兼容的物理设置。因为毕竟没有物理设备的支持，只有软件，我们也是没有办法渲染出图像的。这里的物理设备就是指显卡（当然不一定只是显卡）。 实际上我们这里要查找系统支持的物理设备，然后才能进行下一步的操作，这里用到了下面的函数12345// Provided by VK_VERSION_1_0VkResult vkEnumeratePh">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/01/20/Vulkan之PhysicalDevice/">
+
+
+
+
+
+  <title>Vulkan之PhysicalDevice | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blogs</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/20/Vulkan之PhysicalDevice/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuanchn">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vulkan之PhysicalDevice</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-20T00:00:00+08:00">
+                2020-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,109
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上文我们创建了实例，根据上文的那张图，创建完实例，我们需要查找实例相兼容的物理设置。因为毕竟没有物理设备的支持，只有软件，我们也是没有办法渲染出图像的。这里的物理设备就是指显卡（当然不一定只是显卡）。</p>
+<p>实际上我们这里要查找系统支持的物理设备，然后才能进行下一步的操作，这里用到了下面的函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Provided by VK_VERSION_1_0</span><br><span class="line">VkResult vkEnumeratePhysicalDevices(   </span><br><span class="line">    VkInstance instance,   </span><br><span class="line">    uint32_t* pPhysicalDeviceCount,   </span><br><span class="line">    VkPhysicalDevice* pPhysicalDevices);</span><br></pre></td></tr></table></figure></p>
+<p>这个函数有两种用法（这实际上有点违背了函数的单一原则，这要是在我司，得被喷死），当pPhysicalDevices==NULL时，得到的pPhysicalDeviceCount是系统中物理设备的数量，当我们传入一个数组时，得到的时具体的设备信息。<br>具体用法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">uint32_t deviceCount = 0;</span><br><span class="line">vkEnumeratePhysicalDevices(instance, &amp;deviceCount, nullptr);</span><br><span class="line"></span><br><span class="line">if (deviceCount == 0) &#123;</span><br><span class="line">    throw std::runtime_error(&quot;failed to find GPUs with Vulkan support!&quot;);</span><br><span class="line">&#125;</span><br><span class="line">std::vector&lt;VkPhysicalDevice&gt; devices(deviceCount);</span><br><span class="line">vkEnumeratePhysicalDevices(instance, &amp;deviceCount, devices.data());</span><br></pre></td></tr></table></figure></p>
+<p>一般来讲，我们获取到物理设备后，要继续遍历所有得到的物理设备，查看那个设备支持我们需要的特性，然后就选择这个物理设置。但是对于当前阶段的显卡来说，大部分都会支持我们需要的特性（如swapchain的扩展支持等等），但是这一步骤尽量还是不要省略。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for (const auto&amp; device : devices) &#123;</span><br><span class="line">    if (isDeviceSuitable(device)) &#123;</span><br><span class="line">        physicalDevice = device;</span><br><span class="line">        msaaSamples = getMaxUsableSampleCount();</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>慢慢的我们会发现，我们的后面的所有的操作命令都是需要提交到队列中去执行的，队列都是属于不同的队列簇的，而不同的队列簇支持的命令也是不同的，所以我们在获取到了物理设备后，还要检查一下我们的物理设备是否支持这些队列簇。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Provided by VK_VERSION_1_0</span><br><span class="line">void vkGetPhysicalDeviceQueueFamilyProperties(</span><br><span class="line">    VkPhysicalDevice physicalDevice,</span><br><span class="line">    uint32_t* pQueueFamilyPropertyCount,</span><br><span class="line">    VkQueueFamilyProperties* pQueueFamilyProperties);</span><br></pre></td></tr></table></figure></p>
+<p>这个函数也是有两种用法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">uint32_t queueFamilyCount = 0;</span><br><span class="line">vkGetPhysicalDeviceQueueFamilyProperties(device, &amp;queueFamilyCount, nullptr);</span><br><span class="line"></span><br><span class="line">std::vector&lt;VkQueueFamilyProperties&gt; queueFamilies(queueFamilyCount);</span><br><span class="line">vkGetPhysicalDeviceQueueFamilyProperties(device, &amp;queueFamilyCount, queueFamilies.data());</span><br></pre></td></tr></table></figure></p>
+<p>最后我们得到了某个设备支持的设备簇。<br>我们看下这个结构：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkQueueFamilyProperties &#123;</span><br><span class="line">    VkQueueFlags    queueFlags;</span><br><span class="line">    uint32_t        queueCount;</span><br><span class="line">    uint32_t        timestampValidBits;</span><br><span class="line">    VkExtent3D      minImageTransferGranularity;</span><br><span class="line">&#125; VkQueueFamilyProperties;</span><br></pre></td></tr></table></figure></p>
+<p>queueFlags表示支持的队列类型的位标志。对于我们渲染来说，我们希望它至少支持VK_QUEUE_GRAPHICS_BIT，所以可以用下面的方式来判断：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for (const auto&amp; queueFamily : queueFamilies) &#123;</span><br><span class="line">    if (queueFamily.queueFlags &amp; VK_QUEUE_GRAPHICS_BIT) &#123;</span><br><span class="line">        indices.graphicsFamily = i;</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在vulkan_core.h中定义了如下的队列类型：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkQueueFlagBits &#123;</span><br><span class="line">    VK_QUEUE_GRAPHICS_BIT = 0x00000001,</span><br><span class="line">    VK_QUEUE_COMPUTE_BIT = 0x00000002,</span><br><span class="line">    VK_QUEUE_TRANSFER_BIT = 0x00000004,</span><br><span class="line">    VK_QUEUE_SPARSE_BINDING_BIT = 0x00000008,</span><br><span class="line">    VK_QUEUE_PROTECTED_BIT = 0x00000010,</span><br><span class="line">    VK_QUEUE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkQueueFlagBits;</span><br></pre></td></tr></table></figure></p>
+<p>这就意味着我们在选择物理设备时，要及其注意要看这个设备是否支持都写队列簇的类型。</p>
+<p>当然如果我们希望做的时渲染的话，我们还要看下设备是否支持渲染到屏幕的特性，用如下的函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkGetPhysicalDeviceSurfaceSupportKHR(</span><br><span class="line">    VkPhysicalDevice                            physicalDevice,</span><br><span class="line">    uint32_t                                    queueFamilyIndex,</span><br><span class="line">    VkSurfaceKHR                                surface,</span><br><span class="line">    VkBool32*                                   pSupported);</span><br></pre></td></tr></table></figure></p>
+<p>如果支持，那么就可以选择出合适的物理设备了。</p>
+<p>具体的代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">bool isDeviceSuitable(VkPhysicalDevice device) &#123;</span><br><span class="line">    QueueFamilyIndices indices = findQueueFamilies(device);</span><br><span class="line"></span><br><span class="line">    bool extensionsSupported = checkDeviceExtensionSupport(device);</span><br><span class="line"></span><br><span class="line">    bool swapChainAdequate = false;</span><br><span class="line">    if (extensionsSupported) &#123;</span><br><span class="line">        SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);</span><br><span class="line">        swapChainAdequate = !swapChainSupport.formats.empty() &amp;&amp; !swapChainSupport.presentModes.empty();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    VkPhysicalDeviceFeatures supportedFeatures;</span><br><span class="line">    vkGetPhysicalDeviceFeatures(device, &amp;supportedFeatures);</span><br><span class="line"></span><br><span class="line">    return indices.isComplete() &amp;&amp; extensionsSupported &amp;&amp; swapChainAdequate &amp;&amp; supportedFeatures.samplerAnisotropy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">bool checkDeviceExtensionSupport(VkPhysicalDevice device) &#123;</span><br><span class="line">    uint32_t extensionCount;</span><br><span class="line">    vkEnumerateDeviceExtensionProperties(device, nullptr, &amp;extensionCount, nullptr);</span><br><span class="line"></span><br><span class="line">    std::vector&lt;VkExtensionProperties&gt; availableExtensions(extensionCount);</span><br><span class="line">    vkEnumerateDeviceExtensionProperties(device, nullptr, &amp;extensionCount, availableExtensions.data());</span><br><span class="line"></span><br><span class="line">    std::set&lt;std::string&gt; requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());</span><br><span class="line"></span><br><span class="line">    for (const auto&amp; extension : availableExtensions) &#123;</span><br><span class="line">        requiredExtensions.erase(extension.extensionName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return requiredExtensions.empty();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) &#123;</span><br><span class="line">    QueueFamilyIndices indices;</span><br><span class="line"></span><br><span class="line">    uint32_t queueFamilyCount = 0;</span><br><span class="line">    vkGetPhysicalDeviceQueueFamilyProperties(device, &amp;queueFamilyCount, nullptr);</span><br><span class="line"></span><br><span class="line">    std::vector&lt;VkQueueFamilyProperties&gt; queueFamilies(queueFamilyCount);</span><br><span class="line">    vkGetPhysicalDeviceQueueFamilyProperties(device, &amp;queueFamilyCount, queueFamilies.data());</span><br><span class="line"></span><br><span class="line">    int i = 0;</span><br><span class="line">    for (const auto&amp; queueFamily : queueFamilies) &#123;</span><br><span class="line">        if (queueFamily.queueFlags &amp; VK_QUEUE_GRAPHICS_BIT) &#123;</span><br><span class="line">            indices.graphicsFamily = i;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        VkBool32 presentSupport = false;</span><br><span class="line">        vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &amp;presentSupport);</span><br><span class="line"></span><br><span class="line">        if (presentSupport) &#123;</span><br><span class="line">            indices.presentFamily = i;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (indices.isComplete()) &#123;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return indices;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>总结：<br>我们在创建了instance后，下面要做的就是选择物理设备，物理设备可能会有很多，我们需要在其中选出支持我们需要的扩展的，并且支持指定的队列簇的设备。这样我们选择完物理设备后，就可以进行下一步的逻辑设备的创建了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vulkan/" rel="tag"># vulkan</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/13/Vulkan开发环境/" rel="next" title="Vulkan开发环境">
+                <i class="fa fa-chevron-left"></i> Vulkan开发环境
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/27/Vulkan之Surface/" rel="prev" title="Vulkan之Surface">
+                Vulkan之Surface <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuanchn">
+            
+              <p class="site-author-name" itemprop="name">changyuanchn</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">111</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuanchn</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">118.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共118.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

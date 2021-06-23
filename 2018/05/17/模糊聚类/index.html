@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,非监督学习,聚类,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引言前面我们讲了k-means, k-means属于一种硬聚类的方法，也就是说一个样本属于哪个类了后，他就是哪个类别的了，非此即彼，来不得半点马虎。但是现实生活中，哪有这么多的确定的事啊，身不由己经常发生，因此引入了模糊聚类，英文名Fuzzy c-means clustering, 模糊聚类意味着样本不再是刚性的属于某一类别了，而是给出其属于各个类别的概率。因此称之为模糊聚类。 模糊聚类在k-me">
+<meta name="keywords" content="机器学习,非监督学习,聚类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="模糊聚类">
+<meta property="og:url" content="http://yoursite.com/2018/05/17/模糊聚类/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="引言前面我们讲了k-means, k-means属于一种硬聚类的方法，也就是说一个样本属于哪个类了后，他就是哪个类别的了，非此即彼，来不得半点马虎。但是现实生活中，哪有这么多的确定的事啊，身不由己经常发生，因此引入了模糊聚类，英文名Fuzzy c-means clustering, 模糊聚类意味着样本不再是刚性的属于某一类别了，而是给出其属于各个类别的概率。因此称之为模糊聚类。 模糊聚类在k-me">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.655Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="模糊聚类">
+<meta name="twitter:description" content="引言前面我们讲了k-means, k-means属于一种硬聚类的方法，也就是说一个样本属于哪个类了后，他就是哪个类别的了，非此即彼，来不得半点马虎。但是现实生活中，哪有这么多的确定的事啊，身不由己经常发生，因此引入了模糊聚类，英文名Fuzzy c-means clustering, 模糊聚类意味着样本不再是刚性的属于某一类别了，而是给出其属于各个类别的概率。因此称之为模糊聚类。 模糊聚类在k-me">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/17/模糊聚类/">
+
+
+
+
+
+  <title>模糊聚类 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blogs</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/17/模糊聚类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuanchn">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">模糊聚类</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-17T00:00:00+08:00">
+                2018-05-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  749
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>前面我们讲了k-means, k-means属于一种硬聚类的方法，也就是说一个样本属于哪个类了后，他就是哪个类别的了，非此即彼，来不得半点马虎。但是现实生活中，哪有这么多的确定的事啊，身不由己经常发生，因此引入了模糊聚类，英文名Fuzzy c-means clustering, 模糊聚类意味着样本不再是刚性的属于某一类别了，而是给出其属于各个类别的概率。因此称之为模糊聚类。</p>
+<h1 id="模糊聚类"><a href="#模糊聚类" class="headerlink" title="模糊聚类"></a>模糊聚类</h1><p>在k-means算法中我们尝试给每个样本聚到某一个类中，也就是给样本一个标签。在模糊聚类中，对于某一个样本，不再是将其赋予某一个标签，而是一个概率向量，这个向量表示样本分别属于这k个类别的概率。</p>
+<p>正常将，我们要将n个样本模糊聚类到c个类中，就是要学习一个隶属度矩阵，矩阵表示的就是n个样本模糊聚类到c个类中的概率。</p>
+<p>令：</p>
+<script type="math/tex; mode=display">x = \left \{ x_1,x_2,x_3,...,x_n \right \} \qquad</script><p>表示 <script type="math/tex">n</script> 个样本</p>
+<script type="math/tex; mode=display">c = \left \{ c_1,c_2,...,c_k \right \} \qquad</script><p>表示<script type="math/tex">k</script>个类别</p>
+<p>那么所谓的隶属度矩阵就如下所示：</p>
+<script type="math/tex; mode=display">U= \begin{pmatrix} u_{11} & ... & u_{1k}\\  ...&  &... \\ u_{n1} & ... & u_{nk} \end{pmatrix}</script><p>其中<script type="math/tex">\sum_{j=1}^k u_{pj} =1 \qquad</script> 其中  <script type="math/tex">p\subset [1,n] \qquad</script></p>
+<p>也就是说每一个样本，他属于所有类别的概率的和为1。明显这是合理的。</p>
+<p>下面我们来推导一下如何学习这个隶属度矩阵。</p>
+<h2 id="隶属度矩阵"><a href="#隶属度矩阵" class="headerlink" title="隶属度矩阵"></a>隶属度矩阵</h2><p>在任何的机器学习算法中，都有一个核心点，那就是把在数据集上构建机器学习模型的问题转化为最小化代价函数的问题，模糊聚类也是一样的。</p>
+<p>首先我们定义下代价函数：</p>
+<script type="math/tex; mode=display">J(U,k) = \sum_{i=1}^k \sum_{j=1}^n u_{ij}^m d_{ij}^2 \qquad</script><p>其中 <script type="math/tex">d_{ij}^2 = || x_j - c_i ||^2 \qquad</script> <script type="math/tex">v_i</script> 表示聚类的中心点 <script type="math/tex">\qquad m</script>为模糊系数</p>
+<p>我们的目标就是最小化函数<script type="math/tex">J(U,k)</script>, 即<script type="math/tex">min( J(U,k) )</script></p>
+<p>在约束条件<script type="math/tex">\sum_{j=1}^k u_{pj} =1</script>下求极值，自然想到了拉格朗日乘子法。</p>
+<script type="math/tex; mode=display">J(U,k) = \sum_{i=1}^k \sum_{j=1}^n u_{ij}^m d_{ij}^2  + \sum_{j=1}^n \lambda_j(\sum_{i=1}^k u_{ij} -1 )</script><p>求偏导：</p>
+<script type="math/tex; mode=display">\frac{\partial J }{\partial u_{ij}} = m u_{ij}^{m-1} d_{ij}^2 + \lambda_j = 0</script><p>所以<script type="math/tex">u_{ij}^{m-1} = - \frac{\lambda_j}{m d_{ij}^2}</script></p>
+<p>所以在<script type="math/tex">u_{ij} = (- \frac{\lambda_j}{m d_{ij}^2})^{ \frac{1}{m-1}}</script>函数取极小值。</p>
+<p>而将此值带如到函数<script type="math/tex">\sum_{i=1}^k u_{ip} =1</script>中，有：</p>
+<script type="math/tex; mode=display">\sum_{i=1}^k u_{ip} = \sum_{i=1}^k (-\frac{\lambda_j}{m})^{\frac{1}{m-1}} (\frac{1}{d_{ip}^2})^{\frac{2}{m-1}}= 1</script><p>所以有：</p>
+<script type="math/tex; mode=display">(-\frac{\lambda_j}{m})^{\frac{1}{m-1}} = \frac{1}{\sum_{i=1}^k ({d_{ip}})^{\frac{-2}{m-1}}}</script><p>将其带入到<script type="math/tex">u_{qp} = (- \frac{\lambda_j}{m d_{qp}^2})^{ \frac{1}{m-1}}</script>中，可得</p>
+<script type="math/tex; mode=display">u_{qp} = (-\frac{\lambda_j}{m})^{\frac{1}{m-1}} (\frac{1}{d_{qp}^2})^{\frac{1}{m-1}} =  \frac{1}{ \sum_{i=1}^k (\frac{d_{qp}}{d_{ip}})^{\frac{2}{m-1}} }</script><p>这个表示样本到k个类的中心点的距离的和除以样本到第q个分类点的距离的<script type="math/tex">\frac{2}{m-1}</script>次方的倒数。</p>
+<p>这里我们得到了隶属度矩阵的求解方法，但是这里面需要计算<script type="math/tex">d_{ij}^2 = || x_j - c_i ||^2 \qquad</script> 这里面需要求解<script type="math/tex">c_i</script>，因此继续对拉格朗日函数求偏导，有</p>
+<script type="math/tex; mode=display">\frac{\partial J }{\partial c_i} =  \sum_{j=1}^{n} u_{ij}^m *2* ||x_j-c_i||= 0</script><p>因此有：</p>
+<script type="math/tex; mode=display">c_i = \frac{ \sum_{j=1}^{n} u_{ij}^m  x_j }{\sum_{j=1}^{n} u_{ij}^m}</script><p>因此我们得到了更新聚类中心点和隶属度矩阵的方程，如下所示：</p>
+<script type="math/tex; mode=display">u_{qp} = (-\frac{\lambda_j}{m})^{\frac{1}{m-1}} (\frac{1}{d_{qp}^2})^{\frac{1}{m-1}} =  \frac{1}{ \sum_{i=1}^k (\frac{d_{qp}}{d_{ip}})^{\frac{2}{m-1}} }</script><script type="math/tex; mode=display">c_i = \frac{ \sum_{j=1}^{n} u_{ij}^m  x_j }{\sum_{j=1}^{n} u_{ij}^m}</script><p>因此模糊聚类算法如下：</p>
+<h2 id="模糊聚类算法步骤"><a href="#模糊聚类算法步骤" class="headerlink" title="模糊聚类算法步骤"></a>模糊聚类算法步骤</h2><p>1) 根据给定的聚类类别个数<script type="math/tex">k</script> ，随机初始化隶属度矩阵<script type="math/tex">U</script><br>2) 计算<script type="math/tex">c_i</script><br>3) 更新初始化隶属度矩阵<script type="math/tex">U</script><br>4) 重复上面的步骤，直到满足停止条件为止，停止条件可以是中心点<script type="math/tex">c_i</script>不再变化或者初始化隶属度矩阵<script type="math/tex">U</script> 变化很小为止。</p>
+<h1 id="实例分析"><a href="#实例分析" class="headerlink" title="实例分析"></a>实例分析</h1>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/非监督学习/" rel="tag"># 非监督学习</a>
+          
+            <a href="/tags/聚类/" rel="tag"># 聚类</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/16/logistic回归/" rel="next" title="logistic回归">
+                <i class="fa fa-chevron-left"></i> logistic回归
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/17/k-means算法/" rel="prev" title="k-means算法">
+                k-means算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuanchn">
+            
+              <p class="site-author-name" itemprop="name">changyuanchn</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">111</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模糊聚类"><span class="nav-number">2.</span> <span class="nav-text">模糊聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#隶属度矩阵"><span class="nav-number">2.1.</span> <span class="nav-text">隶属度矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模糊聚类算法步骤"><span class="nav-number">2.2.</span> <span class="nav-text">模糊聚类算法步骤</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例分析"><span class="nav-number">3.</span> <span class="nav-text">实例分析</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuanchn</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">118.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共118.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

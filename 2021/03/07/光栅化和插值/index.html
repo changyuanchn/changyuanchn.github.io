@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="GPU,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="渲染的流程我们可以利用空间变换将三维世界中的物体变换到屏幕空间中，但是我们将如何给每个像素点着色呢？举个例子，我们有一个三角形，我们给定了三个点的坐标信息，我们怎样能将其绘制到屏幕上呢？这个过程就是下面的渲染流程  上图显示了给定了顶点信息，GPU是如何一步一步的将其渲染到图像中的。 这里我们只看Rasterization这一步，看这一步是如何做的。假设我们需要渲染一个三角形，如下所示：  我们很">
+<meta name="keywords" content="GPU">
+<meta property="og:type" content="article">
+<meta property="og:title" content="光栅化和插值">
+<meta property="og:url" content="http://yoursite.com/2021/03/07/光栅化和插值/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="渲染的流程我们可以利用空间变换将三维世界中的物体变换到屏幕空间中，但是我们将如何给每个像素点着色呢？举个例子，我们有一个三角形，我们给定了三个点的坐标信息，我们怎样能将其绘制到屏幕上呢？这个过程就是下面的渲染流程  上图显示了给定了顶点信息，GPU是如何一步一步的将其渲染到图像中的。 这里我们只看Rasterization这一步，看这一步是如何做的。假设我们需要渲染一个三角形，如下所示：  我们很">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/GPU/pipeline.png">
+<meta property="og:image" content="http://yoursite.com/images/GPU/Rasterization.jpg">
+<meta property="og:image" content="http://yoursite.com/images/GPU/chazhi.png">
+<meta property="og:image" content="http://yoursite.com/images/GPU/pixel_jisuan1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/GPU/chazhi.png">
+<meta property="og:image" content="http://yoursite.com/images/GPU/zhongxinzuobiao.jpg">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.642Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="光栅化和插值">
+<meta name="twitter:description" content="渲染的流程我们可以利用空间变换将三维世界中的物体变换到屏幕空间中，但是我们将如何给每个像素点着色呢？举个例子，我们有一个三角形，我们给定了三个点的坐标信息，我们怎样能将其绘制到屏幕上呢？这个过程就是下面的渲染流程  上图显示了给定了顶点信息，GPU是如何一步一步的将其渲染到图像中的。 这里我们只看Rasterization这一步，看这一步是如何做的。假设我们需要渲染一个三角形，如下所示：  我们很">
+<meta name="twitter:image" content="http://yoursite.com/images/GPU/pipeline.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/03/07/光栅化和插值/">
+
+
+
+
+
+  <title>光栅化和插值 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blogs</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/07/光栅化和插值/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuanchn">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">光栅化和插值</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-07T00:00:00+08:00">
+                2021-03-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GPU/" itemprop="url" rel="index">
+                    <span itemprop="name">GPU</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,167
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="渲染的流程"><a href="#渲染的流程" class="headerlink" title="渲染的流程"></a>渲染的流程</h3><p>我们可以利用空间变换将三维世界中的物体变换到屏幕空间中，但是我们将如何给每个像素点着色呢？举个例子，我们有一个三角形，我们给定了三个点的坐标信息，我们怎样能将其绘制到屏幕上呢？这个过程就是下面的渲染流程</p>
+<p><img src="/images/GPU/pipeline.png" alt="pipeline"></p>
+<p>上图显示了给定了顶点信息，GPU是如何一步一步的将其渲染到图像中的。</p>
+<p>这里我们只看Rasterization这一步，看这一步是如何做的。假设我们需要渲染一个三角形，如下所示：</p>
+<p><img src="/images/GPU/Rasterization.jpg" alt="Rasterization"></p>
+<p>我们很自然的只需要判断三角形覆盖了哪些像素点，然后给这些像素点着色就可以了啊。<br>利用我们之前的公式很容易的就可以解决。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">color = texture(image, uv)</span><br></pre></td></tr></table></figure>
+<p>但是说起来很容易，做起来却不是那么简单的，这里有两个问题：</p>
+<ul>
+<li>如何判断像素点在三角形内部</li>
+<li>三角形内部的点应该渲染成什么颜色</li>
+</ul>
+<p>下面我们来一个一个的解决。</p>
+<h3 id="光栅化的输入输出"><a href="#光栅化的输入输出" class="headerlink" title="光栅化的输入输出"></a>光栅化的输入输出</h3><p>首先我们来分析一个这个着色函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">color = texture(image, uv)</span><br></pre></td></tr></table></figure>
+<p>这个方程需要三个输入条件：</p>
+<ul>
+<li>三角形覆盖了哪些pixel</li>
+<li>每个pixel的UV坐标</li>
+<li>纹理贴图</li>
+</ul>
+<p>纹理贴图给定了，那么需要光栅化解决的就是前两个问题。</p>
+<p>因此如果把光栅化当做一个函数来看的化，那么他的输入就应该是：</p>
+<ul>
+<li>每个顶点的位置坐标</li>
+<li>每个顶点的uv坐标</li>
+</ul>
+<p>而他的输出则是：</p>
+<ul>
+<li>哪些pixel需要绘制</li>
+<li>每个pixel的顶点坐标</li>
+</ul>
+<p>在vs中已经给出了每个顶点的位置坐标和uv坐标，这就是光栅化的输入。下面我们以三角形为例子来看下如何得到它的输出</p>
+<h3 id="一个几何问题"><a href="#一个几何问题" class="headerlink" title="一个几何问题"></a>一个几何问题</h3><p>给定三个点，构成了三角形，如何判断其他的点在三角形内还是三角形外？</p>
+<p><img src="/images/GPU/chazhi.png" alt="chazhi"></p>
+<p>实际上这就是需要解下面的一个方程：</p>
+<script type="math/tex; mode=display">A_1 * x + B_1 * y + C_1 > 0</script><p>(边<script type="math/tex">L_{AC}</script>的下方)</p>
+<script type="math/tex; mode=display">A_2 * x + B_2 * y + C_2 > 0</script><p>(边<script type="math/tex">L_{BC}</script>的下方)</p>
+<script type="math/tex; mode=display">A_3 * x + B_3 * y + C_3 > 0</script><p>(边<script type="math/tex">L_{AB}</script>的上方)</p>
+<p>（实际上这只是一个方法，还可以用向量叉乘，重心计算等方法）<br>从framebuffer左上角起，对于每个pixel都计算一遍，然后将其送入到fs中。如果pixel在三角形内，则需要计算他的uv坐标，然后再纹理采样，输出起颜色值，如果不在三角形内，则不进行处理。</p>
+<h3 id="怎样能计算的更快一点？"><a href="#怎样能计算的更快一点？" class="headerlink" title="怎样能计算的更快一点？"></a>怎样能计算的更快一点？</h3><p>正常来讲，我们对每个pixel都需要计算上面的三个方程式，也就是每个pixel都需要做6个乘法，6个加法。那么能不能简化一下计算呢？</p>
+<p>我们看对于pixel而言：</p>
+<p><img src="/images/GPU/pixel_jisuan1.jpg" alt="pixel_jisuan1"></p>
+<script type="math/tex; mode=display">L_1(Q) = L_1(P) + A_1</script><script type="math/tex; mode=display">L_2(Q) = L_1(P) + A_2</script><script type="math/tex; mode=display">L_3(Q) = L_1(P) + A_3</script><script type="math/tex; mode=display">L_1(R) = L_1(P) + B_1</script><script type="math/tex; mode=display">L_2(R) = L_1(P) + B_2</script><script type="math/tex; mode=display">L_3(R) = L_1(P) + B_3</script><p>这样我们在计算了第一个点后，其他的所有的点就只需要3次加法就可以了。<script type="math/tex">P</script>点则是一个种子点。</p>
+<p>思考一下问什么这样做可以？</p>
+<ul>
+<li>离散</li>
+<li>相邻</li>
+<li>三角形的几何特性</li>
+</ul>
+<h3 id="还能更快一点么？"><a href="#还能更快一点么？" class="headerlink" title="还能更快一点么？"></a>还能更快一点么？</h3><p>更快一点，那么我们可以以block为单位，按照区域进行筛选，如果区域不与三角形相交，那么区域内的所有点都不与三角形相交，这样就可以排除掉这些点了。</p>
+<h3 id="还能不能更快一点呢？"><a href="#还能不能更快一点呢？" class="headerlink" title="还能不能更快一点呢？"></a>还能不能更快一点呢？</h3><p>实际上可以按照层级进行block，这样可以进一步的优化。</p>
+<h3 id="如何计算UV坐标"><a href="#如何计算UV坐标" class="headerlink" title="如何计算UV坐标"></a>如何计算UV坐标</h3><p>我们有了三角形的三个顶点的UV坐标，那么三角形内部的其他的pixel点的UV坐标该怎样计算呢？这里我们使用插值的方法。</p>
+<p><img src="/images/GPU/chazhi.png" alt="chazhi"></p>
+<script type="math/tex; mode=display">V(P) = \alpha * V_1 + \beta * V_2 + \gamma * V_3</script><p>公式里面的<script type="math/tex">A</script>表示区域的面积。面积的计算比较复杂，实际上我们上面的函数可以推到为用三角形边的线性方程来计算的公式，如下所示：</p>
+<script type="math/tex; mode=display">V(P) = \frac{L_1(x, y)}{L_1(x, y) + L_1(x, y) + L_1(x, y)} * V_1 + \frac{L_2(x, y)}{L_1(x, y) + L_1(x, y) + L_1(x, y)} * V_2 + \frac{L_3(x, y)}{L_1(x, y) + L_1(x, y) + L_1(x, y)} * V_3</script><p>这样就简化了很多。</p>
+<p>插值计算可以固化到硬件中，因此这一步骤可以非常快，一般来说它不会影响性能。</p>
+<p>插值后的结果作为fs的输入。</p>
+<h3 id="相应的硬件模块"><a href="#相应的硬件模块" class="headerlink" title="相应的硬件模块"></a>相应的硬件模块</h3><ul>
+<li>TS ：由顶点坐标和UV坐标计算得到线性方程和插值公式</li>
+<li>RAST ：由线性方程进行光栅化，向后面的模块输出block mast</li>
+<li>VARY ：根据插值公式在三角形的覆盖点上（RAST结果）进行插值，插值结果送给后面的运算shader的模块作为输入。</li>
+</ul>
+<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>实际上插值还可以利用重心坐标如下计算：<br><img src="/images/GPU/zhongxinzuobiao.jpg" alt="zhongxinzuobiao"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/GPU/" rel="tag"># GPU</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/02/GPU结构初识/" rel="next" title="GPU结构初识">
+                <i class="fa fa-chevron-left"></i> GPU结构初识
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/06/23/UML类图/" rel="prev" title="UML类图">
+                UML类图 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuanchn">
+            
+              <p class="site-author-name" itemprop="name">changyuanchn</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">111</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#渲染的流程"><span class="nav-number">1.</span> <span class="nav-text">渲染的流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#光栅化的输入输出"><span class="nav-number">2.</span> <span class="nav-text">光栅化的输入输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一个几何问题"><span class="nav-number">3.</span> <span class="nav-text">一个几何问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎样能计算的更快一点？"><span class="nav-number">4.</span> <span class="nav-text">怎样能计算的更快一点？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#还能更快一点么？"><span class="nav-number">5.</span> <span class="nav-text">还能更快一点么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#还能不能更快一点呢？"><span class="nav-number">6.</span> <span class="nav-text">还能不能更快一点呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何计算UV坐标"><span class="nav-number">7.</span> <span class="nav-text">如何计算UV坐标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相应的硬件模块"><span class="nav-number">8.</span> <span class="nav-text">相应的硬件模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后记"><span class="nav-number">9.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuanchn</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">118.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共118.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

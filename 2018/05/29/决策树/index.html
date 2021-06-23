@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,监督学习,决策树,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引言决策树是一种树模型，本质上讲就是利用特征对空间进行划分的一种方法。在计算机的数据结构里面我们有二叉树等等模型，在思想上，决策树与他们是一样的。决策树是一种最简单的机器学习算法，甚至某种程度上把它当做机器学习算法有点别扭。对于决策树算法来说，主要包括两点：  以什么样的规则选择根节点 剪枝防止过拟合  常见的决策树算法有ID3，C4.5，CART等算法，我们下面来一一介绍 决策树模型决策树是一种">
+<meta name="keywords" content="机器学习,监督学习,决策树">
+<meta property="og:type" content="article">
+<meta property="og:title" content="决策树">
+<meta property="og:url" content="http://yoursite.com/2018/05/29/决策树/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="引言决策树是一种树模型，本质上讲就是利用特征对空间进行划分的一种方法。在计算机的数据结构里面我们有二叉树等等模型，在思想上，决策树与他们是一样的。决策树是一种最简单的机器学习算法，甚至某种程度上把它当做机器学习算法有点别扭。对于决策树算法来说，主要包括两点：  以什么样的规则选择根节点 剪枝防止过拟合  常见的决策树算法有ID3，C4.5，CART等算法，我们下面来一一介绍 决策树模型决策树是一种">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/decisionTree.jpg">
+<meta property="og:image" content="http://yoursite.com/images/entropy.jpg">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.645Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="决策树">
+<meta name="twitter:description" content="引言决策树是一种树模型，本质上讲就是利用特征对空间进行划分的一种方法。在计算机的数据结构里面我们有二叉树等等模型，在思想上，决策树与他们是一样的。决策树是一种最简单的机器学习算法，甚至某种程度上把它当做机器学习算法有点别扭。对于决策树算法来说，主要包括两点：  以什么样的规则选择根节点 剪枝防止过拟合  常见的决策树算法有ID3，C4.5，CART等算法，我们下面来一一介绍 决策树模型决策树是一种">
+<meta name="twitter:image" content="http://yoursite.com/images/decisionTree.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/29/决策树/">
+
+
+
+
+
+  <title>决策树 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blogs</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/29/决策树/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuanchn">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">决策树</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-29T00:00:00+08:00">
+                2018-05-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,479
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>决策树是一种树模型，本质上讲就是利用特征对空间进行划分的一种方法。在计算机的数据结构里面我们有二叉树等等模型，在思想上，决策树与他们是一样的。决策树是一种最简单的机器学习算法，甚至某种程度上把它当做机器学习算法有点别扭。对于决策树算法来说，主要包括两点：</p>
+<ul>
+<li>以什么样的规则选择根节点</li>
+<li>剪枝防止过拟合</li>
+</ul>
+<p>常见的决策树算法有ID3，C4.5，CART等算法，我们下面来一一介绍</p>
+<h1 id="决策树模型"><a href="#决策树模型" class="headerlink" title="决策树模型"></a>决策树模型</h1><p>决策树是一种利用实例特征对空间进行划分的模型，由节点和有向边组成。内部节点表示属性或者特征，叶子节点表示类别。下图就是一个典型的决策树的例子。</p>
+<p><img src="/images/decisionTree.jpg" alt="DecisionTree"></p>
+<p>对于常规的机器学习问题，给定了数据集，构造决策树模型，那么首先第一个问题就是选择哪个特征作为根节点。业界提出了信息增益的概念，利用信息增益我们就可以计算出什么特征作为根节点最优了。</p>
+<p>在给出信息增益的计算方式之前，首先需要介绍一下信息熵的概念</p>
+<h2 id="信息熵"><a href="#信息熵" class="headerlink" title="信息熵"></a>信息熵</h2><p>初中物理我们学过熵，熵实际上是物质无序状态的一种度量。</p>
+<p>信息熵是大神Shanon提出的概念，用于表示信息多少的概念。设<script type="math/tex">X</script>是一个离散随机变量，其概率分布为<script type="math/tex">P(X = x_i) = p_i \quad i=1,...,n</script>,则我们定义随机变量<script type="math/tex">X</script>的熵为：</p>
+<script type="math/tex; mode=display">H(X) = - \sum_{i=1}^{n} p_i logp_i</script><p>我们看一个二分类问题的熵的图像：</p>
+<p><img src="/images/entropy.jpg" alt="entropy"></p>
+<p>我们可以看到当<script type="math/tex">p=0.5</script>的时候，熵最大，这也就意味着越无序，越没有确定性的时候，熵越大。在信息论里，不确定性越高，信息越多。</p>
+<p>有了熵的定义，下面我们来引入条件熵的概念：</p>
+<p>设随机变量<script type="math/tex">(X,Y)</script>，其概率分布为<script type="math/tex">P(X = x_i,Y=y_j) = p_{ij} \quad i=1,...,n, j=1,...,m</script>,则我们定义给定随机变量<script type="math/tex">X</script>的条件下，随机变量<script type="math/tex">Y</script>的条件熵为：</p>
+<script type="math/tex; mode=display">H(Y|X) =  \sum_{i=1}^{n} p_i H(Y|X=x_i)</script><p>有了熵和条件熵，我们就可以引入信息增益的概念</p>
+<h2 id="信息增益"><a href="#信息增益" class="headerlink" title="信息增益"></a>信息增益</h2><p>给定特征A对训练集D的信息增益<script type="math/tex">g(D,A)</script> 可以简单的用下面的公式计算：</p>
+<script type="math/tex; mode=display">g(D,A) =  H(D) - H(D|A)</script><p>$ H(D) $ 表示数据集D的不确定性，<script type="math/tex">H(D|A)</script> 表示给定特征A的情况下，数据集D的不确定性。他们的差就表示给定了特征A的场景下，数据集D的不确定性减少的程度。程度越大，说明特征A越能有效的对数据进行分类，因此可以利用信息增益来选择递归决策树的根节点</p>
+<h2 id="如何计算信息增益"><a href="#如何计算信息增益" class="headerlink" title="如何计算信息增益"></a>如何计算信息增益</h2><p>假设数据集为<script type="math/tex">D</script> ,<script type="math/tex">|D|</script> 为数据集的容量，数据集有<script type="math/tex">K</script>个类<script type="math/tex">C_k</script>, <script type="math/tex">|C_k|</script> 为<script type="math/tex">C_k</script>的样本个数，<script type="math/tex">\sum^K_{k=1} |C_k| = |D|</script>。设特征<script type="math/tex">A</script> 将样本D划分为<script type="math/tex">n</script>个子集<script type="math/tex">D_1,...,D_n</script> ，子集<script type="math/tex">D_i</script> 中属于类<script type="math/tex">C_k</script>的集合为<script type="math/tex">D_{ik}</script>.因此信息增益可以有下面的式子计算得到：</p>
+<script type="math/tex; mode=display">H(D) = - \sum^K_{k=1} \frac {|C_k|}{|D|} log \frac {|C_k}{|D|}</script><script type="math/tex; mode=display">H(D|A) = \sum^n_{i=1} \frac {|D_i|}{|D|}H(D_i) =  \sum^n_{i=1} \frac {|D_i|}{|D|} \sum_{k=1}^{K} \frac {|D_{ik}|}{|D_i|} log \frac {|D_{ik}|}{|D_i|}</script><p>因此信息增益为：</p>
+<script type="math/tex; mode=display">g(D,A) =  H(D) - H(D|A)</script><h2 id="信息增益比"><a href="#信息增益比" class="headerlink" title="信息增益比"></a>信息增益比</h2><p>由于以信息增益作为划分数据集的特征，存在偏向于选择取值较多的特征，因此引入了信息增益比来选择特征。</p>
+<p>信息增益比为：</p>
+<script type="math/tex; mode=display">g_R(D,A) =  \frac {g(D,A)}{H_A(D)}</script><p>其中<script type="math/tex">{g(D,A)}</script>为信息增益，<script type="math/tex">{H_A(D)}</script>为数据集关于特征<script type="math/tex">A</script>的熵,其计算公式如下：</p>
+<script type="math/tex; mode=display">H_A(D) = - \sum^n_{i=1} \frac {|D_i|}{|D|} log \frac {|D_i}{|D|}</script><p>其中<script type="math/tex">n</script>为特征<script type="math/tex">A</script>取值的个数</p>
+<h1 id="ID3算法"><a href="#ID3算法" class="headerlink" title="ID3算法"></a>ID3算法</h1><p>其实ID3算法很简单，就是一句话，利用信息增益递归的选择根节点来分类数据直至所有的特征选择完毕</p>
+<p>下面我们也给一下具体的算法吧</p>
+<blockquote>
+<p>输入</p>
+<blockquote>
+<ul>
+<li>训练数据集 <script type="math/tex">D = \left \{ (x_1,y_1),...,(x_N,y_N) \right \}</script></li>
+<li>阈值<script type="math/tex">\varepsilon</script></li>
+<li>特征<script type="math/tex">A</script></li>
+</ul>
+</blockquote>
+<p>算法流程</p>
+<blockquote>
+<ul>
+<li>若 <script type="math/tex">D</script>中所有的实例都属于同一类<script type="math/tex">C_k</script>，则<script type="math/tex">T</script>为单节点树，将类别<script type="math/tex">C_k</script>作为类标记，返回<script type="math/tex">T</script></li>
+<li>若<script type="math/tex">A = \varnothing</script>，则<script type="math/tex">T</script>为单节点树，将 <script type="math/tex">D</script>中实例数目最多的类别<script type="math/tex">C_k</script>作为类标记，返回<script type="math/tex">T</script></li>
+<li>否则，按照<script type="math/tex">g(D,A) =  H(D) - H(D|A)</script>计算<script type="math/tex">A</script>中各特征对<script type="math/tex">D</script>的信息增益，选择信息增益最大的特征<script type="math/tex">A_g</script></li>
+<li>如果<script type="math/tex">A_g</script>的信息增益小鱼阈值<script type="math/tex">\varepsilon</script>，则设置<script type="math/tex">T</script>为单节点树，将 <script type="math/tex">D</script>中实例数目最多的类别<script type="math/tex">C_k</script>作为类标记，返回<script type="math/tex">T</script></li>
+<li>否则，对<script type="math/tex">A_g</script>的每一个可能值<script type="math/tex">a_i</script>的，按照<script type="math/tex">A_g = a_i</script>将<script type="math/tex">D</script>分割为若干个非空子集<script type="math/tex">D_i</script>，将<script type="math/tex">D_i</script>中实例数最大的类作为标记，构建子节点，由节点及其子节点构成树<script type="math/tex">T</script>，返回<script type="math/tex">T</script></li>
+<li>对第<script type="math/tex">i</script>个子节点，以<script type="math/tex">D_i</script>为训练集，以<script type="math/tex">A - \left \{A_g \right \}</script>为特征集，递归调用上面的步骤，得到子树<script type="math/tex">T_i</script>,返回<script type="math/tex">T_i</script></li>
+</ul>
+</blockquote>
+<p>输出</p>
+<blockquote>
+<ul>
+<li>决策树 <script type="math/tex">T</script></li>
+</ul>
+</blockquote>
+</blockquote>
+<h1 id="C4-5算法"><a href="#C4-5算法" class="headerlink" title="C4.5算法"></a>C4.5算法</h1><p>C4.5算法跟ID3的不同就在于C4.5算法利用了信息增益比来选择特征。因此具体算法流程跟上面是一样的，因此这里不再阐述。</p>
+<h1 id="剪枝"><a href="#剪枝" class="headerlink" title="剪枝"></a>剪枝</h1><p>上面我们引入了C4.5算法和ID3算法，算法通过规则选择根节点，然后依次递归对每一个特征进行遍历构建决策树。但是这样有一个问题啊，那就是决策树很容易过分的适应训练数据，进而实现过拟合，因此引入剪枝来消除决策树的过拟合问题。</p>
+<p>剪枝最简单的算法如下</p>
+<blockquote>
+<p>输入</p>
+<blockquote>
+<ul>
+<li>决策树T</li>
+</ul>
+</blockquote>
+<p>过程</p>
+<blockquote>
+<ul>
+<li>对给定的决策树从最底层的非叶节点开始剪枝，每次剪一个非叶节点</li>
+<li>将剪枝的非叶节点替换为叶节点，利用投票决定其类别</li>
+<li>依次剪枝，生成剪枝树的集合<script type="math/tex">\left \{T,T_1,T_2,... \right \}</script></li>
+<li>利用cross-validation算法选择效果最好的子树<script type="math/tex">T_{best}</script></li>
+</ul>
+</blockquote>
+<p>输出</p>
+<blockquote>
+<ul>
+<li>剪枝后的决策树<script type="math/tex">T_{best}</script></li>
+</ul>
+</blockquote>
+</blockquote>
+<h1 id="CART算法"><a href="#CART算法" class="headerlink" title="CART算法"></a>CART算法</h1><p>$CART$算法全称为<script type="math/tex">( classification \quad and \quad regression \quad tree)</script>，是一种广泛应用的决策树方法。<script type="math/tex">CART</script>算法由特征选择，树生成和树剪枝构成。<script type="math/tex">CART</script>算法关于决策树的生成就是递归的构建二叉决策树的过程,根据内部节点的特征的取值为“是”或者“否”，来划分两个分支。由她的名字我们也可以看出，<script type="math/tex">CART</script>包括回归树和分类树两种，对回归利用平方误差最小化准则，对分类树利用基尼系数最小化准则。下面我们来分别引入这两种树。</p>
+<h2 id="回归树"><a href="#回归树" class="headerlink" title="回归树"></a>回归树</h2><p>对于回归树来说,它学习到的模型，本质上来讲就是对输入空间进行划分，假设划分为<script type="math/tex">R_1,...,R_M</script>，那么输入空间划分后，就可以利用平方误差准则来训练得到空间的输出<script type="math/tex">c_m</script>,因此我们的回归树模型就如下所示：</p>
+<script type="math/tex; mode=display">f(x) = \sum_{m=1}^{M} c_mI(x \in R_m)</script><p>根据平方误差准则，求训练样本的最大似然估计，有：</p>
+<script type="math/tex; mode=display">\hat{c_m} = ave(y_i | x_i \in R_m)</script><p>那么问题就转化为了如何有效的对空间进行划分，如果空间划分完毕了，<script type="math/tex">\hat{c_m}</script>也就能够计算出来了（<script type="math/tex">\hat{c_m}</script>就是空间<script type="math/tex">R_m</script>内样本的标签的均值）。</p>
+<p>那么给定训练数据集 <script type="math/tex">D = \left \{ (x_1,y_1),...,(x_N,y_N) \right \}</script>，如何对输入空间进行划分呢？这里我们采用启发式的算法。</p>
+<p>假设我们选择第<script type="math/tex">j</script>个变量<script type="math/tex">x_j</script>和她的值<script type="math/tex">s</script>最为切分变量和切分点，那么可以得到两个区域</p>
+<script type="math/tex; mode=display">R_1(j,s) = \left \{ x|x_j \leq s \right \}</script><script type="math/tex; mode=display">R_2(j,s) = \left \{ x|x_j > s \right \}</script><p>那么寻找最优的切分变量<script type="math/tex">j</script>和切分点<script type="math/tex">s</script>，就是求解</p>
+<script type="math/tex; mode=display">min_{j,s} [min_{c_1} \sum_{x_i \in R_1(j,s)} (y_i-c_1)^2 + min_{c_2} \sum_{x_i \in R_2(j,s)} (y_i-c_2)^2]</script><p>对固定输入的切分变量<script type="math/tex">j</script>，可以找到最优的切分点<script type="math/tex">s</script></p>
+<script type="math/tex; mode=display">\hat{c_1} = ave(y_i|x_i \in R_1(j,s))</script><script type="math/tex; mode=display">\hat{c_2} = ave(y_i|x_i \in R_2(j,s))</script><p>遍历所有的输入变量，找到最优的切分变量<script type="math/tex">j</script>，构成<script type="math/tex">(j,s)</script>将空间划分为两个区域。递归的重复上面的过程，直到满足停止条件。</p>
+<h3 id="回归树具体算法："><a href="#回归树具体算法：" class="headerlink" title="回归树具体算法："></a>回归树具体算法：</h3><blockquote>
+<p>输入</p>
+<blockquote>
+<ul>
+<li>样本集 <script type="math/tex">D = \left \{ (x_1,y_1),...,(x_N,y_N) \right \}</script></li>
+</ul>
+</blockquote>
+<p>算法流程</p>
+<ul>
+<li>在训练样本的输入空间中，递归的将每个区域划分为两个子区域并决定每个子区域的输出值，构建二叉树。</li>
+</ul>
+<blockquote>
+<ul>
+<li>1.选择最优的切分变量<script type="math/tex">j</script>和切分点<script type="math/tex">s</script>，求解<script type="math/tex">min_{j,s} [min_{c_1} \sum_{x_i \in R_1(j,s)} (y_i-c_1)^2 + min_{c_2} \sum_{x_i \in R_2(j,s)} (y_i-c_2)^2]</script>，遍历<script type="math/tex">j</script>，对固定的<script type="math/tex">j</script>扫描切分点<script type="math/tex">s</script>，得到是公式最小的值对<script type="math/tex">(j,s)</script></li>
+<li>2.对选定的值对值对<script type="math/tex">(j,s)</script>划分区域，并决定区域的输出值：<script type="math/tex">R_1(j,s) = \left \{ x|x_j \leq s \right \}</script>，<script type="math/tex">R_2(j,s) = \left \{ x|x_j > s \right \}</script>，<script type="math/tex">\hat{c_m} = ave(y_i | x_i \in R_m)</script></li>
+<li>3.继续对上面两个子区域调用步骤1，2，直至满足停止条件</li>
+<li>4.将输入空间划分为<script type="math/tex">M</script>个区域<script type="math/tex">R_1,...,R_M</script>，生成决策树<script type="math/tex">f(x) = \sum_{m=1}^{M} c_mI(x \in R_m)</script></li>
+</ul>
+</blockquote>
+<p>输出</p>
+<blockquote>
+<ul>
+<li>回归树 <script type="math/tex">f(x)</script></li>
+</ul>
+</blockquote>
+</blockquote>
+<h2 id="分类树"><a href="#分类树" class="headerlink" title="分类树"></a>分类树</h2><p>对于分类树，我们采用基尼系数最小准则来确定最优的切分点</p>
+<h3 id="基尼系数"><a href="#基尼系数" class="headerlink" title="基尼系数"></a>基尼系数</h3><p>假设<script type="math/tex">K</script>类分类问题，样本点属于第<script type="math/tex">K</script>类的概率为<script type="math/tex">p_k</script>,则概率分布的基尼系数为：</p>
+<script type="math/tex; mode=display">Gini(p) = \sum_{k=1}^{K} p_k(1-p_k) = 1 - \sum_{k=1}^{K} p_k^2</script><p>给定样本<script type="math/tex">D</script>，其基尼系数为：</p>
+<script type="math/tex; mode=display">Gini(D) =  1 - \sum_{k=1}^{K} (\frac{|C_k|}{|D|})^2</script><p>其中<script type="math/tex">C_k</script>是<script type="math/tex">D</script>中属于第<script type="math/tex">k</script>类的样本的子集。</p>
+<p>如果样本<script type="math/tex">D</script>根据特征<script type="math/tex">A</script>是否取某一可能值<script type="math/tex">a</script>被分割为<script type="math/tex">D_1,D_2</script>两部分，即：</p>
+<script type="math/tex; mode=display">D_1 = \left \{ (x,y) \in D| A(x) = a  \right \} $$,
+
+$$D_2 = D - D_1</script><p>则在给定特征<script type="math/tex">A</script>的条件下，集合<script type="math/tex">D</script>的基尼系数定义为：</p>
+<script type="math/tex; mode=display">Gini(D,A) =  \frac{|D_1|}{|D|}Gini(D_1) + \frac{|D_2|}{|D|}Gini(D_2)</script><h3 id="分类树具体算法"><a href="#分类树具体算法" class="headerlink" title="分类树具体算法"></a>分类树具体算法</h3><blockquote>
+<p>输入</p>
+<blockquote>
+<ul>
+<li>样本集 <script type="math/tex">D = \left \{ (x_1,y_1),...,(x_N,y_N) \right \}</script></li>
+<li>停止条件</li>
+</ul>
+</blockquote>
+<p>算法流程</p>
+<ul>
+<li>在训练样本的输入空间中，递归的对每个节点进行下面的操作，构建二叉树。</li>
+</ul>
+<blockquote>
+<ul>
+<li>1.计算现有特征对数据集<script type="math/tex">D</script>的基尼系数，对每一个特征<script type="math/tex">A</script>，对其可能取值<script type="math/tex">a</script>，根据样本点对<script type="math/tex">A = a</script>的测试结果为“是”或者“否”将<script type="math/tex">D</script>分割为<script type="math/tex">D_1,D_2</script>两部分，利用<script type="math/tex">Gini(D,A) =  \frac{|D_1|}{|D|}Gini(D_1) + \frac{|D_2|}{|D|}Gini(D_2)</script>计算<script type="math/tex">A = a</script>的基尼系数</li>
+<li>2.对所有可能的特征<script type="math/tex">A</script>，以及他们的所有可能的切分点特征<script type="math/tex">a</script>中，选择基尼系数最小的特征及其对应的切分点为最优特征和最优切分点，生成两个子节点，将训练数据划分到两个子节点中。</li>
+<li>3.继续递归调用步骤1，2，直至满足停止条件</li>
+</ul>
+</blockquote>
+<p>输出</p>
+<blockquote>
+<ul>
+<li>决策树 <script type="math/tex">f(x)</script></li>
+</ul>
+</blockquote>
+</blockquote>
+<h2 id="CART剪枝"><a href="#CART剪枝" class="headerlink" title="CART剪枝"></a>CART剪枝</h2><p>最简单的方式是预先预留数据作为验证集，对生成树从底部一步一步剪枝，得到子树序列（每一次剪枝就是将最底层的非叶节点变为叶节点，其类别利用投票法决定），利用验证集选择出效果最好的子树，剪枝完毕。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/监督学习/" rel="tag"># 监督学习</a>
+          
+            <a href="/tags/决策树/" rel="tag"># 决策树</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/26/密度聚类/" rel="next" title="密度聚类">
+                <i class="fa fa-chevron-left"></i> 密度聚类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/30/极大似然估计与贝叶斯估计/" rel="prev" title="极大似然估计与贝叶斯估计">
+                极大似然估计与贝叶斯估计 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuanchn">
+            
+              <p class="site-author-name" itemprop="name">changyuanchn</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">111</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#决策树模型"><span class="nav-number">2.</span> <span class="nav-text">决策树模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息熵"><span class="nav-number">2.1.</span> <span class="nav-text">信息熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息增益"><span class="nav-number">2.2.</span> <span class="nav-text">信息增益</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何计算信息增益"><span class="nav-number">2.3.</span> <span class="nav-text">如何计算信息增益</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息增益比"><span class="nav-number">2.4.</span> <span class="nav-text">信息增益比</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ID3算法"><span class="nav-number">3.</span> <span class="nav-text">ID3算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C4-5算法"><span class="nav-number">4.</span> <span class="nav-text">C4.5算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#剪枝"><span class="nav-number">5.</span> <span class="nav-text">剪枝</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CART算法"><span class="nav-number">6.</span> <span class="nav-text">CART算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#回归树"><span class="nav-number">6.1.</span> <span class="nav-text">回归树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#回归树具体算法："><span class="nav-number">6.1.1.</span> <span class="nav-text">回归树具体算法：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分类树"><span class="nav-number">6.2.</span> <span class="nav-text">分类树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基尼系数"><span class="nav-number">6.2.1.</span> <span class="nav-text">基尼系数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分类树具体算法"><span class="nav-number">6.2.2.</span> <span class="nav-text">分类树具体算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CART剪枝"><span class="nav-number">6.3.</span> <span class="nav-text">CART剪枝</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuanchn</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">118.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共118.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
