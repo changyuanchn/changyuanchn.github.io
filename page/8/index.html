@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/神经网络之代价函数的选择/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/神经网络之softMax神经元/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuanchn">
@@ -281,7 +281,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/08/神经网络之代价函数的选择/" itemprop="url">神经网络之代价函数的选择</a></h1>
+                <a class="post-title-link" href="/2018/05/08/神经网络之softMax神经元/" itemprop="url">神经网络之softmax神经元</a></h1>
         
 
         <div class="post-meta">
@@ -347,7 +347,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  670
+                  179
                 </span>
               
 
@@ -363,7 +363,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  1
                 </span>
               
             </div>
@@ -386,12 +386,13 @@
       
         
           
-          引言上一章节，我们介绍了神经网络，同时在后面的扩展遗留了几个问题。其中一个问题就是代价函数的选择。常规的机器学习算法中，我们都是选取的二次函数作为代价函数，这个没有什么大的问题，但是本章我们分析一下二次代价函数，看下二次代价的性质，同时看下是否有其他更好的代价函数可供我们选择。
-二次代价函数上一章节
+          引言在之前的内容里，我们采用的是sigmoid函数作为输出层神经元。这里我们介绍一种softmax函数作为新的输出层。
+softmax函数softmax本质上是一种归一化的过程，假设神经元的带权输入为：
+z_j^L= \sum_k w_{jk}^La^{L-1}_k + b_j^L定义输出神经元的激
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/05/08/神经网络之代价函数的选择/#more" rel="contents">
+            <a class="btn" href="/2018/05/08/神经网络之softMax神经元/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2223,7 +2224,7 @@ Depth-First Search深度优先是指在图的查找中，对每一个分支深�
 </div>
         
 <div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
   
     <span class="site-uv">
