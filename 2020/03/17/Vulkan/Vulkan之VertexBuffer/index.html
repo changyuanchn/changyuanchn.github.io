@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vulkan,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="vertexBuffer，它是一个Buffer，这个buffer装的是vertex信息。所以实际上我们的所有的图元的顶点信息都是放到了vertexBuffer中。而对于vulkan而言，内存的管理是由我们自己控制的，因此内存管理是一项很重要的内容。扯远了，下面我们就来看下vertexBuffer的创建，copy以及销毁过程。 1) buffer的创建12345VKAPI_ATTR VkResult">
+<meta name="keywords" content="vulkan">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vulkan之VertexBuffer">
+<meta property="og:url" content="http://yoursite.com/2020/03/17/Vulkan/Vulkan之VertexBuffer/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="vertexBuffer，它是一个Buffer，这个buffer装的是vertex信息。所以实际上我们的所有的图元的顶点信息都是放到了vertexBuffer中。而对于vulkan而言，内存的管理是由我们自己控制的，因此内存管理是一项很重要的内容。扯远了，下面我们就来看下vertexBuffer的创建，copy以及销毁过程。 1) buffer的创建12345VKAPI_ATTR VkResult">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.636Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vulkan之VertexBuffer">
+<meta name="twitter:description" content="vertexBuffer，它是一个Buffer，这个buffer装的是vertex信息。所以实际上我们的所有的图元的顶点信息都是放到了vertexBuffer中。而对于vulkan而言，内存的管理是由我们自己控制的，因此内存管理是一项很重要的内容。扯远了，下面我们就来看下vertexBuffer的创建，copy以及销毁过程。 1) buffer的创建12345VKAPI_ATTR VkResult">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/03/17/Vulkan/Vulkan之VertexBuffer/">
+
+
+
+
+
+  <title>Vulkan之VertexBuffer | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/17/Vulkan/Vulkan之VertexBuffer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vulkan之VertexBuffer</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-17T00:00:00+08:00">
+                2020-03-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,750
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>vertexBuffer，它是一个Buffer，这个buffer装的是vertex信息。所以实际上我们的所有的图元的顶点信息都是放到了vertexBuffer中。而对于vulkan而言，内存的管理是由我们自己控制的，因此内存管理是一项很重要的内容。<br>扯远了，下面我们就来看下vertexBuffer的创建，copy以及销毁过程。</p>
+<h2 id="1-buffer的创建"><a href="#1-buffer的创建" class="headerlink" title="1) buffer的创建"></a>1) buffer的创建</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkCreateBuffer(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    const VkBufferCreateInfo*                   pCreateInfo,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator,</span><br><span class="line">    VkBuffer*                                   pBuffer);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkBufferCreateInfo &#123;</span><br><span class="line">    VkStructureType        sType;  // VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO</span><br><span class="line">    const void*            pNext;  // nullptr</span><br><span class="line">    VkBufferCreateFlags    flags;  // 与稀疏缓冲区的创建有关</span><br><span class="line">    VkDeviceSize           size;   // 需要创建的buffer的大小</span><br><span class="line">    VkBufferUsageFlags     usage;  // 如何使用缓冲区</span><br><span class="line">    VkSharingMode          sharingMode; // 是否可以多个队列共享使用</span><br><span class="line">    uint32_t               queueFamilyIndexCount;</span><br><span class="line">    const uint32_t*        pQueueFamilyIndices; // 那些队列会用到buffer</span><br><span class="line">&#125; VkBufferCreateInfo;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkBufferUsageFlagBits &#123;</span><br><span class="line">    VK_BUFFER_USAGE_TRANSFER_SRC_BIT = 0x00000001,</span><br><span class="line">    VK_BUFFER_USAGE_TRANSFER_DST_BIT = 0x00000002,</span><br><span class="line">    VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = 0x00000004,</span><br><span class="line">    VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT = 0x00000008,</span><br><span class="line">    VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT = 0x00000010,</span><br><span class="line">    VK_BUFFER_USAGE_STORAGE_BUFFER_BIT = 0x00000020,</span><br><span class="line">    VK_BUFFER_USAGE_INDEX_BUFFER_BIT = 0x00000040,</span><br><span class="line">    VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = 0x00000080,</span><br><span class="line">    VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = 0x00000100,</span><br><span class="line">    VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT = 0x00020000,</span><br><span class="line">    VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT = 0x00000800,</span><br><span class="line">    VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT = 0x00001000,</span><br><span class="line">    VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT = 0x00000200,</span><br><span class="line">    VK_BUFFER_USAGE_RAY_TRACING_BIT_KHR = 0x00000400,</span><br><span class="line">    VK_BUFFER_USAGE_RAY_TRACING_BIT_NV = VK_BUFFER_USAGE_RAY_TRACING_BIT_KHR,</span><br><span class="line">    VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT = VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT,</span><br><span class="line">    VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_KHR = VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT,</span><br><span class="line">    VK_BUFFER_USAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkBufferUsageFlagBits;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkSharingMode &#123;</span><br><span class="line">    VK_SHARING_MODE_EXCLUSIVE = 0, // buffer只能被一个队列使用</span><br><span class="line">    VK_SHARING_MODE_CONCURRENT = 1, // buffer可被多个队列使用，这样的效率可能不高</span><br><span class="line">    VK_SHARING_MODE_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkSharingMode;</span><br></pre></td></tr></table></figure>
+<p>当VkSharingMode为VK_SHARING_MODE_CONCURRENT需要设置pQueueFamilyIndices，表示那些队列会用到数据。<br>当VkSharingMode为VK_SHARING_MODE_EXCLUSIVE则不需要设置pQueueFamilyIndices。</p>
+<h2 id="2）-设备内存的分配"><a href="#2）-设备内存的分配" class="headerlink" title="2） 设备内存的分配"></a>2） 设备内存的分配</h2><p>上面虽然创建了vertexBuffer，但是实际上没有为其分配设备内存，也就是说GPU实际上还是不能访问到这块内存的。因此我们需要在设备上创建内存，并将其绑定</p>
+<p>第一步首先要查询vertexBuffer需要的设备内存的大小<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkGetBufferMemoryRequirements(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    VkBuffer                                    buffer,</span><br><span class="line">    VkMemoryRequirements*                       pMemoryRequirements);</span><br></pre></td></tr></table></figure></p>
+<p>第二步分配设备内存<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkAllocateMemory(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    const VkMemoryAllocateInfo*                 pAllocateInfo,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator,</span><br><span class="line">    VkDeviceMemory*                             pMemory);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkMemoryAllocateInfo &#123;</span><br><span class="line">    VkStructureType    sType;  // VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO</span><br><span class="line">    const void*        pNext;</span><br><span class="line">    VkDeviceSize       allocationSize; // 上面查询到的内存大小</span><br><span class="line">    uint32_t           memoryTypeIndex; // 内存类型</span><br><span class="line">&#125; VkMemoryAllocateInfo;</span><br></pre></td></tr></table></figure>
+<p>第三步绑定vertexBuffer和创建的设备内存pMemory<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkBindBufferMemory(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    VkBuffer                                    buffer,</span><br><span class="line">    VkDeviceMemory                              memory,</span><br><span class="line">    VkDeviceSize                                memoryOffset);</span><br></pre></td></tr></table></figure></p>
+<p>最后，我们需要注意一下第二步中的memoryTypeIndex，这个是一个位Mask，这个首先需要查找设备支持的内存类型，然后看是否符合我们的预期<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkGetPhysicalDeviceMemoryProperties(</span><br><span class="line">    VkPhysicalDevice                            physicalDevice,</span><br><span class="line">    VkPhysicalDeviceMemoryProperties*           pMemoryProperties);</span><br></pre></td></tr></table></figure></p>
+<p>一般的类型有<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkMemoryPropertyFlagBits &#123;</span><br><span class="line">    VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = 0x00000001,</span><br><span class="line">    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = 0x00000002,</span><br><span class="line">    VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = 0x00000004,</span><br><span class="line">    VK_MEMORY_PROPERTY_HOST_CACHED_BIT = 0x00000008,</span><br><span class="line">    VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = 0x00000010,</span><br><span class="line">    VK_MEMORY_PROPERTY_PROTECTED_BIT = 0x00000020,</span><br><span class="line">    VK_MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD = 0x00000040,</span><br><span class="line">    VK_MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD = 0x00000080,</span><br><span class="line">    VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkMemoryPropertyFlagBits;</span><br><span class="line">typedef VkFlags VkMemoryPropertyFlags;</span><br></pre></td></tr></table></figure></p>
+<p>这个后面我们会专门有一节讲解内存管理，这里先略过。</p>
+<h2 id="3）填充顶点缓冲区"><a href="#3）填充顶点缓冲区" class="headerlink" title="3）填充顶点缓冲区"></a>3）填充顶点缓冲区</h2><p>实际应用中，我们的顶点数据都是通过文件读取，加载到内存中的，但是这个GPU看不到啊，因此需要一个copy的操作，将其从host内存拷贝到device的显存上。<br>而这个copy也不能直接copy，因为CPU也看不到GPU的缓存啊。因此需要首先将device显存映射到CPU可访问的内存中，然后执行copy操作，然后解除映射。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void* data;</span><br><span class="line">vkMapMemory(device, vertexBufferMemory, 0, bufferInfo.size, 0, &amp;data);</span><br><span class="line">memcpy(data, vertices.data(), (size_t) bufferInfo.size);</span><br><span class="line">vkUnmapMemory(device, vertexBufferMemory);</span><br></pre></td></tr></table></figure></p>
+<p>映射函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkMapMemory(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    VkDeviceMemory                              memory,</span><br><span class="line">    VkDeviceSize                                offset, // 偏移量，一般为0则表示映射整个内存</span><br><span class="line">    VkDeviceSize                                size,</span><br><span class="line">    VkMemoryMapFlags                            flags, // 设置为0，这个值当前不用</span><br><span class="line">    void**                                      ppData);</span><br></pre></td></tr></table></figure></p>
+<p>解映射函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkUnmapMemory(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    VkDeviceMemory                              memory);</span><br></pre></td></tr></table></figure></p>
+<h2 id="4）stagingBuffer"><a href="#4）stagingBuffer" class="headerlink" title="4）stagingBuffer"></a>4）stagingBuffer</h2><p>实际上上面的操作已经做完了，那么我们这里提到一个stagingBuffer是干嘛的呢？</p>
+<p>这主要是因为我们创建的vertexBuffer，因为它是要给vertex Shader频繁读取的，因此他的VkMemoryPropertyFlagBits必须设置为VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT会更快的被GPU读取<br>而CPU是无法向VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT这个类型的buffer copy数据的。如果要实现上面的操作，那么必须将vertexBuffer设置为VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT<br>因此我们可以通过加一层缓存的方式来解决这个copy问题。</p>
+<p>也就是我们先将顶点信息copy到stagingBuffer上，然后再将其transfer到vertexBuffer中。这里就引入了一个额外的transfer操作。</p>
+<p>因此是显存对显存的操作，所以不能直接memcpy，应用下面的命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdCopyBuffer(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    VkBuffer                                    srcBuffer,</span><br><span class="line">    VkBuffer                                    dstBuffer,</span><br><span class="line">    uint32_t                                    regionCount,</span><br><span class="line">    const VkBufferCopy*                         pRegions);</span><br></pre></td></tr></table></figure></p>
+<p>既然是command，那么必须要有commandbuffer的那一套流程。</p>
+<h2 id="5）-关于IndexBuffer"><a href="#5）-关于IndexBuffer" class="headerlink" title="5） 关于IndexBuffer"></a>5） 关于IndexBuffer</h2><p>indexBuffer的流程更vertexBuffer完全一样，这里就不多解释。</p>
+<h2 id="6）-实际代码分析"><a href="#6）-实际代码分析" class="headerlink" title="6） 实际代码分析"></a>6） 实际代码分析</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">void createVertexBuffer() &#123;</span><br><span class="line">    VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();</span><br><span class="line"></span><br><span class="line">    VkBuffer stagingBuffer;</span><br><span class="line">    VkDeviceMemory stagingBufferMemory;</span><br><span class="line">    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);</span><br><span class="line"></span><br><span class="line">    void* data;</span><br><span class="line">    vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &amp;data);</span><br><span class="line">    memcpy(data, vertices.data(), (size_t)bufferSize);</span><br><span class="line">    vkUnmapMemory(device, stagingBufferMemory);</span><br><span class="line"></span><br><span class="line">    createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);</span><br><span class="line"></span><br><span class="line">    copyBuffer(stagingBuffer, vertexBuffer, bufferSize);</span><br><span class="line"></span><br><span class="line">    vkDestroyBuffer(device, stagingBuffer, nullptr);</span><br><span class="line">    vkFreeMemory(device, stagingBufferMemory, nullptr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个函数中先创建了stagingBuffer和stagingBufferMemory，注意他们的usage和property<br>VK_BUFFER_USAGE_TRANSFER_SRC_BIT表明它将会作为后续vkCmdCopyBuffer的源<br>VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT 使用这个标记的内存可以被映射到CPU（HOST）上，这意味着不带有这个标记的内存，是不能直接被CPU访问的，它必须要先间接地转移到其他可被映射到CPU的内存中，才能再被CPU访问<br>VK_MEMORY_PROPERTY_HOST_COHERENT_BIT 使用这个标记的内存在被映射到CPU上后，再CPU上对它进行的操作，不会被Cache，对它做的一切修改，不需要手动地写回</p>
+<p>然后创建了vertexBuffer和vertexBufferMemory，注意他们的usage和property<br>VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT 用作传输的目的  以及  能够用于vkCmdBindVertexBuffers<br>VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT   只能被GPU访问，提高访问效率</p>
+<p>这里创建buffer的函数被抽象出来了，如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer&amp; buffer, VkDeviceMemory&amp; bufferMemory) &#123;</span><br><span class="line">    VkBufferCreateInfo bufferInfo&#123;&#125;;</span><br><span class="line">    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;</span><br><span class="line">    bufferInfo.size = size;</span><br><span class="line">    bufferInfo.usage = usage;</span><br><span class="line">    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;</span><br><span class="line"></span><br><span class="line">    if (vkCreateBuffer(device, &amp;bufferInfo, nullptr, &amp;buffer) != VK_SUCCESS) &#123;</span><br><span class="line">        throw std::runtime_error(&quot;failed to create buffer!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    VkMemoryRequirements memRequirements;</span><br><span class="line">    vkGetBufferMemoryRequirements(device, buffer, &amp;memRequirements);</span><br><span class="line"></span><br><span class="line">    VkMemoryAllocateInfo allocInfo&#123;&#125;;</span><br><span class="line">    allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;</span><br><span class="line">    allocInfo.allocationSize = memRequirements.size;</span><br><span class="line">    allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);</span><br><span class="line"></span><br><span class="line">    if (vkAllocateMemory(device, &amp;allocInfo, nullptr, &amp;bufferMemory) != VK_SUCCESS) &#123;</span><br><span class="line">        throw std::runtime_error(&quot;failed to allocate buffer memory!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    vkBindBufferMemory(device, buffer, bufferMemory, 0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>而stagingBuffer到vertexBuffer的传输，被封装到了下面的函数中。<br>调用vkCmdCopyBuffer实现，但是这是一个commandBuffer，所以需要command record以及command submit到队列中执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) &#123;</span><br><span class="line">    VkCommandBuffer commandBuffer = beginSingleTimeCommands();</span><br><span class="line"></span><br><span class="line">    VkBufferCopy copyRegion&#123;&#125;;</span><br><span class="line">    copyRegion.size = size;</span><br><span class="line">    vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &amp;copyRegion);</span><br><span class="line"></span><br><span class="line">    endSingleTimeCommands(commandBuffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先需要分配命令，并启动录制<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">VkCommandBuffer beginSingleTimeCommands() &#123;</span><br><span class="line">    VkCommandBufferAllocateInfo allocInfo&#123;&#125;;</span><br><span class="line">    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;</span><br><span class="line">    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;</span><br><span class="line">    allocInfo.commandPool = commandPool;</span><br><span class="line">    allocInfo.commandBufferCount = 1;</span><br><span class="line"></span><br><span class="line">    VkCommandBuffer commandBuffer;</span><br><span class="line">    vkAllocateCommandBuffers(device, &amp;allocInfo, &amp;commandBuffer);</span><br><span class="line"></span><br><span class="line">    VkCommandBufferBeginInfo beginInfo&#123;&#125;;</span><br><span class="line">    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;</span><br><span class="line">    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;</span><br><span class="line"></span><br><span class="line">    vkBeginCommandBuffer(commandBuffer, &amp;beginInfo);</span><br><span class="line"></span><br><span class="line">    return commandBuffer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结束录制并提交，最后注意等待命令执行完毕后，再释放掉commandBuffer。这里直接用vkQueueWaitIdle，而不是semaphore<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void endSingleTimeCommands(VkCommandBuffer commandBuffer) &#123;</span><br><span class="line">    vkEndCommandBuffer(commandBuffer);</span><br><span class="line"></span><br><span class="line">    VkSubmitInfo submitInfo&#123;&#125;;</span><br><span class="line">    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;</span><br><span class="line">    submitInfo.commandBufferCount = 1;</span><br><span class="line">    submitInfo.pCommandBuffers = &amp;commandBuffer;</span><br><span class="line"></span><br><span class="line">    vkQueueSubmit(graphicsQueue, 1, &amp;submitInfo, VK_NULL_HANDLE);</span><br><span class="line">    vkQueueWaitIdle(graphicsQueue);</span><br><span class="line"></span><br><span class="line">    vkFreeCommandBuffers(device, commandPool, 1, &amp;commandBuffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后销毁stagingBuffer并释放内存stagingBufferMemory</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vulkan/" rel="tag"># vulkan</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/10/Vulkan/Vulkan之CommandBuffer/" rel="next" title="Vulkan之CommandBuffer">
+                <i class="fa fa-chevron-left"></i> Vulkan之CommandBuffer
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/24/Vulkan/Vulkan之DescriptorSet/" rel="prev" title="Vulkan之DescriptorSet">
+                Vulkan之DescriptorSet <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-buffer的创建"><span class="nav-number">1.</span> <span class="nav-text">1) buffer的创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2）-设备内存的分配"><span class="nav-number">2.</span> <span class="nav-text">2） 设备内存的分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3）填充顶点缓冲区"><span class="nav-number">3.</span> <span class="nav-text">3）填充顶点缓冲区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4）stagingBuffer"><span class="nav-number">4.</span> <span class="nav-text">4）stagingBuffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5）-关于IndexBuffer"><span class="nav-number">5.</span> <span class="nav-text">5） 关于IndexBuffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6）-实际代码分析"><span class="nav-number">6.</span> <span class="nav-text">6） 实际代码分析</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

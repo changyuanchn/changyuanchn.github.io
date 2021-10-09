@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C++,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="类类实际上就是我们自己定义的一种数据类型，本质上来讲它和int，float什么的没有什么不同。 在C语言中，我们一般用struct来定义我们自己的类型，在C++中我们引入了类的概念，一般用class来定义自己的类型。实际上这两个概念很像，只不过class多了一些东西，比如可以定义private的类型等等。 构造函数类需要一个构造函数来进行类的初始化，一般来讲，当我们new一个类的时候，会首先调用它">
+<meta name="keywords" content="C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="类">
+<meta property="og:url" content="http://yoursite.com/2016/07/07/ProgramingLanguage/类/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="类类实际上就是我们自己定义的一种数据类型，本质上来讲它和int，float什么的没有什么不同。 在C语言中，我们一般用struct来定义我们自己的类型，在C++中我们引入了类的概念，一般用class来定义自己的类型。实际上这两个概念很像，只不过class多了一些东西，比如可以定义private的类型等等。 构造函数类需要一个构造函数来进行类的初始化，一般来讲，当我们new一个类的时候，会首先调用它">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.660Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="类">
+<meta name="twitter:description" content="类类实际上就是我们自己定义的一种数据类型，本质上来讲它和int，float什么的没有什么不同。 在C语言中，我们一般用struct来定义我们自己的类型，在C++中我们引入了类的概念，一般用class来定义自己的类型。实际上这两个概念很像，只不过class多了一些东西，比如可以定义private的类型等等。 构造函数类需要一个构造函数来进行类的初始化，一般来讲，当我们new一个类的时候，会首先调用它">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/07/ProgramingLanguage/类/">
+
+
+
+
+
+  <title>类 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/07/07/ProgramingLanguage/类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">类</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-07T00:00:00+08:00">
+                2016-07-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,511
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="类"><a href="#类" class="headerlink" title="类"></a>类</h1><p>类实际上就是我们自己定义的一种数据类型，本质上来讲它和int，float什么的没有什么不同。</p>
+<p>在C语言中，我们一般用struct来定义我们自己的类型，在C++中我们引入了类的概念，一般用class来定义自己的类型。实际上这两个概念很像，只不过class多了一些东西，比如可以定义private的类型等等。</p>
+<h1 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h1><p>类需要一个构造函数来进行类的初始化，一般来讲，当我们new一个类的时候，会首先调用它的初始化函数来对类中的成员进行初始化。</p>
+<p>构造函数的名字与类相同，并且没有返回值，也没有返回类型。在很多类中我们看不到构造函数，是因为编译器会隐式给类默认生成构造函数。但是在实际中我们还是应该显示的定义构造函数，这是因为有些场景下编译器生成的默认构造函数是有问题的，或是会报错的，或是在有些类中无法生成默认构造函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class Sales_data &#123;</span><br><span class="line">    Sales_data() = default;</span><br><span class="line">    Sales_data(const std::string &amp;s): bookNo(s) &#123;&#125;</span><br><span class="line">    Sales_data(const std::string &amp;s, unsigned n, double p) :</span><br><span class="line">    bookNo(s), unit_sold(n), revenue(p) &#123;&#125;</span><br><span class="line">    Sales_data(std::istream &amp;);</span><br><span class="line">    std::string bookNo;</span><br><span class="line">    unsigned int unit_sold = 0;</span><br><span class="line">    double revenue = 0.0;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>上面定义了一个类，这个类有三个构造函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Sales_data() = default;</span><br></pre></td></tr></table></figure></p>
+<p>这个的意思是告诉编译器要为我们生成一个默认的构造函数，如果不这样，那么因为我们定义了构造函数，那么编译器就不会为我们生成默认的构造函数了。</p>
+<p>剩下的两种就是我们自己定义的构造函数，这宗定义的方式我们称之为构造函数初始值列表。</p>
+<p>当然我们还两外的构造方式，如下所示，这就跟普通的函数是一样的了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Sales_data::Sales_data（std::istream &amp;is) &#123;</span><br><span class="line">    read(is, *this);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="访问控制和封装"><a href="#访问控制和封装" class="headerlink" title="访问控制和封装"></a>访问控制和封装</h1><p>前面说到struct和class的不同就在于class里面可以进行访问权限控制</p>
+<p>public：整个程序都可以使用，一般用来定义接口</p>
+<p>private：只能被类的成员进行访问，一般用来定义类的成员以及私有的实现。</p>
+<p>所以我们可以修正一下上面的类定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Sales_data &#123;</span><br><span class="line">public:</span><br><span class="line">    Sales_data() = default;</span><br><span class="line">    Sales_data(const std::string &amp;s): bookNo(s) &#123;&#125;</span><br><span class="line">    Sales_data(const std::string &amp;s, unsigned n, double p) :</span><br><span class="line">    bookNo(s), unit_sold(n), revenue(p) &#123;&#125;</span><br><span class="line">    Sales_data(std::istream &amp;);</span><br><span class="line">private:</span><br><span class="line">    std::string bookNo;</span><br><span class="line">    unsigned int unit_sold = 0;</span><br><span class="line">    double revenue = 0.0;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h1 id="友元"><a href="#友元" class="headerlink" title="友元"></a>友元</h1><p>由于类中的private成员不能让外部访问，所以如果我们需要外部的类或者函数来修改private成员的话，就没有办法了，因此我们定义了友元的概念。</p>
+<p>类允许其他的类或者函数访问它的非共有成员，方法是其他类或者函数成为它的友元，用friend关键字</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class Sales_data &#123;</span><br><span class="line">    friend Sales_data add(const Sales_data&amp;, const Sales_data&amp;);</span><br><span class="line">    friend std::istream &amp;read(std::istream&amp;, Sales_data&amp;);</span><br><span class="line">public:</span><br><span class="line">    Sales_data() = default;</span><br><span class="line">    Sales_data(const std::string &amp;s): bookNo(s) &#123;&#125;</span><br><span class="line">    Sales_data(const std::string &amp;s, unsigned n, double p) :</span><br><span class="line">    bookNo(s), unit_sold(n), revenue(p) &#123;&#125;</span><br><span class="line">    Sales_data(std::istream &amp;);</span><br><span class="line">private:</span><br><span class="line">    std::string bookNo;</span><br><span class="line">    unsigned int unit_sold = 0;</span><br><span class="line">    double revenue = 0.0;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="this"><a href="#this" class="headerlink" title="this"></a>this</h1><p>this实际上指的是类本身,在某一些场景下我们需要显示的用到this，比如我们要返回类的时候，在下面有例子说明。</p>
+<h1 id="类的静态成员"><a href="#类的静态成员" class="headerlink" title="类的静态成员"></a>类的静态成员</h1><p>类的静态成员跟类本身有关，而跟它的对象基本无关。<br>一般用static来定义。</p>
+<p>类的静态成员存在与任何对象之外，对象中不包含任何与静态数据成员有关的数据。静态成员也不跟任何对象绑定在一起，他也不包含this指针。</p>
+<p>比如说定义一个账户类，那么我们可以将利率定义为static的，那么这个利率就跟类有关，而跟对象无关。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class Account &#123;</span><br><span class="line">public:</span><br><span class="line">    void calculate() &#123;</span><br><span class="line">        amount += amount * interestRate;</span><br><span class="line">    &#125;</span><br><span class="line">    static double rate() &#123;</span><br><span class="line">        return interestRate;</span><br><span class="line">    &#125;</span><br><span class="line">    static void rate(double);</span><br><span class="line">private:</span><br><span class="line">    std::string owner;</span><br><span class="line">    double amount;</span><br><span class="line">    static double interestRate;</span><br><span class="line">    static double initRate();</span><br><span class="line">&#125;;</span><br><span class="line">void Account::rate(double newRate) &#123;</span><br><span class="line">    interestRate = newRate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这个类中，所有的Account对象将包含两个数据成员owner和amount。但是只存在一个interestRate对象且被所有的Account对象共享。<br>我们可以直接用类名或者对象来访问静态成员</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">double r = Account::rate();</span><br><span class="line">Account r1;</span><br><span class="line">r = r1.rate();</span><br></pre></td></tr></table></figure>
+<h1 id="实例说明"><a href="#实例说明" class="headerlink" title="实例说明"></a>实例说明</h1><p>我们定义一个Screen类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">class Screen &#123;</span><br><span class="line">public:</span><br><span class="line">    typedef std::string::size_type pos;</span><br><span class="line">    Screen() = default;</span><br><span class="line">    Screen(pos ht, pos wd, char c) : height(ht), width(wd), contents(ht * wd, c) &#123;&#125;</span><br><span class="line">    char get() const &#123;</span><br><span class="line">        return contents[cursor];  // 隐式内联</span><br><span class="line">    &#125;</span><br><span class="line">    Screen &amp;move(pos r, pos c);</span><br><span class="line">    inline char get(pos ht, pos wd) const; // 显式内联</span><br><span class="line">private:</span><br><span class="line">    pos cursor = 0;</span><br><span class="line">    pos height = 0, width = 0;</span><br><span class="line">    std::string contents;</span><br><span class="line">&#125;;</span><br><span class="line">char Screen::get(pos r, pos c) const &#123;</span><br><span class="line">    pos row = r * width;</span><br><span class="line">    return contents[row * c];</span><br><span class="line">&#125;</span><br><span class="line">inline Screen &amp;Screen::move(pos r, pos c) &#123;</span><br><span class="line">    pos row = r * width;</span><br><span class="line">    cursor = row + c;</span><br><span class="line">    return *this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个类里面首先我们用typedef定义了一个pos，这样就能封装类的一些细节，同时方便理解类。</p>
+<h2 id="内联函数"><a href="#内联函数" class="headerlink" title="内联函数"></a>内联函数</h2><p>其次我们定义了内联函数，内联函数的有点就不说了，上面的例子是三种内联函数的声明方式。</p>
+<h2 id="mutable可变变量"><a href="#mutable可变变量" class="headerlink" title="mutable可变变量"></a>mutable可变变量</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">class Screen &#123;</span><br><span class="line">public:</span><br><span class="line">    typedef std::string::size_type pos;</span><br><span class="line">    Screen() = default;</span><br><span class="line">    Screen(pos ht, pos wd, char c) : height(ht), width(wd), contents(ht * wd, c) &#123;&#125;</span><br><span class="line">    char get() const &#123;</span><br><span class="line">        return contents[cursor];  // 隐式内联</span><br><span class="line">    &#125;</span><br><span class="line">    Screen &amp;move(pos r, pos c);</span><br><span class="line">    inline char get(pos ht, pos wd) const; // 显式内联</span><br><span class="line">    void some_member() const;</span><br><span class="line">private:</span><br><span class="line">    mutable size_t access_ptr;</span><br><span class="line">    pos cursor = 0;</span><br><span class="line">    pos height = 0, width = 0;</span><br><span class="line">    std::string contents;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">char Screen::get(pos r, pos c) const &#123;</span><br><span class="line">    pos row = r * width;</span><br><span class="line">    return contents[row * c];</span><br><span class="line">&#125;</span><br><span class="line">inline Screen &amp;Screen::move(pos r, pos c) &#123;</span><br><span class="line">    pos row = r * width;</span><br><span class="line">    cursor = row + c;</span><br><span class="line">    return *this;</span><br><span class="line">&#125;</span><br><span class="line">void Screen::some_member() const &#123;</span><br><span class="line">    ++access_ptr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里我们添加了一个mutable的变量，用来表示some_member函数的调用次数。</p>
+<p>这是因为对于函数名后加const的行为，在这个函数中是不能修改成员遍历那个的，所以必须将相应的成员变量设置为mutable。mutable是可变数据成员，当我们将一个成员变量定义为mutable时，即使这个变量在const成员函数中，我们也可以改变它的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void some_member() const;</span><br></pre></td></tr></table></figure>
+<h2 id="this指针返回对象，用于隐式传递"><a href="#this指针返回对象，用于隐式传递" class="headerlink" title="this指针返回对象，用于隐式传递"></a>this指针返回对象，用于隐式传递</h2><p>我们可以从上面的代码中看到我们定义了一个函数，返回了this指针，也就是对象本身的引用。这样做是为什么呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">inline Screen &amp;Screen::move(pos r, pos c) &#123;</span><br><span class="line">    pos row = r * width;</span><br><span class="line">    cursor = row + c;</span><br><span class="line">    return *this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个函数的目的是移动屏幕的光标，那么移动完了就好了，为何还要返回对象的引用呢？这是为了解决一个本质的问题。</p>
+<p>当我们移动一下光标后没有问题，那么当我们还需要继续操作呢？这就有问题了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Screen myScreen；</span><br><span class="line">myScreen.move(4,0).set(&apos;$&apos;, 4);</span><br></pre></td></tr></table></figure>
+<p>因此返回this引用就是可以实现上面的操作。</p>
+<p>假设我们添加了下面的display函数，实际上这个函数不需要改变任何值，那么我们可以将其设置为const类型的，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class Screen &#123;</span><br><span class="line">public:</span><br><span class="line">    typedef std::string::size_type pos;</span><br><span class="line">    Screen() = default;</span><br><span class="line">    Screen(pos ht, pos wd, char c) : height(ht), width(wd), contents(ht * wd, c) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    const Screen &amp;display(std::ostream &amp;os) const &#123;</span><br><span class="line">        do_display(os);</span><br><span class="line">        return *this;</span><br><span class="line">    &#125;</span><br><span class="line">private:</span><br><span class="line">    void do_display(std::ostream &amp;os) const &#123;</span><br><span class="line">        os &lt;&lt; contents;</span><br><span class="line">    &#125;</span><br><span class="line">    mutable size_t access_ptr;</span><br><span class="line">    pos cursor = 0;</span><br><span class="line">    pos height = 0, width = 0;</span><br><span class="line">    std::string contents;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>但是这样有个问题，我们如果按照如下的方式调用则没有问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Screen myScreen；</span><br><span class="line">myScreen.display(std::cout);</span><br></pre></td></tr></table></figure>
+<p>但是如下调用就麻烦了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Screen myScreen；</span><br><span class="line">myScreen.display(std::cout).set(&apos;*&apos;);</span><br></pre></td></tr></table></figure></p>
+<p>这是因为我们的返回值是个const，也就是myScrren是个常量，他是没有办法再进行set的。因此针对这中场景，有一种解决方式，就是基于const的重载，新添加一个非const的函数，如下所示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">class Screen &#123;</span><br><span class="line">public:</span><br><span class="line">    typedef std::string::size_type pos;</span><br><span class="line">    Screen() = default;</span><br><span class="line">    Screen(pos ht, pos wd, char c) : height(ht), width(wd), contents(ht * wd, c) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    Screen &amp;display(std::ostream &amp;os) &#123;</span><br><span class="line">        do_display(os);</span><br><span class="line">        return *this;</span><br><span class="line">    &#125;</span><br><span class="line">    const Screen &amp;display(std::ostream &amp;os) const &#123;</span><br><span class="line">        do_display(os);</span><br><span class="line">        return *this;</span><br><span class="line">    &#125;</span><br><span class="line">private:</span><br><span class="line">    void do_display(std::ostream &amp;os) const &#123;</span><br><span class="line">        os &lt;&lt; contents;</span><br><span class="line">    &#125;</span><br><span class="line">    mutable size_t access_ptr;</span><br><span class="line">    pos cursor = 0;</span><br><span class="line">    pos height = 0, width = 0;</span><br><span class="line">    std::string contents;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这样就解决了上面的两种调用的问题了。</p>
+<h2 id="Screen类的友元问题"><a href="#Screen类的友元问题" class="headerlink" title="Screen类的友元问题"></a>Screen类的友元问题</h2><p>我们定义一个Window_mgr类，这个类需要调用Screen中的私有成员，这样原则上是不允许的，要想实现，我们就需要将Window_mgr定义为Screen的友元。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Window_mgr&#123;</span><br><span class="line">public:</span><br><span class="line">    using ScreenIndex = std::vector&lt;Screen&gt;::size_type;</span><br><span class="line">    void clear(ScreenIndex);</span><br><span class="line">private:</span><br><span class="line">    std::vector&lt;Screen&gt; Screens&#123;Screen(24, 80, &apos; &apos;)&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">void Window_mgr::clear(ScreenIndex i) &#123;</span><br><span class="line">    Screen &amp;s = Screens[i];</span><br><span class="line">    s.contents = string(s.height * s.width, &apos; &apos;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将Window_mgr定义为Screen的友元。注意定义友元之前要先声明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">class Window_mgr;</span><br><span class="line">class Screen &#123;</span><br><span class="line">    friend Window_mgr;</span><br><span class="line">public:</span><br><span class="line">    typedef std::string::size_type pos;</span><br><span class="line">    Screen() = default;</span><br><span class="line">    Screen(pos ht, pos wd, char c) : height(ht), width(wd), contents(ht * wd, c) &#123;&#125;</span><br><span class="line">    char get() const &#123;</span><br><span class="line">        return contents[cursor];  // 隐式内联</span><br><span class="line">    &#125;</span><br><span class="line">    Screen &amp;move(pos r, pos c);</span><br><span class="line">    inline char get(pos ht, pos wd) const; // 显式内联</span><br><span class="line">    void some_member() const;</span><br><span class="line">    Screen &amp;display(std::ostream &amp;os) &#123;</span><br><span class="line">        do_display(os);</span><br><span class="line">        return *this;</span><br><span class="line">    &#125;</span><br><span class="line">    const Screen &amp;display(std::ostream &amp;os) const &#123;</span><br><span class="line">        do_display(os);</span><br><span class="line">        return *this;</span><br><span class="line">    &#125;</span><br><span class="line">private:</span><br><span class="line">    void do_display(std::ostream &amp;os) const &#123;</span><br><span class="line">        os &lt;&lt; contents;</span><br><span class="line">    &#125;</span><br><span class="line">    mutable size_t access_ptr;</span><br><span class="line">    pos cursor = 0;</span><br><span class="line">    pos height = 0, width = 0;</span><br><span class="line">    std::string contents;</span><br><span class="line">&#125;;</span><br><span class="line">char Screen::get(pos r, pos c) const &#123;</span><br><span class="line">    pos row = r * width;</span><br><span class="line">    return contents[row * c];</span><br><span class="line">&#125;</span><br><span class="line">inline Screen &amp;Screen::move(pos r, pos c) &#123;</span><br><span class="line">    pos row = r * width;</span><br><span class="line">    cursor = row + c;</span><br><span class="line">    return *this;</span><br><span class="line">&#125;</span><br><span class="line">void Screen::some_member() const &#123;</span><br><span class="line">    ++access_ptr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>也可以直接定义友元的函数，而不必要将整个类定义为友元，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">friend void Window_mgr::clear(ScreenIndex);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/01/DesignPattern/策略模式/" rel="next" title="策略模式">
+                <i class="fa fa-chevron-left"></i> 策略模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/11/DesignPattern/观察者模式/" rel="prev" title="观察者模式">
+                观察者模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#类"><span class="nav-number">1.</span> <span class="nav-text">类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构造函数"><span class="nav-number">2.</span> <span class="nav-text">构造函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#访问控制和封装"><span class="nav-number">3.</span> <span class="nav-text">访问控制和封装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#友元"><span class="nav-number">4.</span> <span class="nav-text">友元</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#this"><span class="nav-number">5.</span> <span class="nav-text">this</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类的静态成员"><span class="nav-number">6.</span> <span class="nav-text">类的静态成员</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例说明"><span class="nav-number">7.</span> <span class="nav-text">实例说明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内联函数"><span class="nav-number">7.1.</span> <span class="nav-text">内联函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mutable可变变量"><span class="nav-number">7.2.</span> <span class="nav-text">mutable可变变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#this指针返回对象，用于隐式传递"><span class="nav-number">7.3.</span> <span class="nav-text">this指针返回对象，用于隐式传递</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Screen类的友元问题"><span class="nav-number">7.4.</span> <span class="nav-text">Screen类的友元问题</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

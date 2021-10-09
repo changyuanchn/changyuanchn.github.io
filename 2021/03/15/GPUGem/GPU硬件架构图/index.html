@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="GPU,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引言最近在搞GPU，往简单了说，GPU实际上就是在画三角形，往复杂了说，他的各种并行操作，各个渲染阶段几本书都讲不清楚。这大概也就是为什么能做好GPU的整个星球上也没有几家的原因吧。本文我们尝试从简化的架构来了解一下GPU的各个模块以及相应的工作原理。 首先先抛个图，下图就是Nvidia Turing102 GPU的一个组件架构图，可以看到密密麻麻的SM和RT Core，这两个组件实际上算是GPU">
+<meta name="keywords" content="GPU">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GPU硬件架构图">
+<meta property="og:url" content="http://yoursite.com/2021/03/15/GPUGem/GPU硬件架构图/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="引言最近在搞GPU，往简单了说，GPU实际上就是在画三角形，往复杂了说，他的各种并行操作，各个渲染阶段几本书都讲不清楚。这大概也就是为什么能做好GPU的整个星球上也没有几家的原因吧。本文我们尝试从简化的架构来了解一下GPU的各个模块以及相应的工作原理。 首先先抛个图，下图就是Nvidia Turing102 GPU的一个组件架构图，可以看到密密麻麻的SM和RT Core，这两个组件实际上算是GPU">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/GPU/NVIDIATuring.jpg">
+<meta property="og:image" content="http://yoursite.com/images/GPU/NVIDIALogicPipeline.jpg">
+<meta property="og:image" content="http://yoursite.com/images/GPU/NVIDIATuring.jpg">
+<meta property="og:image" content="http://yoursite.com/images/GPU/ROP_L2Cache.jpg">
+<meta property="og:image" content="http://yoursite.com/images/GPU/GPC.jpg">
+<meta property="og:image" content="http://yoursite.com/images/GPU/PolyMorph.jpg">
+<meta property="og:image" content="http://yoursite.com/images/GPU/SM.jpg">
+<meta property="og:image" content="http://yoursite.com/images/GPU/Maxwell.jpg">
+<meta property="og:image" content="http://yoursite.com/images/GPU/SMEvolution.jpg">
+<meta property="og:updated_time" content="2021-07-22T16:00:45.802Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GPU硬件架构图">
+<meta name="twitter:description" content="引言最近在搞GPU，往简单了说，GPU实际上就是在画三角形，往复杂了说，他的各种并行操作，各个渲染阶段几本书都讲不清楚。这大概也就是为什么能做好GPU的整个星球上也没有几家的原因吧。本文我们尝试从简化的架构来了解一下GPU的各个模块以及相应的工作原理。 首先先抛个图，下图就是Nvidia Turing102 GPU的一个组件架构图，可以看到密密麻麻的SM和RT Core，这两个组件实际上算是GPU">
+<meta name="twitter:image" content="http://yoursite.com/images/GPU/NVIDIATuring.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/03/15/GPUGem/GPU硬件架构图/">
+
+
+
+
+
+  <title>GPU硬件架构图 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/15/GPUGem/GPU硬件架构图/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">GPU硬件架构图</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-15T00:00:00+08:00">
+                2021-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GPU/" itemprop="url" rel="index">
+                    <span itemprop="name">GPU</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,863
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>最近在搞GPU，往简单了说，GPU实际上就是在画三角形，往复杂了说，他的各种并行操作，各个渲染阶段几本书都讲不清楚。这大概也就是为什么能做好GPU的整个星球上也没有几家的原因吧。本文我们尝试从简化的架构来了解一下GPU的各个模块以及相应的工作原理。</p>
+<p>首先先抛个图，下图就是Nvidia Turing102 GPU的一个组件架构图，可以看到密密麻麻的SM和RT Core，这两个组件实际上算是GPU的一个基本的工作单元，当然RT Core是引入光线追踪后出现的单元，早期的一些架构是不存在这一单元的。下图不是很清晰，可以查看NVIDIA-Turing-Architecture-Whitepaper来获取更加清晰的图像。</p>
+<p><img src="/images/GPU/NVIDIATuring.jpg" alt="NVIDIATuring"></p>
+<p>下面我们开始从逻辑渲染管线，以及架构图的各个组件的功能开始，一步一步的来解析GPU的架构逻辑</p>
+<h3 id="GPU的逻辑管线"><a href="#GPU的逻辑管线" class="headerlink" title="GPU的逻辑管线"></a>GPU的逻辑管线</h3><p>现在GPU的发展，早已经不是最初的几个硬件实现一下加速功能而已，它有着复杂的逻辑，因此希望开发者按照GPU的物理管线进行编程是不现实的，同时由于水平以及理解的差异，必将导致效率良莠不齐，因此GPU实现了一套逻辑的管线，开发者只需要按照逻辑管线的规则进行操作即可。</p>
+<p><img src="/images/GPU/NVIDIALogicPipeline.jpg" alt="NVIDIALogicPipeline"></p>
+<ul>
+<li>当我们需要渲染时，我们实际上会给GPU下一些指令，比如drawCall/bindBuffer等等，这些指令都属于Graphics API。</li>
+<li>驱动程序则会将这些API编码到pushBuffer中。</li>
+<li>当我们显示掉哟个flush或者pushBuffer指令积攒到一定时，驱动会批量将pushBuffer中的指令传送到GPU。</li>
+<li>GPU的Host Interface会拾取这些指令，然后交由Front End来处理</li>
+<li>Primitive Distributor负责分配任务，什么任务呢？就是将三角形分配给各个GPC（这里我们先不必理会GPC是什么）</li>
+<li>Crossbar来进行GPC之间的工作转移以及其他单元的通信，比如ROP（Render Output Unit）</li>
+<li>通过vs（vertex shader）和GS（Geometry shader）来进行shader的操作，然后做视口的变换（也就是viewport Transform）</li>
+<li>随后光栅化器会做光栅化</li>
+<li>Attribute Setup保证了从vs来的数据经过插值后是pixel-shade是可读的</li>
+<li>PS用来做pixel shader（也叫做fragment shader）, 用来给光栅化后的pixel着色</li>
+<li>ROP会做blend，depth test等操作，保证最终的着色结果正确，然后将渲染结果输出到FB(FrameBuffer)</li>
+</ul>
+<p>上面就是GPU渲染的一个逻辑工作流程。</p>
+<h3 id="GPU的架构以及相应的组件"><a href="#GPU的架构以及相应的组件" class="headerlink" title="GPU的架构以及相应的组件"></a>GPU的架构以及相应的组件</h3><p>还是从我们最开始的那张架构图说起</p>
+<p><img src="/images/GPU/NVIDIATuring.jpg" alt="NVIDIATuring"></p>
+<ul>
+<li>PCI Express Host Interface 是主机与GPU的接口，用于主机与GPU的通讯交互</li>
+<li>GigaThread Engine 负责GPU所有工作的管理</li>
+<li>Memory Controller 两侧的12个存储控制器用来管理显存，它连接着L2 Cache和ROP unit, 下图中的蓝色小框就是ROP unit<br><img src="/images/GPU/ROP_L2Cache.jpg" alt="ROP_L2Cache"></li>
+<li><p>GPC 在图中我们可以看到一共有6个GPC，GPC是Graphics Processing Cluster，图形处理簇，具体的图形渲染业务就是在GPC中进行。我们也能看出来，复杂的unit都在GPC中呢。<br><img src="/images/GPU/GPC.jpg" alt="GPC"></p>
+<ul>
+<li>每个GPC里面有一个光栅化引擎，这个是用来做光栅化的</li>
+<li><p>TPC 纹理处理簇， 每个GPC包含有6个TPC</p>
+<ul>
+<li>PolyMorph Engine 多边形引擎，它负责属性装配（attribute Setup）、顶点拉取(VertexFetch)、曲面细分</li>
+<li>SM（Streaming Multiprocessor） 流处理器， shader的执行就是在SM上进行的。这是一个非常重要的组件，下面我们会主要分析</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="PolyMorph-Engine-多边形引擎"><a href="#PolyMorph-Engine-多边形引擎" class="headerlink" title="PolyMorph Engine 多边形引擎"></a>PolyMorph Engine 多边形引擎</h4><p>实际上这个里面包含了多个组件，如下所示：<br><img src="/images/GPU/PolyMorph.jpg" alt="ROP_L2Cache"></p>
+<ul>
+<li>vertex Fetch 负责顶点获取</li>
+<li>Tessellator负责曲面细分</li>
+<li>viewport Transform负责视口变换</li>
+<li>Attribute Setup负责属性装配</li>
+<li>stream Output负责输出</li>
+</ul>
+<h4 id="SM（Streaming-Multiprocessor）"><a href="#SM（Streaming-Multiprocessor）" class="headerlink" title="SM（Streaming Multiprocessor）"></a>SM（Streaming Multiprocessor）</h4><p>这里我们单拿出来SM来分析，因为SM内部也是很复杂的，也有很多不一样的东西，下面是SM的结构图</p>
+<p><img src="/images/GPU/SM.jpg" alt="SM"></p>
+<ul>
+<li>Warp Scheduler 用来管理Warp（先不用管这是啥，下面会解释）</li>
+<li>Dispatch Unit 用来执行指令</li>
+<li>Register File 用来存储Register</li>
+<li>INT32 用于整形计算的core</li>
+<li>FP32 用于浮点数据的计算core</li>
+<li>Tensor Core 用来做矩阵运算的，在深度学习中会加速运算</li>
+<li>LD/ST(Load/Store) 也就是读取单元</li>
+<li>L1 Cache  L1缓存</li>
+<li>Tex 纹理读取单元</li>
+<li>RT Core 光线追踪的，这里暂不介绍</li>
+<li>SFU（Special function units）执行特殊数学运算（sin、cos、log等）</li>
+</ul>
+<p>下面我们来详细分析下SM：</p>
+<p>我们知道GPU的运行逻辑是SIMD(Single Instructure Multiple Data)，这就是在SM中实现的。SM中有很多的core，这些core可以执行计算。SM就负责Shader的执行。</p>
+<p>SM从GigaThread Engine接收到大线程块，然后将其拆分为更小的堆，每个堆包含32个线程，这样的堆就被称之为Warp。一个Maxwell架构的SM最多可以容纳64个Warp。对于Maxwell的GPU, 一个SP（SMM）有4个Warp Scheduler, 每个Warp Scheduler可以处理一个Warp，并管理SM上剩余的Warp。</p>
+<p><img src="/images/GPU/Maxwell.jpg" alt="Maxwell"></p>
+<p>对于每个Core来说，它是不认识shader的，它每次只能看到一条指令，而且是32个core只能同时看到同一条指令。因此SM会给32个core下发同一条指令，所有的core均执行这提供一条指令，但是分配到不同core上的顶点数据可是不一样的，这样如果shader中存在if条件的话，就有可能存在一部分core在执行，一部分core在休息的场景。因此在shader中，if的存在对于并行度来说是个极大的挑战。</p>
+<p>不可能存在说一部分 Core 在执行指令 A 的时候，另一部分 Core 却在执行指令 B。这种执行机制被称为 锁步（lock-step），这也是GPU的基础。</p>
+<p>总的来说SM负责shader的执行，它接受指令，利用锁步（lock-step）机制，实现指令的并行处理。</p>
+<p>还有一点，我们的Maxwell的SP明明只能同时执行4个Warp，为何还要一个让其容纳64个Warp呢？<br>这是因为有时候为了等待某些数据就绪，你不得不停下来。比如说，我们需要通过法线纹理贴图来计算法线光照，即使该法线纹理已经在 Cache 中了，访问该资源仍然会有所耗时，而如果它不在 Cache 中，那就更加耗时了。用专业术语讲就是 Memory Stall（内存延迟）。与其什么事情也不做，不如将当前的 Warp 换成其它已经准备就绪的 Warp 继续执行。</p>
+<p>最后我们看下SM的变迁：</p>
+<p><img src="/images/GPU/SMEvolution.jpg" alt="SMEvolution"></p>
+<p>可以发现从Fermi, Kepler到Maxwell，SM的计算核心core的数量一直在增加，这也就意味着算力的提升。但是我们也可以发现，实际上这三个产品并没有架构上的提升，享受的一直是摩尔定律的红利。<br>但是Turing架构就不一样了，它引入了tenser Core和RT core，带来了架构的较大变迁。</p>
+<h3 id="Nvidia-TU102-GPU的规格"><a href="#Nvidia-TU102-GPU的规格" class="headerlink" title="Nvidia TU102 GPU的规格"></a>Nvidia TU102 GPU的规格</h3><ul>
+<li>4,608个CUDA Cores</li>
+<li>72个RT Cores</li>
+<li>576个Tensor Cores</li>
+<li>288个texture units</li>
+<li>12个32-bit GDDR6 memory controllers (384-bits total)</li>
+</ul>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="http://simonschreibt.de/gat/renderhell/" target="_blank" rel="noopener">http://simonschreibt.de/gat/renderhell/</a><br><a href="https://developer.nvidia.com/content/life-triangle-nvidias-logical-pipeline" target="_blank" rel="noopener">https://developer.nvidia.com/content/life-triangle-nvidias-logical-pipeline</a><br>NVIDIA-Turing-Architecture-Whitepaper.pdf</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/GPU/" rel="tag"># GPU</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/07/ComputerGraphic/光栅化和插值/" rel="next" title="光栅化和插值">
+                <i class="fa fa-chevron-left"></i> 光栅化和插值
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/03/28/GPUGem/GPU渲染流程/" rel="prev" title="GPU渲染流程">
+                GPU渲染流程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU的逻辑管线"><span class="nav-number">2.</span> <span class="nav-text">GPU的逻辑管线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU的架构以及相应的组件"><span class="nav-number">3.</span> <span class="nav-text">GPU的架构以及相应的组件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PolyMorph-Engine-多边形引擎"><span class="nav-number">3.1.</span> <span class="nav-text">PolyMorph Engine 多边形引擎</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SM（Streaming-Multiprocessor）"><span class="nav-number">3.2.</span> <span class="nav-text">SM（Streaming Multiprocessor）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nvidia-TU102-GPU的规格"><span class="nav-number">4.</span> <span class="nav-text">Nvidia TU102 GPU的规格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -90,7 +90,7 @@
 <meta property="og:image" content="http://yoursite.com/images/GPU/IMR.jpg">
 <meta property="og:image" content="http://yoursite.com/images/GPU/TBR.jpg">
 <meta property="og:image" content="http://yoursite.com/images/GPU/TBR_IMR.jpg">
-<meta property="og:updated_time" content="2021-07-06T16:09:16.793Z">
+<meta property="og:updated_time" content="2021-08-27T14:25:55.791Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GPU渲染模式">
 <meta name="twitter:description" content="GPU一般来说有两种渲染模式，一种是IMR(Immediate Mode Rendering)，一种是TBR(Tile Based Rendering)。巧了，这两种模式分别对应的是PC和mobile GPU，就像世上没有无缘无故的爱，也没有无缘无故的恨一样，PC和mobile选择了不同的渲染方式，必然是有其内在的本质原因的，下面我们就来分析一下。 IMR最早的GPU都是直接渲染的，也就是提交一个">
@@ -355,7 +355,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  940
+                  881
                 </span>
               
 
@@ -393,7 +393,7 @@
 
       
         <p>GPU一般来说有两种渲染模式，一种是IMR(Immediate Mode Rendering)，一种是TBR(Tile Based Rendering)。巧了，这两种模式分别对应的是PC和mobile GPU，就像世上没有无缘无故的爱，也没有无缘无故的恨一样，PC和mobile选择了不同的渲染方式，必然是有其内在的本质原因的，下面我们就来分析一下。</p>
-<h3 id="IMR"><a href="#IMR" class="headerlink" title="IMR"></a>IMR</h3><p>最早的GPU都是直接渲染的，也就是提交一个primitive，pipeline就渲染一个primitive。每个core只需要render分给它的primitive就行，这样并行化起来，没有其他的控制逻辑，效率很高，只是在fragment shader后对每个Raster出的pixel做一下排序即可（排序的目的是因为fs后会做blend等操作，因此需要排序。）</p>
+<h3 id="IMR"><a href="#IMR" class="headerlink" title="IMR"></a>IMR</h3><p>最早的GPU都是直接渲染的，也就是提交一个primitive，pipeline就渲染一个primitive。每个core只需要render分给它的primitive就行，这样并行化起来，没有其他的控制逻辑，效率很高。<br>在fragment shader后对每个Raster出的pixel做一下排序即可（排序的目的是因为fs后会做blend等操作，因此需要排序。注意这里的排序跟sort-last里面的排序不是一个概念，sort-last里面的排序是来分仓的，这里是为了做blend的）</p>
 <p><img src="/images/GPU/IMR.jpg" alt="IMR"></p>
 <p>简单有时候也就意味着它有些一些缺点（否则人们就不用提出别的方法了）。</p>
 <p>带宽和功耗较大</p>
@@ -408,15 +408,13 @@
 <p>在IMR中我们可以先draw red triangle，然后再draw green triangle, 然后再draw gray triangle。三个triangle之间有覆盖也没有关系，一个一个draw就好了，最多是有些overDraw的问题。</p>
 <p>那么当我们用TBR的时候呢？我们首先将所有的primitive做sorting，然后将Screen分块（tile），tile1包含了red的一部分和green的一小部分，我们将其直接渲染到on-chip buffer上，当rasterization完成后，将on-chip buffer写入到framebuffer中，这样一个tile只需要写一次framebuffer。</p>
 <p><img src="/images/GPU/TBR_IMR.jpg" alt="TBR_IMR"></p>
-<p>在IMR中我们在最后做了sorting，但是在TBR中是不行的，因为我们首先需要渲染一个on-chip大小的区域，那么这也就意味着我们需要提前排序，要挪到Rasterization前面（这实际上就是sort middle, IMR是sort last）。</p>
-<p>为什么要先做排序呢？<br>因为我们要拿到所有的primitive才能开始Rasterization。既然我们拿到了所有的primitive，那么就可以提前排序，这样可以减少overdraw了（这也就是early-Z）.</p>
-<p>那么我们为什么要拿到所有的primitive呢？<br>这是因为如果我们只拿到了一部分primitive就开始光栅化。那么render后z-buffer就要写到frameBuffer，当我们拿到另一部分primitive做光栅化时，就要把z-buffer再从framebuffer里面读回来。这样就和IMR没有太大区别了。</p>
+<p>在IMR中我们直接做了光栅化，但是在TBR中是不行的，因为我们首先需要渲染一个on-chip大小的区域，那么这也就意味着我们需要提前排序，要挪到Rasterization前面（这实际上就是sort middle, IMR是sort last），因为只有将Triangle排序完，我们才能知道那些Triangle落在了我们指定的这个区域内，这样我们才能做on-chip的操作。</p>
 <p>当然，哪有之占便宜不吃亏的好事，TBR也有问题。</p>
 <ul>
 <li>IMR的pipeline畅通无干扰，sorting简单，TBR的sorting较复杂，但也给低功耗优化提供了灵活的选择</li>
 <li>TBR pipeline的分割让pipeline中断了，各种defer，跟IMR比起来，速度也可能会进一步被影响而变慢。</li>
 </ul>
-<p>参考资料：<br><a href="https://www.zhihu.com/question/49141824/answer/136096531" target="_blank" rel="noopener">https://www.zhihu.com/question/49141824/answer/136096531</a></p>
+<h3 id><a href="#" class="headerlink" title=" "></a> </h3><p>参考资料：<br><a href="https://www.zhihu.com/question/49141824/answer/136096531" target="_blank" rel="noopener">https://www.zhihu.com/question/49141824/answer/136096531</a></p>
 
       
     </div>
@@ -447,7 +445,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/03/28/GPU渲染流程/" rel="next" title="GPU渲染流程">
+              <a href="/2021/03/28/GPUGem/GPU渲染流程/" rel="next" title="GPU渲染流程">
                 <i class="fa fa-chevron-left"></i> GPU渲染流程
               </a>
             
@@ -456,6 +454,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/04/08/GPUGem/GPU渲染模式/" rel="prev" title="GPU渲染模式">
+                GPU渲染模式 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -539,7 +541,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">115</span>
+                  <span class="site-state-item-count">136</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -561,7 +563,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -610,7 +612,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#IMR"><span class="nav-number">1.</span> <span class="nav-text">IMR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TBR"><span class="nav-number">2.</span> <span class="nav-text">TBR</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#IMR"><span class="nav-number">1.</span> <span class="nav-text">IMR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TBR"><span class="nav-number">2.</span> <span class="nav-text">TBR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text"> </span></a></li></ol></div>
             
 
           </div>
@@ -645,7 +647,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">122.7k</span>
+    <span title="Site words total count">142.7k</span>
   
 </div>
 
@@ -674,7 +676,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共122.7k字</span>
+  <span class="post-count">博客全站共142.7k字</span>
 </div>
         
 <div class="busuanzi-count">

@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据结构,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引论优先队列英文名为Priority Queue，也常被称为Heaps，也就是堆。 前面已经有了链表，堆栈，队列，树等数据结构，尤其是树，是一个很强大的数据结构，能做很多事情，那么为什么还要引进一个优先队列的东东呢？它和队列有什么本质的不同呢？看一个例子，有一个打印机，但是有很多的文件需要打印，那么这些任务必然要排队等候打印机逐步的处理。这里就产生了一个问题。原则上说先来的先处理，但是有一个文件1">
+<meta name="keywords" content="数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="优先队列（堆）">
+<meta property="og:url" content="http://yoursite.com/2014/01/12/DataStructure/优先队列/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="引论优先队列英文名为Priority Queue，也常被称为Heaps，也就是堆。 前面已经有了链表，堆栈，队列，树等数据结构，尤其是树，是一个很强大的数据结构，能做很多事情，那么为什么还要引进一个优先队列的东东呢？它和队列有什么本质的不同呢？看一个例子，有一个打印机，但是有很多的文件需要打印，那么这些任务必然要排队等候打印机逐步的处理。这里就产生了一个问题。原则上说先来的先处理，但是有一个文件1">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/heap1.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/heap2.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/heap3.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/heap4.png">
+<meta property="og:updated_time" content="2021-10-06T15:55:24.462Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="优先队列（堆）">
+<meta name="twitter:description" content="引论优先队列英文名为Priority Queue，也常被称为Heaps，也就是堆。 前面已经有了链表，堆栈，队列，树等数据结构，尤其是树，是一个很强大的数据结构，能做很多事情，那么为什么还要引进一个优先队列的东东呢？它和队列有什么本质的不同呢？看一个例子，有一个打印机，但是有很多的文件需要打印，那么这些任务必然要排队等候打印机逐步的处理。这里就产生了一个问题。原则上说先来的先处理，但是有一个文件1">
+<meta name="twitter:image" content="http://yoursite.com/images/DataStructure/heap1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2014/01/12/DataStructure/优先队列/">
+
+
+
+
+
+  <title>优先队列（堆） | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/01/12/DataStructure/优先队列/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">优先队列（堆）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-01-12T00:00:00+08:00">
+                2014-01-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,626
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="引论"><a href="#引论" class="headerlink" title="引论"></a>引论</h3><p>优先队列英文名为Priority Queue，也常被称为Heaps，也就是堆。</p>
+<p>前面已经有了链表，堆栈，队列，树等数据结构，尤其是树，是一个很强大的数据结构，能做很多事情，那么为什么还要引进一个优先队列的东东呢？它和队列有什么本质的不同呢？看一个例子，有一个打印机，但是有很多的文件需要打印，那么这些任务必然要排队等候打印机逐步的处理。这里就产生了一个问题。原则上说先来的先处理，但是有一个文件100页，它排在另一个1页的文件的前面，那么可能我们要先打印这个1页的文件比较合理。因此为了解决这一类的问题，提出了优先队列的模型。</p>
+<p>优先队列是一个至少能够提供插入（Insert）和删除最小（DeleteMin）这两种操作的数据结构。对应于队列的操作，Insert相当于Enqueue，DeleteMin相当于Dequeue。</p>
+<p>链表，二叉查找树，都可以提供插入（Insert）和删除最小（DeleteMin）这两种操作，但是为什么不用它们而引入了新的数据结构的。原因在于应用前两者需要较高的时间复杂度。对于链表的实现，插入需要O(1)，删除最小需要遍历链表，故需要O(N)。对于二叉查找树，这两种操作都需要O(logN)；而且随着不停的DeleteMin的操作，二叉查找树会变得非常不平衡；同时使用二叉查找树有些浪费，因此很多操作根本不需要。</p>
+<p>因此这里引入一种新的数据结构，它能够使插入（Insert）和删除最小（DeleteMin）这两种操作的最坏时间复杂度为O(N)，而插入的平均时间复杂度为常数时间，即O(1)。同时不需要引入指针。</p>
+<h3 id="二插堆（Binary-Heap）"><a href="#二插堆（Binary-Heap）" class="headerlink" title="二插堆（Binary Heap）"></a>二插堆（Binary Heap）</h3><p>Heap有两个性质：结构性质（structure property），堆的顺序性（heap order property）。看英文应该比较好理解。</p>
+<ul>
+<li>structure property</li>
+</ul>
+<p>Heap（堆）是一个除了底层节点外的完全填满的二叉树，底层可以不完全，左到右填充节点。（a heap is a binary tree that completely filled, with the exception of bottom level, which is filled from left to right.）这样的树叫做完全二叉树。</p>
+<p>一个高度为h 的完全二叉树应该有以下的性质：</p>
+<p>a) 有2^h到2^h-1个节点</p>
+<p>b) 完全二叉树的高度为<a href="向下取整">logN</a></p>
+<p>鉴于完全二叉树是一个很整齐的结构，因此可以不用指针而只用数组来表示一颗完全二叉树。 对于处于位置i 的元素，</p>
+<p>a)他的左子节点在2<em>i，右子节点在（2</em>i+1）</p>
+<p>b) 它的父节点在【i/2】(向下取整)</p>
+<p>下图显示了完全二叉树与数组的对应关系：</p>
+<p><img src="/images/DataStructure/heap1.png" alt="heap1"></p>
+<ul>
+<li>heap order property</li>
+</ul>
+<p>堆的顺序性质是指最小的结点应该是根节点，鉴于我们希望子树也是堆，那么每个子树的根节点也应该是最小的，这样就可以立刻找到最小值，然后可以对其进行删除操作。下图是一个堆的例子。</p>
+<p><img src="/images/DataStructure/heap2.png" alt="heap2"></p>
+<p>其实从这里可以看出，堆的两条性质：<br>（a）完全二叉树；<br>（b）父节点小于后继子节点</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><ul>
+<li>堆的声明<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct HeapStruct;</span><br><span class="line">typedef struct HeapStruct *Heap;</span><br><span class="line"></span><br><span class="line">struct HeapStruct</span><br><span class="line">&#123;</span><br><span class="line">	int Capacity;</span><br><span class="line">	int Size;</span><br><span class="line">	ElementType *Element;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>堆元素存放在数组中Element，Capacity是指堆的容量，Size是指堆的实际元素个数。</p>
+<ul>
+<li>堆的初始化<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Heap Initialize(int MaxNum)</span><br><span class="line">&#123;</span><br><span class="line">	if(MaxNum&lt;MiniHeapSize)</span><br><span class="line">		error(&quot;The Heap Size is too small&quot;);</span><br><span class="line">	Heap H;</span><br><span class="line">	H = malloc(sizeof(struct HeapStruct));</span><br><span class="line">	if(H==NULL)</span><br><span class="line">		Error(&quot;Out of Space!!!&quot;);</span><br><span class="line">	H-&gt;Element = malloc(sizeof(ElementType)*(MaxNum+1));</span><br><span class="line">	if(H-&gt;Element == NULL)</span><br><span class="line">		Error(&quot;Out of Space!!!&quot;);</span><br><span class="line">	H-&gt;Capacity = MaxNum;</span><br><span class="line">	H-&gt;Size = 0;</span><br><span class="line">	H-&gt;Element[0] = MinData;</span><br><span class="line">	return H;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>堆的数组的位置0的值是一个游标哨兵，这个会用到，对元素是从1开始存放的。</p>
+<ul>
+<li>堆的插入</li>
+</ul>
+<p>堆的插入是按照顺序插入到底层的结点上，然后与他的父节点比较，如果小于父节点，那么此结点与父节点交换位置，否则，这个位置就是应该插入的位置，依次循环，如图所示。因此也可以理解堆的插入的平均时间复杂度为O(1)，即常数时间，原因就在于只要在最后插入就可，最多是做几个迁移比较，而最坏的时间复杂度为O(logN)是指这个插入节点是最小的结点，要迁移到root。</p>
+<p><img src="/images/DataStructure/heap3.png" alt="heap3"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">void Insert(ElementType X, Heap H)</span><br><span class="line">&#123;</span><br><span class="line">	int i;</span><br><span class="line">	if(IsFull(H))</span><br><span class="line">	&#123;</span><br><span class="line">		Error(&quot;Heap is Full&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	for(i=++H-&gt;Size;H-&gt;Element[i/2]&gt;X;i/=2)</span><br><span class="line">		H-&gt;Element[i] = H-&gt;Element[i/2];</span><br><span class="line">	H-&gt;Element[i] = X;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>插入就是一个比较节点和父节点的过程，而对于堆<code>H-&gt;Element[i/2]</code>就是父节点。</p>
+<ul>
+<li>堆的删除最小操作</li>
+</ul>
+<p>找到最小很easy，就是root。但是最关键的是删除了以后的问题。这个可以用插入的思想把一步一步的向上渗透。先选取根节点的最小子节点，然后把这个这点迁移到根节点。然后递归操作。</p>
+<p>对于删除最小操作，可与预见的是他的最坏时间复杂度为O(logN)，因为删除节点后的渗透是沿着子树走的，类似于二叉查找树的操作，故为O(logN)。</p>
+<p><img src="/images/DataStructure/heap4.png" alt="heap4"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">ElementType DeleteMin(Heap H)</span><br><span class="line">&#123;</span><br><span class="line">	if(IsEmpty(H))</span><br><span class="line">	&#123;</span><br><span class="line">		Error(&quot;Heap is Empty!!&quot;);</span><br><span class="line">		return H-&gt;Element[0];</span><br><span class="line">	&#125;</span><br><span class="line">	MiniElement = H-&gt;Element[1];</span><br><span class="line">	LastElement = H-&gt;Element[H-&gt;Size--];</span><br><span class="line"></span><br><span class="line">	int i;</span><br><span class="line">	for(i=1;i*2&lt;=H-&gt;Size;i=Child)</span><br><span class="line">	&#123;</span><br><span class="line">		Child = i*2;</span><br><span class="line">		// some node may have only one child or no child ,so put Child!=H-&gt;Size firstly </span><br><span class="line">		// to protect.</span><br><span class="line">		if(Child!=H-&gt;Size &amp;&amp; H-&gt;Element[Child+1]&lt; H-&gt;Element[Child])</span><br><span class="line">			Child++;</span><br><span class="line">		if(LastElement&gt;H-&gt;Element[Child])</span><br><span class="line">			H-&gt;Element[i] = H-&gt;Element[Child];</span><br><span class="line">		else</span><br><span class="line">			break;</span><br><span class="line">	&#125;</span><br><span class="line">	H-&gt;Element[i] = LastElement;</span><br><span class="line">	return MiniElement;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="高级语言的封装"><a href="#高级语言的封装" class="headerlink" title="高级语言的封装"></a>高级语言的封装</h3><p>在C++或者JAVA中，都已经有成熟的库，我们不需要自己实现堆。</p>
+<p>在C++中，优先队列（堆）在头文件<code>#include&lt;queue&gt;</code>中，他的定义如下：</p>
+<p><code>priority_queue&lt;Type, Container, Functional&gt;</code></p>
+<p><code>Type</code>为数据类型<br><code>Container</code>为容器类型<br><code>Functional</code>为比较的方式</p>
+<p>如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//升序队列，小顶堆</span><br><span class="line">priority_queue &lt;int, vector&lt;int&gt;, greater&lt;int&gt; &gt; q;</span><br><span class="line">//降序队列，大顶堆</span><br><span class="line">priority_queue &lt;int, vector&lt;int&gt;, less&lt;int&gt; &gt; q;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/01/02/DataStructure/伸展树/" rel="next" title="伸展树">
+                <i class="fa fa-chevron-left"></i> 伸展树
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/01/22/DataStructure/左堆/" rel="prev" title="左堆">
+                左堆 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引论"><span class="nav-number">1.</span> <span class="nav-text">引论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二插堆（Binary-Heap）"><span class="nav-number">2.</span> <span class="nav-text">二插堆（Binary Heap）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高级语言的封装"><span class="nav-number">4.</span> <span class="nav-text">高级语言的封装</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

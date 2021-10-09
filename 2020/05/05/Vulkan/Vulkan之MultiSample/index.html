@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vulkan,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="光栅化的步骤会将三角形的线段映射到图像上。但是由于数字图像的不连续性，导致我们没有办法用模拟信号的方式连续的表示直线。实际上是使用小方格，也就是像素来表示直线的颜色，如下面所示。当线段落在了像素上时，这个像素就染色，没有落在像素上，像素不染色，这就会导致右边的锯齿效果。当图像分辨率较高时，锯齿效果不明显，当分辨率很低时，锯齿效果会比较明显。那么有没有什么方法能优化这个显示问题呢？这里我们看到上面的">
+<meta name="keywords" content="vulkan">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vulkan之MultiSample">
+<meta property="og:url" content="http://yoursite.com/2020/05/05/Vulkan/Vulkan之MultiSample/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="光栅化的步骤会将三角形的线段映射到图像上。但是由于数字图像的不连续性，导致我们没有办法用模拟信号的方式连续的表示直线。实际上是使用小方格，也就是像素来表示直线的颜色，如下面所示。当线段落在了像素上时，这个像素就染色，没有落在像素上，像素不染色，这就会导致右边的锯齿效果。当图像分辨率较高时，锯齿效果不明显，当分辨率很低时，锯齿效果会比较明显。那么有没有什么方法能优化这个显示问题呢？这里我们看到上面的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/multiSampler1.png">
+<meta property="og:image" content="http://yoursite.com/images/multiSampler2.png">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.633Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vulkan之MultiSample">
+<meta name="twitter:description" content="光栅化的步骤会将三角形的线段映射到图像上。但是由于数字图像的不连续性，导致我们没有办法用模拟信号的方式连续的表示直线。实际上是使用小方格，也就是像素来表示直线的颜色，如下面所示。当线段落在了像素上时，这个像素就染色，没有落在像素上，像素不染色，这就会导致右边的锯齿效果。当图像分辨率较高时，锯齿效果不明显，当分辨率很低时，锯齿效果会比较明显。那么有没有什么方法能优化这个显示问题呢？这里我们看到上面的">
+<meta name="twitter:image" content="http://yoursite.com/images/multiSampler1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/05/Vulkan/Vulkan之MultiSample/">
+
+
+
+
+
+  <title>Vulkan之MultiSample | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/05/Vulkan/Vulkan之MultiSample/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vulkan之MultiSample</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-05T00:00:00+08:00">
+                2020-05-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,653
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>光栅化的步骤会将三角形的线段映射到图像上。但是由于数字图像的不连续性，导致我们没有办法用模拟信号的方式连续的表示直线。实际上是使用小方格，也就是像素来表示直线的颜色，如下面所示。<br>当线段落在了像素上时，这个像素就染色，没有落在像素上，像素不染色，这就会导致右边的锯齿效果。当图像分辨率较高时，锯齿效果不明显，当分辨率很低时，锯齿效果会比较明显。<br><img src="/images/multiSampler1.png" alt="multiSampler1"><br>那么有没有什么方法能优化这个显示问题呢？这里我们看到上面的的染色逻辑是我们在每个小方格内采样一个点，这个点在三角形内，整个方格就染色，不在就不染色。之所以会造成锯齿的效果，就在于临近的颜色变化剧烈，会给人眼睛造成冲击，导致人眼能清晰感受到锯齿效果。<br>那么怎样让其变化不剧烈呢？我们可以增加采样点，每个小方格内采样4次，每次得到一个颜色，然后小方块的颜色是4次的平均。便捷的模糊自然的会导致变化不剧烈，可以欺骗人的眼睛。<br><img src="/images/multiSampler2.png" alt="multiSampler2"><br>多重采样的原理就是这样的，由于增加了采样次数，必然会带来效率和功耗的提升。</p>
+<p>在vulkan中应用多重采样，需要如下的步骤：<br>查询设备支持的最大的采样数<br>创建多重采样的colorImage<br>修改depthImage支持多重采样<br>将colorImage作为attachment添加到FrameBuffer中<br>在pipeline中开启多重采样</p>
+<h2 id="1）查询设备支持的最大采样数"><a href="#1）查询设备支持的最大采样数" class="headerlink" title="1）查询设备支持的最大采样数"></a>1）查询设备支持的最大采样数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkGetPhysicalDeviceProperties(</span><br><span class="line">    VkPhysicalDevice                            physicalDevice,</span><br><span class="line">    VkPhysicalDeviceProperties*                 pProperties);</span><br><span class="line">在pProperties的limit属性中有下面三个attachment的支持的最大采样数目。</span><br><span class="line">VkSampleCountFlags    framebufferColorSampleCounts;</span><br><span class="line">VkSampleCountFlags    framebufferDepthSampleCounts;</span><br><span class="line">VkSampleCountFlags    framebufferStencilSampleCounts;</span><br></pre></td></tr></table></figure>
+<p>我们要设置的采样数不能大于这个属性值。</p>
+<h2 id="2）创建多重采样的color-Image"><a href="#2）创建多重采样的color-Image" class="headerlink" title="2）创建多重采样的color Image"></a>2）创建多重采样的color Image</h2><p>多重采样是在离屏采样，然后将缓冲区呈现给屏幕。新的缓冲区不同于默认的swapchainImage，这是因为我们要保存每个像素的多个样本。因此我们要创建新的颜色图像资源。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT; // 定义</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VkImage colorImage;</span><br><span class="line">VkDeviceMemory colorImageMemory;</span><br><span class="line">VkImageView colorImageView;</span><br></pre></td></tr></table></figure>
+<p>新建一个函数createColorResources，用于创建颜色图像资源。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">void createColorResources() &#123;</span><br><span class="line">    VkFormat colorFormat = swapChainImageFormat;</span><br><span class="line">    createImage(swapChainExtent.width, swapChainExtent.height, 1, msaaSamples, colorFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, colorImage, colorImageMemory);</span><br><span class="line">    colorImageView = createImageView(colorImage, colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里面的逻辑和纹理图像创建一样的流程，我们需要注意的是他的参数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage&amp; image, VkDeviceMemory&amp; imageMemory);</span><br></pre></td></tr></table></figure></p>
+<p>mipLevels 这里我们设置为1，这是因为我们不是用作纹理图像，所以不需要mipMap的设置，所以这里只要1个细化级别就行，实际上vulkan也要求多重采样的mipLevels要设置为1<br>numSamples 采样次数，这里需要我们自己设置，这个值不能大于device支持的值。<br>format跟swapchainImage保持一致即可<br>tiling 这里我们设置为VK_IMAGE_TILING_OPTIMAL<br>usage 表示图像用途，这里设置为VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT 表明用作color attachment并且在需要使用时才分配内存空间<br>properties 为是要用于GPU读取，效率优先，因此设置为VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</p>
+<h2 id="3）修改DepthImage支持多重采样"><a href="#3）修改DepthImage支持多重采样" class="headerlink" title="3）修改DepthImage支持多重采样"></a>3）修改DepthImage支持多重采样</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">void createDepthResources() &#123;</span><br><span class="line">    VkFormat depthFormat = findDepthFormat();</span><br><span class="line">    createImage(swapChainExtent.width, swapChainExtent.height, 1, msaaSamples, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);</span><br><span class="line">    depthImageView = createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4）添加attachment到framebuffer和renderpass中"><a href="#4）添加attachment到framebuffer和renderpass中" class="headerlink" title="4）添加attachment到framebuffer和renderpass中"></a>4）添加attachment到framebuffer和renderpass中</h2><p>在创建framebuffer时，将color attachment加入到framebuffer资源中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">std::array&lt;VkImageView, 3&gt; attachments = &#123;</span><br><span class="line">    colorImageView,</span><br><span class="line">    depthImageView,</span><br><span class="line">    swapChainImageViews[i]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>在renderpass里面添加attachment的引用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">void createRenderPass() &#123;</span><br><span class="line">    VkAttachmentDescription colorAttachment&#123;&#125;;</span><br><span class="line">    colorAttachment.format = swapChainImageFormat;</span><br><span class="line">    colorAttachment.samples = msaaSamples;</span><br><span class="line">    colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;</span><br><span class="line">    colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;</span><br><span class="line">    colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">    colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br><span class="line">    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;</span><br><span class="line">    colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">    VkAttachmentDescription depthAttachment&#123;&#125;;</span><br><span class="line">    depthAttachment.format = findDepthFormat();</span><br><span class="line">    depthAttachment.samples = msaaSamples;</span><br><span class="line">    depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;</span><br><span class="line">    depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br><span class="line">    depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">    depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br><span class="line">    depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;</span><br><span class="line">    depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">    VkAttachmentDescription colorAttachmentResolve&#123;&#125;;</span><br><span class="line">    colorAttachmentResolve.format = swapChainImageFormat;</span><br><span class="line">    colorAttachmentResolve.samples = VK_SAMPLE_COUNT_1_BIT;</span><br><span class="line">    colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">    colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;</span><br><span class="line">    colorAttachmentResolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">    colorAttachmentResolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br><span class="line">    colorAttachmentResolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;</span><br><span class="line">    colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;</span><br><span class="line"></span><br><span class="line">    VkAttachmentReference colorAttachmentRef&#123;&#125;;</span><br><span class="line">    colorAttachmentRef.attachment = 0;</span><br><span class="line">    colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">    VkAttachmentReference depthAttachmentRef&#123;&#125;;</span><br><span class="line">    depthAttachmentRef.attachment = 1;</span><br><span class="line">    depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">    VkAttachmentReference colorAttachmentResolveRef&#123;&#125;;</span><br><span class="line">    colorAttachmentResolveRef.attachment = 2;</span><br><span class="line">    colorAttachmentResolveRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">    VkSubpassDescription subpass&#123;&#125;;</span><br><span class="line">    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;</span><br><span class="line">    subpass.colorAttachmentCount = 1;</span><br><span class="line">    subpass.pColorAttachments = &amp;colorAttachmentRef;</span><br><span class="line">    subpass.pDepthStencilAttachment = &amp;depthAttachmentRef;</span><br><span class="line">    subpass.pResolveAttachments = &amp;colorAttachmentResolveRef;</span><br><span class="line"></span><br><span class="line">    VkSubpassDependency dependency&#123;&#125;;</span><br><span class="line">    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;</span><br><span class="line">    dependency.dstSubpass = 0;</span><br><span class="line">    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;</span><br><span class="line">    dependency.srcAccessMask = 0;</span><br><span class="line">    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;</span><br><span class="line">    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;</span><br><span class="line"></span><br><span class="line">    std::array&lt;VkAttachmentDescription, 3&gt; attachments = &#123; colorAttachment, depthAttachment, colorAttachmentResolve &#125;;</span><br><span class="line">    VkRenderPassCreateInfo renderPassInfo&#123;&#125;;</span><br><span class="line">    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;</span><br><span class="line">    renderPassInfo.attachmentCount = static_cast&lt;uint32_t&gt;(attachments.size());</span><br><span class="line">    renderPassInfo.pAttachments = attachments.data();</span><br><span class="line">    renderPassInfo.subpassCount = 1;</span><br><span class="line">    renderPassInfo.pSubpasses = &amp;subpass;</span><br><span class="line">    renderPassInfo.dependencyCount = 1;</span><br><span class="line">    renderPassInfo.pDependencies = &amp;dependency;</span><br><span class="line"></span><br><span class="line">    if (vkCreateRenderPass(device, &amp;renderPassInfo, nullptr, &amp;renderPass) != VK_SUCCESS) &#123;</span><br><span class="line">        throw std::runtime_error(&quot;failed to create render pass!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面我们来好好分析一个这个renderpass。</p>
+<p>这个跟之前的渲染是有很大的不同的。之前的FrameBuffer里面只需要有两个attachment，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::array&lt;VkImageView, 3&gt; attachments = &#123;</span><br><span class="line">    swapChainImageViews[i]，</span><br><span class="line">    depthImageView,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>这里swapChainImageViews[i]作为attachment[0]，直接作为shader的输出写入的attachment。我们也能从他的colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;看出，他直接就用来输出到屏幕了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">VkAttachmentDescription colorAttachment&#123;&#125;;</span><br><span class="line">colorAttachment.format = swapChainImageFormat;</span><br><span class="line">colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;</span><br><span class="line">colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;</span><br><span class="line">colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;</span><br><span class="line">colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br><span class="line">colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;</span><br><span class="line">colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;</span><br><span class="line"></span><br><span class="line">VkAttachmentDescription depthAttachment&#123;&#125;;</span><br><span class="line">depthAttachment.format = findDepthFormat();</span><br><span class="line">depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;</span><br><span class="line">depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;</span><br><span class="line">depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br><span class="line">depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br><span class="line">depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;</span><br><span class="line">depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">VkAttachmentReference colorAttachmentRef&#123;&#125;;</span><br><span class="line">colorAttachmentRef.attachment = 0;</span><br><span class="line">colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">VkAttachmentReference depthAttachmentRef&#123;&#125;;</span><br><span class="line">depthAttachmentRef.attachment = 1;</span><br><span class="line">depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">VkSubpassDescription subpass&#123;&#125;;</span><br><span class="line">subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;</span><br><span class="line">subpass.colorAttachmentCount = 1;</span><br><span class="line">subpass.pColorAttachments = &amp;colorAttachmentRef;</span><br><span class="line">subpass.pDepthStencilAttachment = &amp;depthAttachmentRef;</span><br></pre></td></tr></table></figure></p>
+<p>但是在多重采样这里，我们的设置时不同的，首先我们的swapchainImage是attachment[2]，它确实是用来做present的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">VkAttachmentDescription colorAttachmentResolve&#123;&#125;;</span><br><span class="line">colorAttachmentResolve.format = swapChainImageFormat;</span><br><span class="line">colorAttachmentResolve.samples = VK_SAMPLE_COUNT_1_BIT;</span><br><span class="line">colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;</span><br><span class="line">colorAttachmentResolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">colorAttachmentResolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br><span class="line">colorAttachmentResolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;</span><br><span class="line">colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;</span><br></pre></td></tr></table></figure></p>
+<p>而fragment shader的输出到哪里了呢？就是我们新创建的colorImage.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">subpass.pColorAttachments = &amp;colorAttachmentRef;</span><br></pre></td></tr></table></figure></p>
+<p>也就是说fragment shader的输出到了新创建的能进行多重采样的color attachment里面，然后vulkan执行多重采样，最终的输出结果位于subpass.pResolveAttachments指定的attachment中，也就是我们的swapchainImage。</p>
+<p>这也就意味着多重采样实在fragment shader之后。</p>
+<h2 id="5）-修改pipeline支持多重采样"><a href="#5）-修改pipeline支持多重采样" class="headerlink" title="5） 修改pipeline支持多重采样"></a>5） 修改pipeline支持多重采样</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineMultisampleStateCreateInfo multisampling&#123;&#125;;</span><br><span class="line">multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;</span><br><span class="line">multisampling.sampleShadingEnable = VK_FALSE;</span><br><span class="line">multisampling.rasterizationSamples = msaaSamples;</span><br></pre></td></tr></table></figure>
+<h2 id="6）最后在程序退出的时候，销毁资源"><a href="#6）最后在程序退出的时候，销毁资源" class="headerlink" title="6）最后在程序退出的时候，销毁资源"></a>6）最后在程序退出的时候，销毁资源</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vkDestroyImageView(device, colorImageView, nullptr);</span><br><span class="line">vkDestroyImage(device, colorImage, nullptr);</span><br><span class="line">vkFreeMemory(device, colorImageMemory, nullptr);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vulkan/" rel="tag"># vulkan</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/03/Vulkan/Vulkan之Renderpass/" rel="next" title="Vulkan之Renderpass">
+                <i class="fa fa-chevron-left"></i> Vulkan之Renderpass
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/12/ComputerGraphic/光照基础/" rel="prev" title="光照基础">
+                光照基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1）查询设备支持的最大采样数"><span class="nav-number">1.</span> <span class="nav-text">1）查询设备支持的最大采样数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2）创建多重采样的color-Image"><span class="nav-number">2.</span> <span class="nav-text">2）创建多重采样的color Image</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3）修改DepthImage支持多重采样"><span class="nav-number">3.</span> <span class="nav-text">3）修改DepthImage支持多重采样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4）添加attachment到framebuffer和renderpass中"><span class="nav-number">4.</span> <span class="nav-text">4）添加attachment到framebuffer和renderpass中</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5）-修改pipeline支持多重采样"><span class="nav-number">5.</span> <span class="nav-text">5） 修改pipeline支持多重采样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6）最后在程序退出的时候，销毁资源"><span class="nav-number">6.</span> <span class="nav-text">6）最后在程序退出的时候，销毁资源</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

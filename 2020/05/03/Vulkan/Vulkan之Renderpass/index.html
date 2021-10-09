@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vulkan,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在我们完成管线的创建工作之前，我们需要告诉Vulkan渲染时候使用的framebuffer帧缓冲区附件相关信息。我们需要指定多少个颜色和深度缓冲区将会被使用，指定多少个采样器被用到及在整个渲染操作中相关的内容如何处理。所有的这些信息都被封装在一个叫做 render pass 的对象中。pipeline设计了整个渲染的流程，但是pipeline只是定义了各个操作，renderpass定义了整个渲染的">
+<meta name="keywords" content="vulkan">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vulkan之Renderpass">
+<meta property="og:url" content="http://yoursite.com/2020/05/03/Vulkan/Vulkan之Renderpass/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="在我们完成管线的创建工作之前，我们需要告诉Vulkan渲染时候使用的framebuffer帧缓冲区附件相关信息。我们需要指定多少个颜色和深度缓冲区将会被使用，指定多少个采样器被用到及在整个渲染操作中相关的内容如何处理。所有的这些信息都被封装在一个叫做 render pass 的对象中。pipeline设计了整个渲染的流程，但是pipeline只是定义了各个操作，renderpass定义了整个渲染的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.635Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vulkan之Renderpass">
+<meta name="twitter:description" content="在我们完成管线的创建工作之前，我们需要告诉Vulkan渲染时候使用的framebuffer帧缓冲区附件相关信息。我们需要指定多少个颜色和深度缓冲区将会被使用，指定多少个采样器被用到及在整个渲染操作中相关的内容如何处理。所有的这些信息都被封装在一个叫做 render pass 的对象中。pipeline设计了整个渲染的流程，但是pipeline只是定义了各个操作，renderpass定义了整个渲染的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/03/Vulkan/Vulkan之Renderpass/">
+
+
+
+
+
+  <title>Vulkan之Renderpass | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/03/Vulkan/Vulkan之Renderpass/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vulkan之Renderpass</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-03T00:00:00+08:00">
+                2020-05-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,499
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在我们完成管线的创建工作之前，我们需要告诉Vulkan渲染时候使用的framebuffer帧缓冲区附件相关信息。我们需要指定多少个颜色和深度缓冲区将会被使用，指定多少个采样器被用到及在整个渲染操作中相关的内容如何处理。所有的这些信息都被封装在一个叫做 render pass 的对象中。<br>pipeline设计了整个渲染的流程，但是pipeline只是定义了各个操作，renderpass定义了整个渲染的过程。</p>
+<p>在复杂的图形渲染过程中，我们很难只通过一个操作就完成渲染，大多数情况下需要多步的处理，因此一个renderpass也是由多个子通道组成的，这些子通道被称为subpass，subpass对应整个渲染流程的各个渲染阶段。</p>
+<h2 id="1）创建renderpass"><a href="#1）创建renderpass" class="headerlink" title="1）创建renderpass"></a>1）创建renderpass</h2><p>所有的渲染操作必须包含在一个renderpass中，下面我们首先来创建renderpass<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkCreateRenderPass(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    const VkRenderPassCreateInfo*               pCreateInfo,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator,</span><br><span class="line">    VkRenderPass*                               pRenderPass);</span><br></pre></td></tr></table></figure></p>
+<p>这里面实际上重要的是VkRenderPassCreateInfo结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkRenderPassCreateInfo &#123;</span><br><span class="line">    VkStructureType                   sType; // VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO</span><br><span class="line">    const void*                       pNext; // nullptr</span><br><span class="line">    VkRenderPassCreateFlags           flags; // 留存后续扩展</span><br><span class="line">    uint32_t                          attachmentCount; // </span><br><span class="line">    const VkAttachmentDescription*    pAttachments; // renderpass里面使用的附件信息</span><br><span class="line">    uint32_t                          subpassCount; // </span><br><span class="line">    const VkSubpassDescription*       pSubpasses; // subpass的定义</span><br><span class="line">    uint32_t                          dependencyCount; // </span><br><span class="line">    const VkSubpassDependency*        pDependencies; // subpass的依赖</span><br><span class="line">&#125; VkRenderPassCreateInfo;</span><br></pre></td></tr></table></figure></p>
+<p>这里面重要是就是三部分：pAttachments，pSubpasses，pDependencies。下面来挨个分析</p>
+<h2 id="2）VkAttachmentDescription"><a href="#2）VkAttachmentDescription" class="headerlink" title="2）VkAttachmentDescription"></a>2）VkAttachmentDescription</h2><p>pAttachments是一个指向VkAttachmentDescription结构的数组的指针。数组里面存放的是图像attachment，每个图像将在renderpass的多个subpass中用作输入，输出或者同时作为输入输出。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkAttachmentDescription &#123;</span><br><span class="line">    VkAttachmentDescriptionFlags    flags;</span><br><span class="line">    VkFormat                        format;</span><br><span class="line">    VkSampleCountFlagBits           samples;</span><br><span class="line">    VkAttachmentLoadOp              loadOp;</span><br><span class="line">    VkAttachmentStoreOp             storeOp;</span><br><span class="line">    VkAttachmentLoadOp              stencilLoadOp;</span><br><span class="line">    VkAttachmentStoreOp             stencilStoreOp;</span><br><span class="line">    VkImageLayout                   initialLayout;</span><br><span class="line">    VkImageLayout                   finalLayout;</span><br><span class="line">&#125; VkAttachmentDescription;</span><br></pre></td></tr></table></figure></p>
+<p>flag — 是给vulkan提供attachment的附加信息，这里面实际只有一个VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT，表示attachment可能和同一个renderpass引用的其他attachment使用相同的内存，这告诉vulkan不要做任何导致attachment数据不一致的事情，大多数场景下，这个值设置为0<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkAttachmentDescriptionFlagBits &#123;</span><br><span class="line">    VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = 0x00000001,</span><br><span class="line">    VK_ATTACHMENT_DESCRIPTION_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkAttachmentDescriptionFlagBits;</span><br><span class="line">typedef VkFlags VkAttachmentDescriptionFlags;</span><br></pre></td></tr></table></figure></p>
+<p>format — 格式信息，对于colorAttachment，这个就是swapChainImageFormat</p>
+<p>samples — 采样方式，如果不是多重采样，则设置为VK_SAMPLE_COUNT_1_BIT</p>
+<p>下面的这一组VkAttachmentLoadOp和VkAttachmentStoreOp定义了渲染通道开始和结束的时候如何处理attachment中的内容</p>
+<p>VkAttachmentLoadOp加载时的处理：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkAttachmentLoadOp &#123;</span><br><span class="line">    VK_ATTACHMENT_LOAD_OP_LOAD = 0, // attachment中已经有数据了，继续对其进行渲染</span><br><span class="line">    VK_ATTACHMENT_LOAD_OP_CLEAR = 1, // 在渲染开始时，清除attachment中的内容</span><br><span class="line">    VK_ATTACHMENT_LOAD_OP_DONT_CARE = 2,  // 不关心</span><br><span class="line">    VK_ATTACHMENT_LOAD_OP_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkAttachmentLoadOp;</span><br></pre></td></tr></table></figure></p>
+<p>VkAttachmentStoreOp结束时的处理：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkAttachmentStoreOp &#123;</span><br><span class="line">    VK_ATTACHMENT_STORE_OP_STORE = 0, // 保存附件的内容，展示给用户或者给其他的renderpass作为attachemnt，将其写入内存</span><br><span class="line">    VK_ATTACHMENT_STORE_OP_DONT_CARE = 1, // 不关心</span><br><span class="line">    VK_ATTACHMENT_STORE_OP_NONE_QCOM = 1000301000,</span><br><span class="line">    VK_ATTACHMENT_STORE_OP_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkAttachmentStoreOp;</span><br></pre></td></tr></table></figure></p>
+<p>initialLayout和finalLayout告诉vulkan在渲染通道开始于结束时，期望图像是什么布局</p>
+<h2 id="3）subpass"><a href="#3）subpass" class="headerlink" title="3）subpass"></a>3）subpass</h2><p>subpass是很有用的，他实际上定义了具体的渲染逻辑<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkSubpassDescription &#123;</span><br><span class="line">    VkSubpassDescriptionFlags       flags; // 留待后续用，一般为0</span><br><span class="line">    VkPipelineBindPoint             pipelineBindPoint;</span><br><span class="line">    uint32_t                        inputAttachmentCount;</span><br><span class="line">    const VkAttachmentReference*    pInputAttachments;</span><br><span class="line">    uint32_t                        colorAttachmentCount;</span><br><span class="line">    const VkAttachmentReference*    pColorAttachments;</span><br><span class="line">    const VkAttachmentReference*    pResolveAttachments;</span><br><span class="line">    const VkAttachmentReference*    pDepthStencilAttachment;</span><br><span class="line">    uint32_t                        preserveAttachmentCount;</span><br><span class="line">    const uint32_t*                 pPreserveAttachments;</span><br><span class="line">&#125; VkSubpassDescription;</span><br></pre></td></tr></table></figure></p>
+<p>pipelineBindPoint — 定义了是什么pipeline的subpass，主要有以下的取值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkPipelineBindPoint &#123;</span><br><span class="line">    VK_PIPELINE_BIND_POINT_GRAPHICS = 0,</span><br><span class="line">    VK_PIPELINE_BIND_POINT_COMPUTE = 1,</span><br><span class="line">    VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR = 1000165000,</span><br><span class="line">    VK_PIPELINE_BIND_POINT_RAY_TRACING_NV = VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR,</span><br><span class="line">    VK_PIPELINE_BIND_POINT_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkPipelineBindPoint;</span><br></pre></td></tr></table></figure></p>
+<p>pInputAttachments — 输入到subpass的attachment的引用，也就是这个subpass用到的attachemnt</p>
+<p>pColorAttachments — 实际上是一个数组，对应subpass输出的attachemnt的引用，数组元素的第一个值实际上对应于着色器中的layout(location = 0) out vec4 outColor ，</p>
+<p>pResolveAttachments — 用于颜色附件的多重采样的引用</p>
+<p>pDepthStencilAttachment — 深度和模板的附件的引用</p>
+<p>pPreserveAttachments — 如果我们希望附件的生命周期跨越一个subpass但并不被subpass直接引用，我们就在pPreserveAttachments数组中引用他们。</p>
+<p>每个VkAttachmentReference实际上都是下面的结构：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkAttachmentReference &#123;</span><br><span class="line">    uint32_t         attachment; // 在attachment数组中的索引</span><br><span class="line">    VkImageLayout    layout; // 布局</span><br><span class="line">&#125; VkAttachmentReference;</span><br></pre></td></tr></table></figure></p>
+<h2 id="4）Dependency依赖关系"><a href="#4）Dependency依赖关系" class="headerlink" title="4）Dependency依赖关系"></a>4）Dependency依赖关系</h2><p>我们知道一个renderpass可以有多个subpass，而每个subpass又可以引用多个attachment，那么麻烦来了，如何解决这些引用的先后关系呢？甚至如何解决同一attachment的读写问题呢？这就是dependency存在的意义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkSubpassDependency &#123;</span><br><span class="line">    uint32_t                srcSubpass;</span><br><span class="line">    uint32_t                dstSubpass;</span><br><span class="line">    VkPipelineStageFlags    srcStageMask;</span><br><span class="line">    VkPipelineStageFlags    dstStageMask;</span><br><span class="line">    VkAccessFlags           srcAccessMask;</span><br><span class="line">    VkAccessFlags           dstAccessMask;</span><br><span class="line">    VkDependencyFlags       dependencyFlags;</span><br><span class="line">&#125; VkSubpassDependency;</span><br></pre></td></tr></table></figure></p>
+<p>srcSubpass — 源subpass的索引<br>dstSubpass — 目的subpass的索引<br>srcStageMask — 位Mask，指定源subpass的哪些管线阶段产生数据<br>dstStageMask — 位Mask，指定目的subpass哪些管线阶段使用数据<br>srcAccessMask — 位Mask，指定源subpass如何访问数据<br>dstAccessMask — 位Mask，指定目的subpass如何访问数据<br>dependencyFlags </p>
+<h2 id="5）renderpass的销毁"><a href="#5）renderpass的销毁" class="headerlink" title="5）renderpass的销毁"></a>5）renderpass的销毁</h2><p>因为renderpass是我们创建的，因此也是需要销毁的，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vkDestroyRenderPass(device, renderPass, nullptr);</span><br></pre></td></tr></table></figure></p>
+<h2 id="6）实际使用例子"><a href="#6）实际使用例子" class="headerlink" title="6）实际使用例子"></a>6）实际使用例子</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">void createRenderPass() &#123;</span><br><span class="line">    VkAttachmentDescription colorAttachment&#123;&#125;;</span><br><span class="line">    colorAttachment.format = swapChainImageFormat;</span><br><span class="line">    colorAttachment.samples = msaaSamples;</span><br><span class="line">    colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;</span><br><span class="line">    colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;</span><br><span class="line">    colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">    colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br><span class="line">    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;</span><br><span class="line">    colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">    VkAttachmentDescription depthAttachment&#123;&#125;;</span><br><span class="line">    depthAttachment.format = findDepthFormat();</span><br><span class="line">    depthAttachment.samples = msaaSamples;</span><br><span class="line">    depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;</span><br><span class="line">    depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br><span class="line">    depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">    depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br><span class="line">    depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;</span><br><span class="line">    depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">    VkAttachmentDescription colorAttachmentResolve&#123;&#125;;</span><br><span class="line">    colorAttachmentResolve.format = swapChainImageFormat;</span><br><span class="line">    colorAttachmentResolve.samples = VK_SAMPLE_COUNT_1_BIT;</span><br><span class="line">    colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">    colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;</span><br><span class="line">    colorAttachmentResolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">    colorAttachmentResolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br><span class="line">    colorAttachmentResolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;</span><br><span class="line">    colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;</span><br><span class="line"></span><br><span class="line">    VkAttachmentReference colorAttachmentRef&#123;&#125;;</span><br><span class="line">    colorAttachmentRef.attachment = 0;</span><br><span class="line">    colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">    VkAttachmentReference depthAttachmentRef&#123;&#125;;</span><br><span class="line">    depthAttachmentRef.attachment = 1;</span><br><span class="line">    depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">    VkAttachmentReference colorAttachmentResolveRef&#123;&#125;;</span><br><span class="line">    colorAttachmentResolveRef.attachment = 2;</span><br><span class="line">    colorAttachmentResolveRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;</span><br><span class="line"></span><br><span class="line">    VkSubpassDescription subpass&#123;&#125;;</span><br><span class="line">    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;</span><br><span class="line">    subpass.colorAttachmentCount = 1;</span><br><span class="line">    subpass.pColorAttachments = &amp;colorAttachmentRef;</span><br><span class="line">    subpass.pDepthStencilAttachment = &amp;depthAttachmentRef;</span><br><span class="line">    subpass.pResolveAttachments = &amp;colorAttachmentResolveRef;</span><br><span class="line"></span><br><span class="line">    VkSubpassDependency dependency&#123;&#125;;</span><br><span class="line">    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;</span><br><span class="line">    dependency.dstSubpass = 0;</span><br><span class="line">    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;</span><br><span class="line">    dependency.srcAccessMask = 0;</span><br><span class="line">    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;</span><br><span class="line">    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;</span><br><span class="line"></span><br><span class="line">    std::array&lt;VkAttachmentDescription, 3&gt; attachments = &#123; colorAttachment, depthAttachment, colorAttachmentResolve &#125;;</span><br><span class="line">    VkRenderPassCreateInfo renderPassInfo&#123;&#125;;</span><br><span class="line">    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;</span><br><span class="line">    renderPassInfo.attachmentCount = static_cast&lt;uint32_t&gt;(attachments.size());</span><br><span class="line">    renderPassInfo.pAttachments = attachments.data();</span><br><span class="line">    renderPassInfo.subpassCount = 1;</span><br><span class="line">    renderPassInfo.pSubpasses = &amp;subpass;</span><br><span class="line">    renderPassInfo.dependencyCount = 1;</span><br><span class="line">    renderPassInfo.pDependencies = &amp;dependency;</span><br><span class="line"></span><br><span class="line">    if (vkCreateRenderPass(device, &amp;renderPassInfo, nullptr, &amp;renderPass) != VK_SUCCESS) &#123;</span><br><span class="line">        throw std::runtime_error(&quot;failed to create render pass!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vulkan/" rel="tag"># vulkan</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/01/Vulkan/Vulkan之DepthBuffer/" rel="next" title="Vulkan之DepthBuffer">
+                <i class="fa fa-chevron-left"></i> Vulkan之DepthBuffer
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/05/Vulkan/Vulkan之MultiSample/" rel="prev" title="Vulkan之MultiSample">
+                Vulkan之MultiSample <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1）创建renderpass"><span class="nav-number">1.</span> <span class="nav-text">1）创建renderpass</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2）VkAttachmentDescription"><span class="nav-number">2.</span> <span class="nav-text">2）VkAttachmentDescription</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3）subpass"><span class="nav-number">3.</span> <span class="nav-text">3）subpass</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4）Dependency依赖关系"><span class="nav-number">4.</span> <span class="nav-text">4）Dependency依赖关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5）renderpass的销毁"><span class="nav-number">5.</span> <span class="nav-text">5）renderpass的销毁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6）实际使用例子"><span class="nav-number">6.</span> <span class="nav-text">6）实际使用例子</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

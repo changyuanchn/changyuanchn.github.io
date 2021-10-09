@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="GPU,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引言我们知道GPU是并行处理的利器，并行可以极大的提升效率。如果一个芯片只有一个core,那么同一时间，它只能处理一个任务，如果有两个core，并且他们能够并行解决问题，那么就能处理两个任务了，效率提升两倍（理想状态下，实际上是达不到的）。那么是不是核心越多，并行越多，效率就越高的？原则上是，但是实际上这是个渐进平缓的曲线，当核心越多时，调度就越复杂，同时单位芯片面积上也不能无限制的增加核心数目。">
+<meta name="keywords" content="GPU">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GPU并行架构模型">
+<meta property="og:url" content="http://yoursite.com/2021/07/15/GPUGem/GPU并行架构模型/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="引言我们知道GPU是并行处理的利器，并行可以极大的提升效率。如果一个芯片只有一个core,那么同一时间，它只能处理一个任务，如果有两个core，并且他们能够并行解决问题，那么就能处理两个任务了，效率提升两倍（理想状态下，实际上是达不到的）。那么是不是核心越多，并行越多，效率就越高的？原则上是，但是实际上这是个渐进平缓的曲线，当核心越多时，调度就越复杂，同时单位芯片面积上也不能无限制的增加核心数目。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/GPU/GPURenderflow.jpg">
+<meta property="og:image" content="http://yoursite.com/images/GPU/sortClassification.jpg">
+<meta property="og:image" content="http://yoursite.com/images/GPU/sort_middle.jpg">
+<meta property="og:updated_time" content="2021-08-19T15:56:41.124Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GPU并行架构模型">
+<meta name="twitter:description" content="引言我们知道GPU是并行处理的利器，并行可以极大的提升效率。如果一个芯片只有一个core,那么同一时间，它只能处理一个任务，如果有两个core，并且他们能够并行解决问题，那么就能处理两个任务了，效率提升两倍（理想状态下，实际上是达不到的）。那么是不是核心越多，并行越多，效率就越高的？原则上是，但是实际上这是个渐进平缓的曲线，当核心越多时，调度就越复杂，同时单位芯片面积上也不能无限制的增加核心数目。">
+<meta name="twitter:image" content="http://yoursite.com/images/GPU/GPURenderflow.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/07/15/GPUGem/GPU并行架构模型/">
+
+
+
+
+
+  <title>GPU并行架构模型 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/07/15/GPUGem/GPU并行架构模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">GPU并行架构模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-15T00:00:00+08:00">
+                2021-07-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GPU/" itemprop="url" rel="index">
+                    <span itemprop="name">GPU</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,679
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>我们知道GPU是并行处理的利器，并行可以极大的提升效率。如果一个芯片只有一个core,那么同一时间，它只能处理一个任务，如果有两个core，并且他们能够并行解决问题，那么就能处理两个任务了，效率提升两倍（理想状态下，实际上是达不到的）。那么是不是核心越多，并行越多，效率就越高的？原则上是，但是实际上这是个渐进平缓的曲线，当核心越多时，调度就越复杂，同时单位芯片面积上也不能无限制的增加核心数目。因此，当核心数目达到一定时，再增加核心的数目，性能的提升已经很有限了。在业界，有个Amdahl’s Law用来描述这一现象。</p>
+<p>$  a(s, p) = \frac{1}{s + \frac{1-s}{p}} $</p>
+<p>其中s表示串行比例，p表示处理器个数。可见随着处理器核数的增加，性能的提升是越来越缓慢的。</p>
+<h2 id="GPU的渲染流程"><a href="#GPU的渲染流程" class="headerlink" title="GPU的渲染流程"></a>GPU的渲染流程</h2><p>下面我们来看下GPU的一个粗粒度的渲染流程,它主要有四部分</p>
+<ul>
+<li>Application<br>一般是在CPU上操作，负责数据的解析，视锥的剔除，BUffer的生成，API的调用等等</li>
+<li>Geometry<br>负责多边形及其顶点的大部分操作，包括vs，projection， clipping, Screen mapping, Tessellation, Geometry shader等操作</li>
+<li>Rasterization<br>只负责光栅化</li>
+<li>Pixel Processing<br>pixel shading 以及后续的blending等操作<br><img src="/images/GPU/GPURenderflow.jpg" alt="GPURenderflow"></li>
+</ul>
+<p>粗粒度的划分，GPU需要至少四个步骤，我们知道GPU是有多个核心的，是可以并行起来的。当我们需要画10000个三角形时，GPU是怎么分配任务的呢？同时这些三角形要按照规则画到一个屏幕上去，这么多核心要怎样配合呢？</p>
+<p>为了解决上面的问题，人们提出四种架构模型，正好对应了上面的四个阶段<br><img src="/images/GPU/sortClassification.jpg" alt="sortClassification"></p>
+<p>实在是盗不到图了，所以自己画了一个。这里少了一种模型，也就是在Pixel shader后面做排序的模型，这种基本没有用过，所以就不展示了。</p>
+<h2 id="为什么要做sort"><a href="#为什么要做sort" class="headerlink" title="为什么要做sort"></a>为什么要做sort</h2><p>首先思考一个问题，我们为什么要做一个sort操作？</p>
+<p>这是因为我们的GPU是并行操作的，在架构上，每个组件（G/R/P）实际上只是负责整个屏幕的一片区域。如果不这样划分，每个组件都负责全屏的处理，那么冲突以及并行就会有一些问题。</p>
+<h2 id="Sort-First"><a href="#Sort-First" class="headerlink" title="Sort-First"></a>Sort-First</h2><p>这个模型也是比较少见，应该没有相关的硬件采用这种架构（或者是有，但是及其少见）。这个模型在raw data阶段就首先做了排序，这样给到Geometry Processing模块的数据就是已经排好序的了，它会将屏幕划分为一组区域，将区域内的primitives发送到负责该区域的pipeline上即可。</p>
+<h2 id="Sort-middle"><a href="#Sort-middle" class="headerlink" title="Sort-middle"></a>Sort-middle</h2><p>对于sort-middle模型 ，假设我们Application下发的任务是画10K个Triangle，那么在Geometry Processing模块,任务是随机分配的，也就是如果我们有4个Geometry Processing模块，那么每个Geometry Processing模块需要处理2500个Triangle任务。当Geometry Processing模块处理完成后，我们就要对生成的Triangle进行排序了，这里的排序实际上是将Triangle按照它的位置分配给4个Rasterization模块（每个Rasterization模块负责屏幕上的不同区域）。然后同样的，对于Pixel Processing模块，它也只需要处理负责的区域的pixel着色即可。</p>
+<p>如果Triangle覆盖了多个区域呢？那么它会被多个R/P进行处理。</p>
+<p><img src="/images/GPU/sort_middle.jpg" alt="sort_middle"></p>
+<h2 id="Sort-last"><a href="#Sort-last" class="headerlink" title="Sort-last"></a>Sort-last</h2><p>sort-last也就意味着它的Geometry Processing模块以及Rasterization模块都是任务随机分配的。同样的对于Application下发的任务是画10K个Triangle，每个Geometry Processing模块需要处理2500个Triangle任务，处理完成后，每个Rasterization模块也随机分配到了2500个Triangle的Rast任务。这里每个Rasterization模块的渲染范围就是整个屏幕区域了。也就是说Triangle在哪，Rasterization模块就要Rast哪里。当做完所有的Rast操作后，再去sort，这样pixel阶段，就可以处理自己的区域了。</p>
+<p>在R之后进行排序，那么也就意味着对于pixel shader来说，不会存在重叠的shader操作了，每个pixel位置的值只能是一个了。</p>
+<h3 id="另一种sort-last"><a href="#另一种sort-last" class="headerlink" title="另一种sort-last"></a>另一种sort-last</h3><p>还有一种架构，也就是在做完pixel shader后，再进行排序。这种架构也算比较奇怪了。再这种架构中，pipeline是独立的，再最后的合成阶段，所有的图像会根据z-buffer进行最终的合并。</p>
+<h2 id="IMR和TBR"><a href="#IMR和TBR" class="headerlink" title="IMR和TBR"></a>IMR和TBR</h2><p>上面的sort-middle和sort-last正好对应了两种不同的渲染模式TBR和IMR。这两种渲染模式也是手机端和桌面端GPU的两种架构。</p>
+<p>我们看sort-middle在R阶段之前做了排序，那么Rasterization/Pixel shader/ROP都可以明确的知道自己操作的区域了，这就给TBR提供了架构上的支持。</p>
+<p>我们知道TBR实际上就是sort-middle + on-chip Cache。</p>
+<p>而IMR则是使用了sort-last架构。</p>
+<p>为什么sort-last不能加on-chip Cache呢？   </p>
+<ul>
+<li>sort-last的R是全屏幕空间，这个可不是一个固定值，即使是固定值，你也很难将它on-chip化，太大了。   </li>
+</ul>
+<p>那么桌面端为什么不能使用TBR呢？</p>
+<ul>
+<li>sort-middle在R之前进行了sort,那么这个sort结果呢？实际上是存在了ddr里面，如果我们的Triangle数量少还好说，如果数量多的话，这个操作的带宽和速度可不一定比sort-last好到哪里去。而桌面端的画质要求Triangle的数量可不是手机端能比的。因为对于手机端，这个数量可控（毕竟屏幕就那么大，能画多少Triangle），因为收益是大于付出的。   </li>
+</ul>
+<p>因此如果桌面端用了TBR，那么才是好处没捞着，坏处全占了呢。</p>
+<h2 id="sort-middle和sort-last的负载不均衡问题"><a href="#sort-middle和sort-last的负载不均衡问题" class="headerlink" title="sort-middle和sort-last的负载不均衡问题"></a>sort-middle和sort-last的负载不均衡问题</h2><p>所以我们看对于sort-middle来说，他的R阶段负责是不均衡的，因为可能这10K个三角形有9K都在左上角，那么一个R模块就需要做大量的光栅化，而其他的三个R就很轻松。但是对于sort-last来说，每个R分配了相同的任务两，但是对于P阶段来说，它就是负载不均衡的了。所以说负载不均衡是普遍存在的，只不过是在那个阶段罢了。</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>A sorting classification of parallel Rendering. molnar 1994.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/GPU/" rel="tag"># GPU</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/04/08/GPUGem/GPU渲染模式/" rel="next" title="GPU渲染模式">
+                <i class="fa fa-chevron-left"></i> GPU渲染模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GPU的渲染流程"><span class="nav-number">2.</span> <span class="nav-text">GPU的渲染流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要做sort"><span class="nav-number">3.</span> <span class="nav-text">为什么要做sort</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sort-First"><span class="nav-number">4.</span> <span class="nav-text">Sort-First</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sort-middle"><span class="nav-number">5.</span> <span class="nav-text">Sort-middle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sort-last"><span class="nav-number">6.</span> <span class="nav-text">Sort-last</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#另一种sort-last"><span class="nav-number">6.1.</span> <span class="nav-text">另一种sort-last</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IMR和TBR"><span class="nav-number">7.</span> <span class="nav-text">IMR和TBR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sort-middle和sort-last的负载不均衡问题"><span class="nav-number">8.</span> <span class="nav-text">sort-middle和sort-last的负载不均衡问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">8.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

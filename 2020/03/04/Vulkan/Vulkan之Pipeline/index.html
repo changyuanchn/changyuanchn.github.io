@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vulkan,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="0） pipeline基础知识vulkan的整个渲染流程实际上是一个pipeline， 也就是流水线的形式，通过在不同的管线阶段做相应的操作，最终我们可以得到渲染的结果。实际上pipeline是整个图形渲染的核心，这里面也包括了太多的内容，具体如下图所示： 在下图中，黄色部分是我们可以编程实现的部分，绿色的部分是固定的，是我们不需要操作的部分。而实际上在大多数的场景下我们真正需要变成的就是Vert">
+<meta name="keywords" content="vulkan">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vulkan之Pipeline">
+<meta property="og:url" content="http://yoursite.com/2020/03/04/Vulkan/Vulkan之Pipeline/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="0） pipeline基础知识vulkan的整个渲染流程实际上是一个pipeline， 也就是流水线的形式，通过在不同的管线阶段做相应的操作，最终我们可以得到渲染的结果。实际上pipeline是整个图形渲染的核心，这里面也包括了太多的内容，具体如下图所示： 在下图中，黄色部分是我们可以编程实现的部分，绿色的部分是固定的，是我们不需要操作的部分。而实际上在大多数的场景下我们真正需要变成的就是Vert">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/pipeline1.png">
+<meta property="og:image" content="http://yoursite.com/images/pipeline2.png">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.633Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vulkan之Pipeline">
+<meta name="twitter:description" content="0） pipeline基础知识vulkan的整个渲染流程实际上是一个pipeline， 也就是流水线的形式，通过在不同的管线阶段做相应的操作，最终我们可以得到渲染的结果。实际上pipeline是整个图形渲染的核心，这里面也包括了太多的内容，具体如下图所示： 在下图中，黄色部分是我们可以编程实现的部分，绿色的部分是固定的，是我们不需要操作的部分。而实际上在大多数的场景下我们真正需要变成的就是Vert">
+<meta name="twitter:image" content="http://yoursite.com/images/pipeline1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/03/04/Vulkan/Vulkan之Pipeline/">
+
+
+
+
+
+  <title>Vulkan之Pipeline | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/04/Vulkan/Vulkan之Pipeline/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vulkan之Pipeline</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-04T00:00:00+08:00">
+                2020-03-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,365
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  16
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="0）-pipeline基础知识"><a href="#0）-pipeline基础知识" class="headerlink" title="0） pipeline基础知识"></a>0） pipeline基础知识</h2><p>vulkan的整个渲染流程实际上是一个pipeline， 也就是流水线的形式，通过在不同的管线阶段做相应的操作，最终我们可以得到渲染的结果。<br>实际上pipeline是整个图形渲染的核心，这里面也包括了太多的内容，具体如下图所示：</p>
+<p>在下图中，黄色部分是我们可以编程实现的部分，绿色的部分是固定的，是我们不需要操作的部分。而实际上在大多数的场景下我们真正需要变成的就是Vertex shader和Fragment Shader。<br><img src="/images/pipeline1.png" alt="pipeline"></p>
+<p>下面我们来介绍下上面这些部分的含义，而pipeline的整个流程实际上也是为了实现上面的内容。</p>
+<p>input assembler 获取顶点数据，顶点数据的来源可以是应用程序提交的原始顶点数据，或是根据索引缓冲提取的顶点数据。</p>
+<p>vertex shader 对每个顶点进行模型空间到屏幕空间的变换，然后将顶点数据传递给图形管线的下一阶段。</p>
+<p>tessellation shaders 根据一定的规则对几何图形进行细分，从而提高网格质量。通常被用来使类似墙面这类不光滑表面看起来更自然。</p>
+<p>geometry shader 可以以图元(三角形，线段，点) 为单位处理几何图形，它可以剔除图元，输出图元。有点类似于tessellation shader，但更灵活。但目前已经不推荐应用程序使用它，geometry shader 的性能在除了Intel 集成显卡外的大多数显卡上表现不佳。</p>
+<p>rasterization 阶段将图元离散为片段。片段被用来在帧缓冲上填充像素。位于屏幕外的片段会被丢弃，顶点着色器输出的顶点属性会在片段之间进行插值，开启深度测试后，位于其它片段之后的片段也会被丢弃。</p>
+<p>fragment shader 对每一个未被丢弃的片段进行处理，确定片段要写入的帧缓冲，它可以使用来自vertex shader 的插值数据，比如纹理坐标和顶点法线。</p>
+<p>color blending 阶段对写入帧缓冲同一像素位置的不同片段进行混合操作。片段可以直接覆盖之前写入的片段，也可以基于之前片段写入的信息进行混合操作。</p>
+<p>最终的结果写入到了framebuffer中。</p>
+<p>图形管线的创建调用下面的函数实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkCreateGraphicsPipelines(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    VkPipelineCache                             pipelineCache,</span><br><span class="line">    uint32_t                                    createInfoCount,</span><br><span class="line">    const VkGraphicsPipelineCreateInfo*         pCreateInfos,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator,</span><br><span class="line">    VkPipeline*                                 pPipelines);</span><br></pre></td></tr></table></figure></p>
+<p>pipelineCache  是管线缓存的句柄，这个我们在后续会介绍管线缓存的应用，如果不使用，则设置为VK_NULL_HANDLE<br>createInfoCount和pCreateInfos 是核心内容，它们表示了创建管线所需要的结构以及结构的数量。</p>
+<p>这个结构很复杂，每一项都对应这上面图的一个小块内容。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkGraphicsPipelineCreateInfo &#123;</span><br><span class="line">    VkStructureType                                  sType;  // VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO</span><br><span class="line">    const void*                                      pNext;   // 扩展</span><br><span class="line">    VkPipelineCreateFlags                            flags;</span><br><span class="line">    uint32_t                                         stageCount;</span><br><span class="line">    const VkPipelineShaderStageCreateInfo*           pStages;</span><br><span class="line">    const VkPipelineVertexInputStateCreateInfo*      pVertexInputState;</span><br><span class="line">    const VkPipelineInputAssemblyStateCreateInfo*    pInputAssemblyState;</span><br><span class="line">    const VkPipelineTessellationStateCreateInfo*     pTessellationState;</span><br><span class="line">    const VkPipelineViewportStateCreateInfo*         pViewportState;</span><br><span class="line">    const VkPipelineRasterizationStateCreateInfo*    pRasterizationState;</span><br><span class="line">    const VkPipelineMultisampleStateCreateInfo*      pMultisampleState;</span><br><span class="line">    const VkPipelineDepthStencilStateCreateInfo*     pDepthStencilState;</span><br><span class="line">    const VkPipelineColorBlendStateCreateInfo*       pColorBlendState;</span><br><span class="line">    const VkPipelineDynamicStateCreateInfo*          pDynamicState;</span><br><span class="line">    VkPipelineLayout                                 layout;</span><br><span class="line">    VkRenderPass                                     renderPass;</span><br><span class="line">    uint32_t                                         subpass;</span><br><span class="line">    VkPipeline                                       basePipelineHandle;</span><br><span class="line">    int32_t                                          basePipelineIndex;</span><br><span class="line">&#125; VkGraphicsPipelineCreateInfo;</span><br></pre></td></tr></table></figure></p>
+<h2 id="1）-flag位"><a href="#1）-flag位" class="headerlink" title="1） flag位"></a>1） flag位</h2><p>flag表示一个位的掩码，表示管线的用途信息， 在vulkan_core.h文件中定义了它的枚举值，这个值告诉我们想要创建一个什么样子的管线。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkPipelineCreateFlagBits &#123;</span><br><span class="line">    VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = 0x00000001,</span><br><span class="line">    VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = 0x00000002,</span><br><span class="line">    VK_PIPELINE_CREATE_DERIVATIVE_BIT = 0x00000004,</span><br><span class="line">    VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = 0x00000008,</span><br><span class="line">    VK_PIPELINE_CREATE_DISPATCH_BASE_BIT = 0x00000010,</span><br><span class="line">    VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR = 0x00004000,</span><br><span class="line">    VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR = 0x00008000,</span><br><span class="line">    VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR = 0x00010000,</span><br><span class="line">    VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR = 0x00020000,</span><br><span class="line">    VK_PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR = 0x00001000,</span><br><span class="line">    VK_PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR = 0x00002000,</span><br><span class="line">    VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV = 0x00000020,</span><br><span class="line">    VK_PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR = 0x00000040,</span><br><span class="line">    VK_PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR = 0x00000080,</span><br><span class="line">    VK_PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV = 0x00040000,</span><br><span class="line">    VK_PIPELINE_CREATE_LIBRARY_BIT_KHR = 0x00000800,</span><br><span class="line">    VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT = 0x00000100,</span><br><span class="line">    VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT = 0x00000200,</span><br><span class="line">    VK_PIPELINE_CREATE_DISPATCH_BASE = VK_PIPELINE_CREATE_DISPATCH_BASE_BIT,</span><br><span class="line">    VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHR = VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT,</span><br><span class="line">    VK_PIPELINE_CREATE_DISPATCH_BASE_KHR = VK_PIPELINE_CREATE_DISPATCH_BASE,</span><br><span class="line">    VK_PIPELINE_CREATE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkPipelineCreateFlagBits;</span><br><span class="line">typedef VkFlags VkPipelineCreateFlags;</span><br></pre></td></tr></table></figure></p>
+<h2 id="2）-shader加载"><a href="#2）-shader加载" class="headerlink" title="2） shader加载"></a>2） shader加载</h2><p>stageCount和pStages 定义了管线中的shader stage信息，也就是我们需要加载的shader信息<br>stageCount表示有几个shader，pStages是具体的shader信息，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkPipelineShaderStageCreateInfo &#123;</span><br><span class="line">    VkStructureType                     sType;   //VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO</span><br><span class="line">    const void*                         pNext;</span><br><span class="line">    VkPipelineShaderStageCreateFlags    flags;</span><br><span class="line">    VkShaderStageFlagBits               stage;   //表示shader是vertexShader还是fragShader等</span><br><span class="line">    VkShaderModule                      module;  //具体加载的shader模型</span><br><span class="line">    const char*                         pName;   //shader中的入口函数名称，一般是main</span><br><span class="line">    const VkSpecializationInfo*         pSpecializationInfo;</span><br><span class="line">&#125; VkPipelineShaderStageCreateInfo;</span><br></pre></td></tr></table></figure></p>
+<p>而这里面的VkShaderModule是由shader文件创建的，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">VkShaderModule createShaderModule(const std::vector&lt;char&gt;&amp; code) &#123;</span><br><span class="line">    VkShaderModuleCreateInfo createInfo&#123;&#125;;</span><br><span class="line">    createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;</span><br><span class="line">    createInfo.codeSize = code.size();</span><br><span class="line">    createInfo.pCode = reinterpret_cast&lt;const uint32_t*&gt;(code.data());</span><br><span class="line"></span><br><span class="line">    VkShaderModule shaderModule;</span><br><span class="line">    if (vkCreateShaderModule(device, &amp;createInfo, nullptr, &amp;shaderModule) != VK_SUCCESS) &#123;</span><br><span class="line">        throw std::runtime_error(&quot;failed to create shader module!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return shaderModule;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="3）-顶点vertex信息"><a href="#3）-顶点vertex信息" class="headerlink" title="3） 顶点vertex信息"></a>3） 顶点vertex信息</h2><p>VkPipelineVertexInputStateCreateInfo这个结构主要是描述顶点信息是如何组织的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkPipelineVertexInputStateCreateInfo &#123;</span><br><span class="line">    VkStructureType                             sType;</span><br><span class="line">    const void*                                 pNext;</span><br><span class="line">    VkPipelineVertexInputStateCreateFlags       flags;</span><br><span class="line">    uint32_t                                    vertexBindingDescriptionCount;</span><br><span class="line">    const VkVertexInputBindingDescription*      pVertexBindingDescriptions;</span><br><span class="line">    uint32_t                                    vertexAttributeDescriptionCount;</span><br><span class="line">    const VkVertexInputAttributeDescription*    pVertexAttributeDescriptions;</span><br><span class="line">&#125; VkPipelineVertexInputStateCreateInfo;</span><br></pre></td></tr></table></figure></p>
+<p>其中VkVertexInputBindingDescription表示vertexBuffer缓冲中的顶点的绑定关系<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkVertexInputBindingDescription &#123;</span><br><span class="line">    uint32_t             binding; // 结构的binding number</span><br><span class="line">    uint32_t             stride;  // buffer中的两个相邻元素的距离</span><br><span class="line">    VkVertexInputRate    inputRate; /逐顶点还是逐实例渲染的方式</span><br><span class="line">&#125; VkVertexInputBindingDescription;</span><br></pre></td></tr></table></figure></p>
+<p>pVertexAttributeDescriptions表示结构的属性信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkVertexInputAttributeDescription &#123;</span><br><span class="line">    uint32_t    location;  // 属性再shader中的binding location</span><br><span class="line">    uint32_t    binding;  // 属性来源数据的binding number</span><br><span class="line">    VkFormat    format;  // 属性的格式以及size信息</span><br><span class="line">    uint32_t    offset;  // 属性再整个结构里面的偏移</span><br><span class="line">&#125; VkVertexInputAttributeDescription;</span><br></pre></td></tr></table></figure></p>
+<p>实际调用代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">struct Vertex &#123;</span><br><span class="line">    glm::vec3 pos;</span><br><span class="line">    glm::vec3 color;</span><br><span class="line">    glm::vec2 texCoord;</span><br><span class="line"></span><br><span class="line">    static VkVertexInputBindingDescription getBindingDescription() &#123;</span><br><span class="line">        VkVertexInputBindingDescription bindingDescription&#123;&#125;;</span><br><span class="line">        bindingDescription.binding = 0;</span><br><span class="line">        bindingDescription.stride = sizeof(Vertex);</span><br><span class="line">        bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;</span><br><span class="line"></span><br><span class="line">        return bindingDescription;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static std::array&lt;VkVertexInputAttributeDescription, 3&gt; getAttributeDescriptions() &#123;</span><br><span class="line">        std::array&lt;VkVertexInputAttributeDescription, 3&gt; attributeDescriptions&#123;&#125;;</span><br><span class="line"></span><br><span class="line">        attributeDescriptions[0].binding = 0;</span><br><span class="line">        attributeDescriptions[0].location = 0;</span><br><span class="line">        attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;</span><br><span class="line">        attributeDescriptions[0].offset = offsetof(Vertex, pos);</span><br><span class="line"></span><br><span class="line">        attributeDescriptions[1].binding = 0;</span><br><span class="line">        attributeDescriptions[1].location = 1;</span><br><span class="line">        attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;</span><br><span class="line">        attributeDescriptions[1].offset = offsetof(Vertex, color);</span><br><span class="line"></span><br><span class="line">        attributeDescriptions[2].binding = 0;</span><br><span class="line">        attributeDescriptions[2].location = 2;</span><br><span class="line">        attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;</span><br><span class="line">        attributeDescriptions[2].offset = offsetof(Vertex, texCoord);</span><br><span class="line"></span><br><span class="line">        return attributeDescriptions;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    bool operator==(const Vertex&amp; other) const &#123;</span><br><span class="line">        return pos == other.pos &amp;&amp; color == other.color &amp;&amp; texCoord == other.texCoord;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">VkPipelineVertexInputStateCreateInfo vertexInputInfo&#123;&#125;;</span><br><span class="line">vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;</span><br><span class="line"></span><br><span class="line">auto bindingDescription = Vertex::getBindingDescription();</span><br><span class="line">auto attributeDescriptions = Vertex::getAttributeDescriptions();</span><br><span class="line"></span><br><span class="line">vertexInputInfo.vertexBindingDescriptionCount = 1;</span><br><span class="line">vertexInputInfo.vertexAttributeDescriptionCount = static_cast&lt;uint32_t&gt;(attributeDescriptions.size());</span><br><span class="line">vertexInputInfo.pVertexBindingDescriptions = &amp;bindingDescription;</span><br><span class="line">vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();</span><br></pre></td></tr></table></figure></p>
+<h2 id="3）图元装配"><a href="#3）图元装配" class="headerlink" title="3）图元装配"></a>3）图元装配</h2><p>实际上这就是规定图元以什么格式装配，是点，线还是三角形或是其他的图形，还挺多的，不过一般都是triangle<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkPipelineInputAssemblyStateCreateInfo &#123;</span><br><span class="line">    VkStructureType                            sType;</span><br><span class="line">    const void*                                pNext;</span><br><span class="line">    VkPipelineInputAssemblyStateCreateFlags    flags;</span><br><span class="line">    VkPrimitiveTopology                        topology;</span><br><span class="line">    VkBool32                                   primitiveRestartEnable;  //布尔标志确定是否将特殊标记或顶点索引用作图元重启功能</span><br><span class="line">&#125; VkPipelineInputAssemblyStateCreateInfo;</span><br></pre></td></tr></table></figure></p>
+<h2 id="4）曲面细分"><a href="#4）曲面细分" class="headerlink" title="4）曲面细分"></a>4）曲面细分</h2><p>VkPipelineTessellationStateCreateInfo这个结构是曲面细分用的，这也是一个可编程管线，如果我们要启用它，就还要设置一些其他的内容，大部分情况下，我们不需要做曲面细分，所以是不设置的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkPipelineTessellationStateCreateInfo &#123;</span><br><span class="line">    VkStructureType                           sType; // VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO</span><br><span class="line">    const void*                               pNext; //NULL或者指向VkPipelineTessellationDomainOriginStateCreateInfo结构</span><br><span class="line">    VkPipelineTessellationStateCreateFlags    flags; // for future扩展用</span><br><span class="line">    uint32_t                                  patchControlPoints;  //每个patch的控制点的个数</span><br><span class="line">&#125; VkPipelineTessellationStateCreateInfo;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkPipelineTessellationDomainOriginStateCreateInfo &#123;</span><br><span class="line">    VkStructureType               sType;</span><br><span class="line">    const void*                   pNext;</span><br><span class="line">    VkTessellationDomainOrigin    domainOrigin;</span><br><span class="line">&#125; VkPipelineTessellationDomainOriginStateCreateInfo;</span><br></pre></td></tr></table></figure>
+<h2 id="5）-裁剪窗口"><a href="#5）-裁剪窗口" class="headerlink" title="5） 裁剪窗口"></a>5） 裁剪窗口</h2><p>这又是一个概念，实际上是指我们渲染的结果以一种什么样的裁剪方式显示，主要包括视口和裁剪。</p>
+<p>视口定义了图像到帧缓冲的映射关系。<br>裁剪矩形定义了哪一区域的像素实际被存储在帧缓存</p>
+<p>一个比较形象的图如下所示：<br><img src="/images/pipeline2.png" alt="pipeline"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkPipelineViewportStateCreateInfo &#123;</span><br><span class="line">    VkStructureType                       sType;</span><br><span class="line">    const void*                           pNext;</span><br><span class="line">    VkPipelineViewportStateCreateFlags    flags;</span><br><span class="line">    uint32_t                              viewportCount;</span><br><span class="line">    const VkViewport*                     pViewports;</span><br><span class="line">    uint32_t                              scissorCount;</span><br><span class="line">    const VkRect2D*                       pScissors;</span><br><span class="line">&#125; VkPipelineViewportStateCreateInfo;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">VkViewport viewport&#123;&#125;;</span><br><span class="line">viewport.x = 0.0f;</span><br><span class="line">viewport.y = 0.0f;</span><br><span class="line">viewport.width = (float)swapChainExtent.width;</span><br><span class="line">viewport.height = (float)swapChainExtent.height;</span><br><span class="line">viewport.minDepth = 0.0f;</span><br><span class="line">viewport.maxDepth = 1.0f;</span><br><span class="line"></span><br><span class="line">VkRect2D scissor&#123;&#125;;</span><br><span class="line">scissor.offset = &#123; 0, 0 &#125;;</span><br><span class="line">scissor.extent = swapChainExtent;</span><br><span class="line"></span><br><span class="line">VkPipelineViewportStateCreateInfo viewportState&#123;&#125;;</span><br><span class="line">viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;</span><br><span class="line">viewportState.viewportCount = 1;</span><br><span class="line">viewportState.pViewports = &amp;viewport;</span><br><span class="line">viewportState.scissorCount = 1;</span><br><span class="line">viewportState.pScissors = &amp;scissor;</span><br></pre></td></tr></table></figure>
+<h2 id="6）-光栅化"><a href="#6）-光栅化" class="headerlink" title="6） 光栅化"></a>6） 光栅化</h2><p>光栅化定义了如何将物体映射到屏幕上的操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkPipelineRasterizationStateCreateInfo &#123;</span><br><span class="line">    VkStructureType                            sType;  //VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO</span><br><span class="line">    const void*                                pNext;  // 扩展</span><br><span class="line">    VkPipelineRasterizationStateCreateFlags    flags;  //遗留</span><br><span class="line">    VkBool32                                   depthClampEnable; // VK_TRUE 表示在近平面和远平面外的片段会被截断为在近平面和远平面上，而不是直接丢弃这些片段。这对于阴影贴图的生成很有用。使用这一设置需要开启相应的GPU 特性。</span><br><span class="line">    VkBool32                                   rasterizerDiscardEnable; // VK_TRUE 表示所有几何图元都不能通过光栅化阶段。这一设置会禁止一切片段输出到帧缓冲，一般位VK_FALSE</span><br><span class="line">    VkPolygonMode                              polygonMode; // 指定几何图元生成片段的方式</span><br><span class="line">    VkCullModeFlags                            cullMode; // 用于指定使用的表面剔除类型。我们可以通过它禁用表面剔除，剔除背面，剔除正面，以及剔除双面</span><br><span class="line">    VkFrontFace                                frontFace; // 用于指定顺时针的顶点序是正面，还是逆时针的顶点序是正面</span><br><span class="line">    VkBool32                                   depthBiasEnable;</span><br><span class="line">    float                                      depthBiasConstantFactor;</span><br><span class="line">    float                                      depthBiasClamp;</span><br><span class="line">    float                                      depthBiasSlopeFactor;</span><br><span class="line">    float                                      lineWidth;  //用于指定光栅化后的线段宽度，它以线宽所占的片段数目为单位。线宽的最大值依赖于硬件，使用大于1.0f 的线宽，需要启用相应的GPU 特性。</span><br><span class="line">&#125; VkPipelineRasterizationStateCreateInfo;</span><br></pre></td></tr></table></figure></p>
+<h2 id="7）多重采样"><a href="#7）多重采样" class="headerlink" title="7）多重采样"></a>7）多重采样</h2><p>多重采样功能的开启实际上是为了减轻边缘走样问题的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkPipelineMultisampleStateCreateInfo &#123;</span><br><span class="line">    VkStructureType                          sType;</span><br><span class="line">    const void*                              pNext;</span><br><span class="line">    VkPipelineMultisampleStateCreateFlags    flags;</span><br><span class="line">    VkSampleCountFlagBits                    rasterizationSamples;</span><br><span class="line">    VkBool32                                 sampleShadingEnable;</span><br><span class="line">    float                                    minSampleShading;</span><br><span class="line">    const VkSampleMask*                      pSampleMask;</span><br><span class="line">    VkBool32                                 alphaToCoverageEnable;</span><br><span class="line">    VkBool32                                 alphaToOneEnable;</span><br><span class="line">&#125; VkPipelineMultisampleStateCreateInfo;</span><br></pre></td></tr></table></figure></p>
+<h2 id="8）深度与模板测试"><a href="#8）深度与模板测试" class="headerlink" title="8）深度与模板测试"></a>8）深度与模板测试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkPipelineDepthStencilStateCreateInfo &#123;</span><br><span class="line">    VkStructureType                           sType;</span><br><span class="line">    const void*                               pNext;</span><br><span class="line">    VkPipelineDepthStencilStateCreateFlags    flags;</span><br><span class="line">    VkBool32                                  depthTestEnable;</span><br><span class="line">    VkBool32                                  depthWriteEnable;</span><br><span class="line">    VkCompareOp                               depthCompareOp;</span><br><span class="line">    VkBool32                                  depthBoundsTestEnable;</span><br><span class="line">    VkBool32                                  stencilTestEnable;</span><br><span class="line">    VkStencilOpState                          front;</span><br><span class="line">    VkStencilOpState                          back;</span><br><span class="line">    float                                     minDepthBounds;</span><br><span class="line">    float                                     maxDepthBounds;</span><br><span class="line">&#125; VkPipelineDepthStencilStateCreateInfo;</span><br></pre></td></tr></table></figure>
+<h2 id="9）颜色混合"><a href="#9）颜色混合" class="headerlink" title="9）颜色混合"></a>9）颜色混合</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkPipelineColorBlendStateCreateInfo &#123;</span><br><span class="line">    VkStructureType                               sType;</span><br><span class="line">    const void*                                   pNext;</span><br><span class="line">    VkPipelineColorBlendStateCreateFlags          flags;</span><br><span class="line">    VkBool32                                      logicOpEnable;</span><br><span class="line">    VkLogicOp                                     logicOp;</span><br><span class="line">    uint32_t                                      attachmentCount;</span><br><span class="line">    const VkPipelineColorBlendAttachmentState*    pAttachments;</span><br><span class="line">    float                                         blendConstants[4];</span><br><span class="line">&#125; VkPipelineColorBlendStateCreateInfo;</span><br></pre></td></tr></table></figure>
+<h2 id="10）管线布局"><a href="#10）管线布局" class="headerlink" title="10）管线布局"></a>10）管线布局</h2><p>实际上这里是因为我们管线要绑定动态的描述符集和推常量，因此需要提前在管线的创建阶段给两者留出位置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkCreatePipelineLayout(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    const VkPipelineLayoutCreateInfo*           pCreateInfo,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator,</span><br><span class="line">    VkPipelineLayout*                           pPipelineLayout);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkPipelineLayoutCreateInfo &#123;</span><br><span class="line">    VkStructureType                 sType;</span><br><span class="line">    const void*                     pNext;</span><br><span class="line">    VkPipelineLayoutCreateFlags     flags;</span><br><span class="line">    uint32_t                        setLayoutCount;</span><br><span class="line">    const VkDescriptorSetLayout*    pSetLayouts;</span><br><span class="line">    uint32_t                        pushConstantRangeCount;</span><br><span class="line">    const VkPushConstantRange*      pPushConstantRanges;</span><br><span class="line">&#125; VkPipelineLayoutCreateInfo;</span><br></pre></td></tr></table></figure>
+<h2 id="11）renderPass"><a href="#11）renderPass" class="headerlink" title="11）renderPass"></a>11）renderPass</h2><p>在创建管线的时候，还要指定renderpass以及使用到的subpass在subpass数组中的索引，这是因为一个renderpass可能存在多个subpass，而这些subpass可能被不同的pipeline使用，同时也可能存在多个renderpass。</p>
+<h2 id="12）衍生管线"><a href="#12）衍生管线" class="headerlink" title="12）衍生管线"></a>12）衍生管线</h2><p>basePipelineHandle 和basePipelineIndex 成员变量用于以一个创建好的图形管线为基础创建一个新的图形管线。当要创建一个和已有管线大量设置相同的管线时，使用它的代价要比直接创建小，并且，对于从同一个管线衍生出的两个管线，在它们之间进行管线切换操作的效率也要高很多。我们可以使用basePipelineHandle 来指定已经创建好的管线，或是使用basePipelineIndex 来指定将要创建的管线作为基础管线，用于衍生新的管线。如果我们只使用一个管线，所以将这两个成员变量分别设置为VK_NULL_HANDLE 和-1，不使用基础管线衍生新的管线。这两个成员变量的设置只有在VkGraphicsPipelineCreateInfo 结构体的flags 成员变量使用了VK_PIPELINE_CREATE_DERIVATIVE_BIT 标记的情况下才会起效。</p>
+<h2 id="13）最后我们在创建了pipeline后，我们还是要销毁我们之前加载的shader模型资源的。"><a href="#13）最后我们在创建了pipeline后，我们还是要销毁我们之前加载的shader模型资源的。" class="headerlink" title="13）最后我们在创建了pipeline后，我们还是要销毁我们之前加载的shader模型资源的。"></a>13）最后我们在创建了pipeline后，我们还是要销毁我们之前加载的shader模型资源的。</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vkDestroyShaderModule(device, fragShaderModule, nullptr);</span><br><span class="line">vkDestroyShaderModule(device, vertShaderModule, nullptr);</span><br></pre></td></tr></table></figure>
+<h2 id="14-最最后，我们的完整代码如下所示："><a href="#14-最最后，我们的完整代码如下所示：" class="headerlink" title="14) 最最后，我们的完整代码如下所示："></a>14) 最最后，我们的完整代码如下所示：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre></td><td class="code"><pre><span class="line">创建一个pipeline，需要配置如此多的内容。</span><br><span class="line">void createGraphicsPipeline() &#123;</span><br><span class="line">    auto vertShaderCode = readFile(&quot;shaders/vert.spv&quot;);</span><br><span class="line">    auto fragShaderCode = readFile(&quot;shaders/frag.spv&quot;);</span><br><span class="line"></span><br><span class="line">    VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);</span><br><span class="line">    VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);</span><br><span class="line"></span><br><span class="line">    VkPipelineShaderStageCreateInfo vertShaderStageInfo&#123;&#125;;</span><br><span class="line">    vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;</span><br><span class="line">    vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;</span><br><span class="line">    vertShaderStageInfo.module = vertShaderModule;</span><br><span class="line">    vertShaderStageInfo.pName = &quot;main&quot;;</span><br><span class="line"></span><br><span class="line">    VkPipelineShaderStageCreateInfo fragShaderStageInfo&#123;&#125;;</span><br><span class="line">    fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;</span><br><span class="line">    fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;</span><br><span class="line">    fragShaderStageInfo.module = fragShaderModule;</span><br><span class="line">    fragShaderStageInfo.pName = &quot;main&quot;;</span><br><span class="line"></span><br><span class="line">    VkPipelineShaderStageCreateInfo shaderStages[] = &#123; vertShaderStageInfo, fragShaderStageInfo &#125;;</span><br><span class="line"></span><br><span class="line">    VkPipelineVertexInputStateCreateInfo vertexInputInfo&#123;&#125;;</span><br><span class="line">    vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;</span><br><span class="line"></span><br><span class="line">    auto bindingDescription = Vertex::getBindingDescription();</span><br><span class="line">    auto attributeDescriptions = Vertex::getAttributeDescriptions();</span><br><span class="line"></span><br><span class="line">    vertexInputInfo.vertexBindingDescriptionCount = 1;</span><br><span class="line">    vertexInputInfo.vertexAttributeDescriptionCount = static_cast&lt;uint32_t&gt;(attributeDescriptions.size());</span><br><span class="line">    vertexInputInfo.pVertexBindingDescriptions = &amp;bindingDescription;</span><br><span class="line">    vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();</span><br><span class="line"></span><br><span class="line">    VkPipelineInputAssemblyStateCreateInfo inputAssembly&#123;&#125;;</span><br><span class="line">    inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;</span><br><span class="line">    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;</span><br><span class="line">    inputAssembly.primitiveRestartEnable = VK_FALSE;</span><br><span class="line"></span><br><span class="line">    VkViewport viewport&#123;&#125;;</span><br><span class="line">    viewport.x = 0.0f;</span><br><span class="line">    viewport.y = 0.0f;</span><br><span class="line">    viewport.width = (float)swapChainExtent.width;</span><br><span class="line">    viewport.height = (float)swapChainExtent.height;</span><br><span class="line">    viewport.minDepth = 0.0f;</span><br><span class="line">    viewport.maxDepth = 1.0f;</span><br><span class="line"></span><br><span class="line">    VkRect2D scissor&#123;&#125;;</span><br><span class="line">    scissor.offset = &#123; 0, 0 &#125;;</span><br><span class="line">    scissor.extent = swapChainExtent;</span><br><span class="line"></span><br><span class="line">    VkPipelineViewportStateCreateInfo viewportState&#123;&#125;;</span><br><span class="line">    viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;</span><br><span class="line">    viewportState.viewportCount = 1;</span><br><span class="line">    viewportState.pViewports = &amp;viewport;</span><br><span class="line">    viewportState.scissorCount = 1;</span><br><span class="line">    viewportState.pScissors = &amp;scissor;</span><br><span class="line"></span><br><span class="line">    VkPipelineRasterizationStateCreateInfo rasterizer&#123;&#125;;</span><br><span class="line">    rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;</span><br><span class="line">    rasterizer.depthClampEnable = VK_FALSE;</span><br><span class="line">    rasterizer.rasterizerDiscardEnable = VK_FALSE;</span><br><span class="line">    rasterizer.polygonMode = VK_POLYGON_MODE_FILL;</span><br><span class="line">    rasterizer.lineWidth = 1.0f;</span><br><span class="line">    rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;</span><br><span class="line">    rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;</span><br><span class="line">    rasterizer.depthBiasEnable = VK_FALSE;</span><br><span class="line"></span><br><span class="line">    VkPipelineMultisampleStateCreateInfo multisampling&#123;&#125;;</span><br><span class="line">    multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;</span><br><span class="line">    multisampling.sampleShadingEnable = VK_FALSE;</span><br><span class="line">    multisampling.rasterizationSamples = msaaSamples;</span><br><span class="line"></span><br><span class="line">    VkPipelineDepthStencilStateCreateInfo depthStencil&#123;&#125;;</span><br><span class="line">    depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;</span><br><span class="line">    depthStencil.depthTestEnable = VK_TRUE;</span><br><span class="line">    depthStencil.depthWriteEnable = VK_TRUE;</span><br><span class="line">    depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;</span><br><span class="line">    depthStencil.depthBoundsTestEnable = VK_FALSE;</span><br><span class="line">    depthStencil.stencilTestEnable = VK_FALSE;</span><br><span class="line"></span><br><span class="line">    VkPipelineColorBlendAttachmentState colorBlendAttachment&#123;&#125;;</span><br><span class="line">    colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;</span><br><span class="line">    colorBlendAttachment.blendEnable = VK_FALSE;</span><br><span class="line"></span><br><span class="line">    VkPipelineColorBlendStateCreateInfo colorBlending&#123;&#125;;</span><br><span class="line">    colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;</span><br><span class="line">    colorBlending.logicOpEnable = VK_FALSE;</span><br><span class="line">    colorBlending.logicOp = VK_LOGIC_OP_COPY;</span><br><span class="line">    colorBlending.attachmentCount = 1;</span><br><span class="line">    colorBlending.pAttachments = &amp;colorBlendAttachment;</span><br><span class="line">    colorBlending.blendConstants[0] = 0.0f;</span><br><span class="line">    colorBlending.blendConstants[1] = 0.0f;</span><br><span class="line">    colorBlending.blendConstants[2] = 0.0f;</span><br><span class="line">    colorBlending.blendConstants[3] = 0.0f;</span><br><span class="line"></span><br><span class="line">    VkPipelineLayoutCreateInfo pipelineLayoutInfo&#123;&#125;;</span><br><span class="line">    pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;</span><br><span class="line">    pipelineLayoutInfo.setLayoutCount = 1;</span><br><span class="line">    pipelineLayoutInfo.pSetLayouts = &amp;descriptorSetLayout;</span><br><span class="line"></span><br><span class="line">    if (vkCreatePipelineLayout(device, &amp;pipelineLayoutInfo, nullptr, &amp;pipelineLayout) != VK_SUCCESS) &#123;</span><br><span class="line">        throw std::runtime_error(&quot;failed to create pipeline layout!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    VkGraphicsPipelineCreateInfo pipelineInfo&#123;&#125;;</span><br><span class="line">    pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;</span><br><span class="line">    pipelineInfo.stageCount = 2;</span><br><span class="line">    pipelineInfo.pStages = shaderStages;</span><br><span class="line">    pipelineInfo.pVertexInputState = &amp;vertexInputInfo;</span><br><span class="line">    pipelineInfo.pInputAssemblyState = &amp;inputAssembly;</span><br><span class="line">    pipelineInfo.pViewportState = &amp;viewportState;</span><br><span class="line">    pipelineInfo.pRasterizationState = &amp;rasterizer;</span><br><span class="line">    pipelineInfo.pMultisampleState = &amp;multisampling;</span><br><span class="line">    pipelineInfo.pDepthStencilState = &amp;depthStencil;</span><br><span class="line">    pipelineInfo.pColorBlendState = &amp;colorBlending;</span><br><span class="line">    pipelineInfo.layout = pipelineLayout;</span><br><span class="line">    pipelineInfo.renderPass = renderPass;</span><br><span class="line">    pipelineInfo.subpass = 0;</span><br><span class="line">    pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;</span><br><span class="line"></span><br><span class="line">    if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &amp;pipelineInfo, nullptr, &amp;graphicsPipeline) != VK_SUCCESS) &#123;</span><br><span class="line">        throw std::runtime_error(&quot;failed to create graphics pipeline!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    vkDestroyShaderModule(device, fragShaderModule, nullptr);</span><br><span class="line">    vkDestroyShaderModule(device, vertShaderModule, nullptr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vulkan/" rel="tag"># vulkan</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/28/Vulkan/Vulkan之Fence/" rel="next" title="Vulkan之Fence">
+                <i class="fa fa-chevron-left"></i> Vulkan之Fence
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/10/Vulkan/Vulkan之CommandBuffer/" rel="prev" title="Vulkan之CommandBuffer">
+                Vulkan之CommandBuffer <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0）-pipeline基础知识"><span class="nav-number">1.</span> <span class="nav-text">0） pipeline基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1）-flag位"><span class="nav-number">2.</span> <span class="nav-text">1） flag位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2）-shader加载"><span class="nav-number">3.</span> <span class="nav-text">2） shader加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3）-顶点vertex信息"><span class="nav-number">4.</span> <span class="nav-text">3） 顶点vertex信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3）图元装配"><span class="nav-number">5.</span> <span class="nav-text">3）图元装配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4）曲面细分"><span class="nav-number">6.</span> <span class="nav-text">4）曲面细分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5）-裁剪窗口"><span class="nav-number">7.</span> <span class="nav-text">5） 裁剪窗口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6）-光栅化"><span class="nav-number">8.</span> <span class="nav-text">6） 光栅化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7）多重采样"><span class="nav-number">9.</span> <span class="nav-text">7）多重采样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8）深度与模板测试"><span class="nav-number">10.</span> <span class="nav-text">8）深度与模板测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9）颜色混合"><span class="nav-number">11.</span> <span class="nav-text">9）颜色混合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10）管线布局"><span class="nav-number">12.</span> <span class="nav-text">10）管线布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11）renderPass"><span class="nav-number">13.</span> <span class="nav-text">11）renderPass</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12）衍生管线"><span class="nav-number">14.</span> <span class="nav-text">12）衍生管线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13）最后我们在创建了pipeline后，我们还是要销毁我们之前加载的shader模型资源的。"><span class="nav-number">15.</span> <span class="nav-text">13）最后我们在创建了pipeline后，我们还是要销毁我们之前加载的shader模型资源的。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-最最后，我们的完整代码如下所示："><span class="nav-number">16.</span> <span class="nav-text">14) 最最后，我们的完整代码如下所示：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

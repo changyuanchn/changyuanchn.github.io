@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据结构,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前面介绍了二叉查找树，二叉查找树的平均时间复杂度为O(logN),是相当低的，因此是一种非常优异的模型。但是这只是对一个随机输入的二叉查找树有效（平衡的二叉树）。当我们进行一定次数的插入（或删除）后，可能会导致二叉树不平衡，甚至退化成链表，这样会重新使时间复杂度变为O(logN).因此，引入AVL树。 AVL树是Adelson-Velskii和Landis于1962年发明的自平衡二叉树。在一个二叉">
+<meta name="keywords" content="数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AVL树">
+<meta property="og:url" content="http://yoursite.com/2013/12/22/DataStructure/AVL树/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="前面介绍了二叉查找树，二叉查找树的平均时间复杂度为O(logN),是相当低的，因此是一种非常优异的模型。但是这只是对一个随机输入的二叉查找树有效（平衡的二叉树）。当我们进行一定次数的插入（或删除）后，可能会导致二叉树不平衡，甚至退化成链表，这样会重新使时间复杂度变为O(logN).因此，引入AVL树。 AVL树是Adelson-Velskii和Landis于1962年发明的自平衡二叉树。在一个二叉">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/avlTree1.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/avlTree2.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/avlTree3.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/avlTree4.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/avlTree5.png">
+<meta property="og:updated_time" content="2021-10-06T15:31:04.041Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AVL树">
+<meta name="twitter:description" content="前面介绍了二叉查找树，二叉查找树的平均时间复杂度为O(logN),是相当低的，因此是一种非常优异的模型。但是这只是对一个随机输入的二叉查找树有效（平衡的二叉树）。当我们进行一定次数的插入（或删除）后，可能会导致二叉树不平衡，甚至退化成链表，这样会重新使时间复杂度变为O(logN).因此，引入AVL树。 AVL树是Adelson-Velskii和Landis于1962年发明的自平衡二叉树。在一个二叉">
+<meta name="twitter:image" content="http://yoursite.com/images/DataStructure/avlTree1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/12/22/DataStructure/AVL树/">
+
+
+
+
+
+  <title>AVL树 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/12/22/DataStructure/AVL树/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">AVL树</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-12-22T00:00:00+08:00">
+                2013-12-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,320
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前面介绍了二叉查找树，二叉查找树的平均时间复杂度为O(logN),是相当低的，因此是一种非常优异的模型。但是这只是对一个随机输入的二叉查找树有效（平衡的二叉树）。当我们进行一定次数的插入（或删除）后，可能会导致二叉树不平衡，甚至退化成链表，这样会重新使时间复杂度变为O(logN).因此，引入AVL树。</p>
+<p>AVL树是Adelson-Velskii和Landis于1962年发明的自平衡二叉树。在一个二叉树中引入平衡条件，最简单的当然是每个节点的左子树和右子树的高度一样。但是这个条件太强了，因此AVL树引入例如下面的一个限制：</p>
+<p><strong><em>每个节点的左子树的高度和右子树的高度的差的绝对值不超过1（空树的高度定义为-1）</em></strong></p>
+<h3 id="旋转"><a href="#旋转" class="headerlink" title="旋转"></a>旋转</h3><p>对于AVL树，除了插入结点外，所有的操作都可以在O(logN)的时间内完成。对于插入节点的情况，插入可能会破坏AVL树的约束条件，而我们可以通过对树的适当旋转来修正。<br><img src="/images/DataStructure/avlTree1.png" alt="avlTree1"></p>
+<p>对一个AVL树插入一个节点，分4中情况</p>
+<ul>
+<li><p>对左子树插入左子节点</p>
+</li>
+<li><p>对右子树插入左子节点</p>
+</li>
+<li><p>对左子树插入右子节点</p>
+</li>
+<li><p>对右子树插入右子节点</p>
+</li>
+</ul>
+<p>其中（1）和（4）是镜面对称情况，（2）和（3）是镜面对称情况，因此他们相应的旋转情况是一致的，因此这里只分析（1）和（2）的情况。</p>
+<ul>
+<li>单旋转：</li>
+</ul>
+<p>对于（1）的情况适用于单旋转，如上面的图所示，插入节点5，就是在左子树插入左子节点，这个结果直接导致了不符合AVL的约束条件，对于节点7来说，它已经失去了平衡了，节点4,8的失衡也是由于节点7的失衡，因此为了恢复平衡，我们要把节点7的左子树提高一个level，把节点7的右子树降低一个level，因此可以得到上图的旋转后的结果</p>
+<p>要旋转之前首先要清晰到底应该是哪个节点导致的不平衡。</p>
+<p>对于编程实现来说，旋转本质上是指针的一些改变</p>
+<p>从上图可以看到旋转后的树与旋转前的树的高度是一样的。这其实很好理解，正因为增加了一个节点导致树变深了，进而导致了unbalance，所以通过旋转必然要减掉这个深度，否则一样的unbalance.</p>
+<ul>
+<li>双旋转：</li>
+</ul>
+<p>对应于（2）的情况，单旋转已经不能解决问题了。因此要引入两次但旋转，即双旋转来解决</p>
+<p><img src="/images/DataStructure/avlTree2.png" alt="avlTree2"></p>
+<p>在这个例子中根节点8是平衡的，不平衡的是节点9，因此要对节点9做双旋转。</p>
+<p>另一个例子：</p>
+<p><img src="/images/DataStructure/avlTree3.png" alt="avlTree3"></p>
+<p>这个例子中根节点6不平衡，因此要对根节点做旋转。</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>AVL树的定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">struct Avltree;</span><br><span class="line">typedef struct AvlNode *AvlTree;</span><br><span class="line">typedef AvlTree Position;</span><br><span class="line"></span><br><span class="line">struct AvlNode</span><br><span class="line">&#123;</span><br><span class="line">	ElementType Element;</span><br><span class="line">	AvlTree Left;</span><br><span class="line">	AvlTree Right;</span><br><span class="line">	int Height;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// calculate height</span><br><span class="line">static int Height(Position P)</span><br><span class="line">&#123;</span><br><span class="line">	if(P==NULL)</span><br><span class="line">		return -1;</span><br><span class="line">	else</span><br><span class="line">		return P-&gt;Height;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>插入节点：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">AvlTree Insert(Element X,AvlTree T)</span><br><span class="line">&#123;</span><br><span class="line">	if(T==NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		T = malloc(sizeof(struct AvlNode));</span><br><span class="line">		if(T==NULL)</span><br><span class="line">			Error(&quot;Out of Space!&quot;);</span><br><span class="line">		T-&gt;Left = T-&gt;Right = NULL;</span><br><span class="line">		T-&gt;Element = X;</span><br><span class="line">		T-&gt;Height = 0;</span><br><span class="line">	&#125;</span><br><span class="line">	else if(X&lt;T-&gt;Element)</span><br><span class="line">	&#123;</span><br><span class="line">		T-&gt;Left = Insert(X,T-&gt;Left);</span><br><span class="line">		//if X==T-&gt;Left,the next if condition is false,it will do nothing</span><br><span class="line">		if(Height(T-&gt;Left) - Height(T-&gt;Right)==2)  </span><br><span class="line">			if(X&lt;T-&gt;Left-&gt;Element)</span><br><span class="line">				T = SingleRotateWithLeft(T);</span><br><span class="line">			else</span><br><span class="line">				T = DoubleRotateWithLeft(T);</span><br><span class="line">	&#125;</span><br><span class="line">	else if(X&gt;T-&gt;Element)</span><br><span class="line">	&#123;</span><br><span class="line">		T-&gt;Right = Insert(X,T-&gt;Right);</span><br><span class="line">		if(Height(T-&gt;Right) - Height(T-&gt;Left)==2)</span><br><span class="line">			if(X&gt;T-&gt;Right-&gt;Element)</span><br><span class="line">				T = SingleRotateWithRight(T);</span><br><span class="line">			else</span><br><span class="line">				T = DoubleRotateWithRight(T);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	T-&gt;Height = Max(Height(T-&gt;Left),Height(T-&gt;Right))+1;</span><br><span class="line">	return T;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>左节点单旋转：</p>
+<p><img src="/images/DataStructure/avlTree4.png" alt="avlTree4"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Position SingleRotateWithLeft(Position P1)</span><br><span class="line">&#123;</span><br><span class="line">	Position P2;</span><br><span class="line">	P2 = P1-&gt;Left;</span><br><span class="line">	P1-&gt;Left = P2-&gt;Right;</span><br><span class="line">	P2-&gt;Right = P1;</span><br><span class="line">	P1-&gt;Height = Max(Height(P1-&gt;Left),Height(P1-&gt;Right));</span><br><span class="line">	P2-&gt;Height = Max(Height(P2-&gt;Left),P1-&gt;Height);</span><br><span class="line">	return P2;  //new root</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>右节点单循环：（与上面的是镜面对称）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Position SingleRotateWithRight(Position P1)</span><br><span class="line">&#123;</span><br><span class="line">	Position P2;</span><br><span class="line">	P2 = P1-&gt;Right;</span><br><span class="line">	P1-&gt;Right = P2-&gt;Left;</span><br><span class="line">	P2-&gt;Left = P1;</span><br><span class="line">	P1-&gt;Height = Max(Height(P1-&gt;Left),Height(P1-&gt;Right));</span><br><span class="line">	P2-&gt;Height = Max(Height(P2-&gt;Right),P1-&gt;Height);</span><br><span class="line">	return P2;  //new root</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是双旋转：其实双旋转的编程实现比较简单，就是把单旋转做两遍，一次左，一次右。</p>
+<p>左节点双旋转：<br><img src="/images/DataStructure/avlTree5.png" alt="avlTree5"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Position DoubleRotateWithLeft(Position P3)</span><br><span class="line">&#123;</span><br><span class="line">	P3-&gt;Left = SingleRotateWithRight(P3-&gt;Left);</span><br><span class="line">	return SingleRotateWithLeft(P3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>右节点双旋转：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Position DoubleRotateWithRight(Position P3)</span><br><span class="line">&#123;</span><br><span class="line">	P3-&gt;Right = SingleRotateWithLeft(P3-&gt;Right);</span><br><span class="line">	return SingleRotateWithRight(P3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这两个双旋转是镜面对称的。</p>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p>AVL树是平衡的二叉树，它有限制：“每个节点的左子树的高度和右子树的高度的差的绝对值不超过1”（空树的高度定义为-1）。对AVL树插入值很有可能导致二叉树不再平衡，因此可以通过旋转来消除这种不平衡。旋转分单旋转和双旋转，分别对应于不同的插入情况。最多只需要双旋转。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/12/12/DataStructure/B树/" rel="next" title="B树">
+                <i class="fa fa-chevron-left"></i> B树
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/01/02/DataStructure/伸展树/" rel="prev" title="伸展树">
+                伸展树 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#旋转"><span class="nav-number">1.</span> <span class="nav-text">旋转</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现"><span class="nav-number">2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结："><span class="nav-number">3.</span> <span class="nav-text">总结：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

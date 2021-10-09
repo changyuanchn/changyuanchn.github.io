@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="设计模式,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在之前的章节中，我们提到了要针对接口编程，所以在DuckDemo中，我们利用了接口的多态的特性，可以动态的改变对象。但是这样也是存在一定的问题的，下面我们就来分析这个问题。 一个pizza引发的血案假设我们开了一个pizza店，我们提供了一个程序能够让顾客自动下单订购pizza，那么我们的代码可以如下实现：首先我们定义一个pizza类 1234567891011121314151617181920">
+<meta name="keywords" content="设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="工厂模式">
+<meta property="og:url" content="http://yoursite.com/2016/07/25/DesignPattern/工厂模式/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="在之前的章节中，我们提到了要针对接口编程，所以在DuckDemo中，我们利用了接口的多态的特性，可以动态的改变对象。但是这样也是存在一定的问题的，下面我们就来分析这个问题。 一个pizza引发的血案假设我们开了一个pizza店，我们提供了一个程序能够让顾客自动下单订购pizza，那么我们的代码可以如下实现：首先我们定义一个pizza类 1234567891011121314151617181920">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/patternDesign/simplePizzaFactory.jpg">
+<meta property="og:image" content="http://yoursite.com/images/patternDesign/pizzaStoreOrigin.jpg">
+<meta property="og:image" content="http://yoursite.com/images/patternDesign/pizzaStoreFactory.jpg">
+<meta property="og:image" content="http://yoursite.com/images/patternDesign/Factory.jpg">
+<meta property="og:image" content="http://yoursite.com/images/patternDesign/abstractFactory.jpg">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.650Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="工厂模式">
+<meta name="twitter:description" content="在之前的章节中，我们提到了要针对接口编程，所以在DuckDemo中，我们利用了接口的多态的特性，可以动态的改变对象。但是这样也是存在一定的问题的，下面我们就来分析这个问题。 一个pizza引发的血案假设我们开了一个pizza店，我们提供了一个程序能够让顾客自动下单订购pizza，那么我们的代码可以如下实现：首先我们定义一个pizza类 1234567891011121314151617181920">
+<meta name="twitter:image" content="http://yoursite.com/images/patternDesign/simplePizzaFactory.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/25/DesignPattern/工厂模式/">
+
+
+
+
+
+  <title>工厂模式 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/07/25/DesignPattern/工厂模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">工厂模式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-25T00:00:00+08:00">
+                2016-07-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,010
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  14
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在之前的章节中，我们提到了要针对接口编程，所以在DuckDemo中，我们利用了接口的多态的特性，可以动态的改变对象。但是这样也是存在一定的问题的，下面我们就来分析这个问题。</p>
+<h3 id="一个pizza引发的血案"><a href="#一个pizza引发的血案" class="headerlink" title="一个pizza引发的血案"></a>一个pizza引发的血案</h3><p>假设我们开了一个pizza店，我们提供了一个程序能够让顾客自动下单订购pizza，那么我们的代码可以如下实现：<br>首先我们定义一个pizza类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">package com.changyuan.pizzaDemo;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line"></span><br><span class="line">public abstract class Pizza &#123;</span><br><span class="line">    String name;</span><br><span class="line">    String dough;</span><br><span class="line">    String sauce;</span><br><span class="line">    ArrayList toppings = new ArrayList();</span><br><span class="line"></span><br><span class="line">    void prepare() &#123;</span><br><span class="line">        System.out.println(&quot;Prepare &quot; + name + &quot;.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void bake() &#123;</span><br><span class="line">        System.out.println(&quot;Bake pizza for 25 minutes.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void cut() &#123;</span><br><span class="line">        System.out.println(&quot;Cut pizza to 8 slices.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void box() &#123;</span><br><span class="line">        System.out.println(&quot;Boxing pizza&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后定义一个pizzaStore的类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">package com.changyuan.pizzaDemo;</span><br><span class="line"></span><br><span class="line">public class PizzaStore &#123;</span><br><span class="line">    public Pizza createPizza(String style, String type) &#123;</span><br><span class="line">        Pizza pizza = null;</span><br><span class="line">        if (style.equals(&quot;NY&quot;)) &#123;</span><br><span class="line">            if (type.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">                pizza = new NYStyleCheesePizza();</span><br><span class="line">            &#125; else if (type.equals(&quot;veggie&quot;)) &#123;</span><br><span class="line">                pizza = new NYStyleVeggiePizza();</span><br><span class="line">            &#125; else if (type.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">                pizza = new NYStyleClamPizza();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else if (style.equals(&quot;Chicago&quot;)) &#123;</span><br><span class="line">            if (type.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">                pizza = new ChicagoStyleCheesePizza();</span><br><span class="line">            &#125; else if (type.equals(&quot;veggie&quot;)) &#123;</span><br><span class="line">                pizza = new ChicagoStyleVeggiePizza();</span><br><span class="line">            &#125; else if (type.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">                pizza = new ChicagoStyleClamPizza();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            System.out.println(&quot;Error: invalid pizza type&quot;);</span><br><span class="line">            return pizza;</span><br><span class="line">        &#125;</span><br><span class="line">        pizza.prepare();</span><br><span class="line">        pizza.bake();</span><br><span class="line">        pizza.cut();</span><br><span class="line">        pizza.box();</span><br><span class="line">        return pizza;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们看这个类里面的createPizza的方法，我们根据不同的参数new不同的类的实例，NYStyleCheesePizza等这六个类都是继承pizza类的具体的子类。这里我们利用接口的多态思想，可以动态的调用具体的方法。</p>
+<p>但是当我们需要添加新的类型的pizza时怎么办呢？比如我们需要添加Miami的cheese口味的pizza，那么就必须要修改createPizza的方法，在里面继续添加if。这就违背了我们的一个重要的设计原则</p>
+<blockquote>
+<p>对修改关闭，对扩展开放</p>
+</blockquote>
+<p>因此我们需要引入新的设计模式来解决这个问题，这就是工厂模式。</p>
+<h3 id="上面的代码归档位置"><a href="#上面的代码归档位置" class="headerlink" title="上面的代码归档位置"></a>上面的代码归档位置</h3><h3 id="我们看上面的代码存在什么问题？"><a href="#我们看上面的代码存在什么问题？" class="headerlink" title="我们看上面的代码存在什么问题？"></a>我们看上面的代码存在什么问题？</h3><p>就一个问题，我们在针对具体的实现再编程，也就是我们在具体的new每一个类的实例。我们接触到的第一个原则是：</p>
+<blockquote>
+<p>找出变化的部分</p>
+</blockquote>
+<p>而这里面变化的部分就是createPizza方法。这里我们引入工厂（工厂处理创建对象的细节），来统一处理这个变化的部分。</p>
+<p>我们定义一个工厂类来处理对象的创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public class SimplePizzaFactory &#123;</span><br><span class="line">    public Pizza createPizza(String style, String type) &#123;</span><br><span class="line">        Pizza pizza = null;</span><br><span class="line">        if (style.equals(&quot;NY&quot;)) &#123;</span><br><span class="line">            if (type.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">                pizza = new NYStyleCheesePizza();</span><br><span class="line">            &#125; else if (type.equals(&quot;veggie&quot;)) &#123;</span><br><span class="line">                pizza = new NYStyleVeggiePizza();</span><br><span class="line">            &#125; else if (type.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">                pizza = new NYStyleClamPizza();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else if (style.equals(&quot;Chicago&quot;)) &#123;</span><br><span class="line">            if (type.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">                pizza = new ChicagoStyleCheesePizza();</span><br><span class="line">            &#125; else if (type.equals(&quot;veggie&quot;)) &#123;</span><br><span class="line">                pizza = new ChicagoStyleVeggiePizza();</span><br><span class="line">            &#125; else if (type.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">                pizza = new ChicagoStyleClamPizza();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            System.out.println(&quot;Error: invalid pizza type&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return pizza;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后就可以改造PizzaStore了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class PizzaStore &#123;</span><br><span class="line">    SimplePizzaFactory factory;</span><br><span class="line"></span><br><span class="line">    public PizzaStore(SimplePizzaFactory factory) &#123;</span><br><span class="line">        this.factory = factory;</span><br><span class="line">    &#125;</span><br><span class="line">    public Pizza orderPizza(String style, String type) &#123;</span><br><span class="line">        Pizza pizza;</span><br><span class="line">        pizza = factory.createPizza(style, type);</span><br><span class="line"></span><br><span class="line">        pizza.prepare();</span><br><span class="line">        pizza.bake();</span><br><span class="line">        pizza.cut();</span><br><span class="line">        pizza.box();</span><br><span class="line">        return pizza;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们就把需要修改的部分单独提出来了，放到了工厂类中了。</p>
+<p>那么这样有什么好处呢？好像没什么啊，就是单独的将变化的部分放到了一个类中。实际上这只是一点小改变，当我们需要添加新的加盟店铺时，就只需要使用SimplePizzaFactory创建就好了，尤其是当需要修改种类时，只需要修改SimplePizzaFactory就好了，不用修改两个类。</p>
+<h3 id="类图如下所示"><a href="#类图如下所示" class="headerlink" title="类图如下所示"></a>类图如下所示</h3><p><img src="/images/patternDesign/simplePizzaFactory.jpg" alt="simplePizzaFactory"></p>
+<h3 id="代码归档如下"><a href="#代码归档如下" class="headerlink" title="代码归档如下"></a>代码归档如下</h3><p>当我们真的有了两个加盟店后，我们可以直接调用SimplePizzaFactory去创建对象，但是有个问题哎，就是每个加盟店修改自己的内容，比如说pizza的种类等等，它只能修改SimplePizzaFactory类，这必然会影响到别的加盟店，那么我们就需要方式去解决这个问题。</p>
+<p>在上面的代码中，我们每次创建一个实例时，都是用的同一个pizzaStore</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SimplePizzaFactory factory = new SimplePizzaFactory();</span><br><span class="line">PizzaStore nyStore = new PizzaStore(factory);</span><br><span class="line">nyStore.orderPizza(&quot;NY&quot;, &quot;cheese&quot;);</span><br><span class="line">PizzaStore chicagoStore = new PizzaStore(factory);</span><br><span class="line">chicagoStore.orderPizza(&quot;Chicago&quot;, &quot;veggie&quot;);</span><br></pre></td></tr></table></figure>
+<p>我们这里要做的就是对于每个加盟店，创建其自己的store类（继承自pizzaStore），然后在子类中自己创建createPizza方法，让子类自己决定其创建的对象。</p>
+<p>pizzaStore类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public abstract class PizzaStore &#123;</span><br><span class="line">    public Pizza orderPizza(String type) &#123;</span><br><span class="line">        Pizza pizza = createPizza(type);</span><br><span class="line"></span><br><span class="line">        pizza.prepare();</span><br><span class="line">        pizza.bake();</span><br><span class="line">        pizza.cut();</span><br><span class="line">        pizza.box();</span><br><span class="line">        return pizza;</span><br><span class="line">    &#125;</span><br><span class="line">    abstract Pizza createPizza(String type);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>每个店铺有自己的createPizza方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class NYPizzaStore extends PizzaStore &#123;</span><br><span class="line">    Pizza createPizza(String type) &#123;</span><br><span class="line">        if (type.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">            return new NYStyleCheesePizza();</span><br><span class="line">        &#125; else if (type.equals(&quot;veggie&quot;)) &#123;</span><br><span class="line">            return new NYStyleVeggiePizza();</span><br><span class="line">        &#125; else if (type.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">            return new NYStyleClamPizza();</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class ChicagoPizzaStore extends PizzaStore &#123;</span><br><span class="line">    Pizza createPizza(String type) &#123;</span><br><span class="line">        if (type.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">            return new ChicagoStyleCheesePizza();</span><br><span class="line">        &#125; else if (type.equals(&quot;veggie&quot;)) &#123;</span><br><span class="line">            return new ChicagoStyleVeggiePizza();</span><br><span class="line">        &#125; else if (type.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">            return new ChicagoStyleClamPizza();</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="代码归档如下-1"><a href="#代码归档如下-1" class="headerlink" title="代码归档如下"></a>代码归档如下</h3><h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><blockquote>
+<p>工厂模式就是定义了一个创建对象的接口，但是由子类来决定要实例话的类是哪一个，工厂方法让类把实例化推迟到子类中。</p>
+</blockquote>
+<p>工厂模式一般有两个类，一个是创建者类，一个是产品类。</p>
+<p>我们回到我们最初的代码，假设我们要在其中加入一种California风味的pizza，那么就需要修改PizzaStore类。实际上这个版本的pizzaStore依赖于所有的pizza对象，因为在这个函数里，直接创建了这些pizza对象。而且每新增一个pizza种类，就会让pizzaStore多一个依赖。</p>
+<p><img src="/images/patternDesign/pizzaStoreOrigin.jpg" alt="pizzaStoreOrigin"></p>
+<p>而我们通过工厂模式，我们的pizzaStore依赖于抽象的pizza类，而具体的pizza类也依赖于抽象的pizza类（因为它们实现了pizza的接口）。高层组件和底层组件都依赖于抽象的pizza类，这就是依赖倒置原则。</p>
+<p><img src="/images/patternDesign/pizzaStoreFactory.jpg" alt="pizzaStoreFactory"></p>
+<p>第五个设计原则：</p>
+<blockquote>
+<p>依赖倒置原则：要依赖抽象，不要依赖具体的类</p>
+</blockquote>
+<p>看看我们当前的实现，对于不同的pizza类型，它们的原料都是在类中写死的。换句话说，它们都是依赖于各自的pizza类的。那么如果我们要将其统一管理起来要怎样处理呢？</p>
+<p>假设我们有两个pizzaStore的店铺，它们分别使用相同的原料家族，但是具体的每个原料是不同的，那么我们首先需要创建基础的原料接口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public interface Dough &#123;</span><br><span class="line">    public String toString();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public interface Clam &#123;</span><br><span class="line">    public String toString();</span><br><span class="line">&#125;</span><br><span class="line">public interface Cheese &#123;</span><br><span class="line">    public String toString();</span><br><span class="line">&#125;</span><br><span class="line">public interface Pepperoni &#123;</span><br><span class="line">    public String toString();</span><br><span class="line">&#125;</span><br><span class="line">public interface Veggies &#123;</span><br><span class="line">    public String toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后我们可以定义具体的原料类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public class ThinCrustDough implements Dough &#123;</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Thin Crust Dough&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">public class ThickCrustDough implements Dough &#123;</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Thick Crust Dough&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">public class Spinach implements Veggies &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Spinach&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">public class SlicedPepperoni implements Pepperoni &#123;</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Sliced Pepperoni&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">public class ReggianoCheese implements Cheese &#123;</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Reggiano Cheese&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">public class RedPepper implements Veggies &#123;</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;RedPepper&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>等等等等的具体的原料类型。</p>
+<p>然后我们可以创建我们的pizzaStore</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">public class NYPizzaIngredientFactory implements PizzaIngredientFactory &#123;</span><br><span class="line">    public Dough createDough() &#123;</span><br><span class="line">        return new ThinCrustDough();</span><br><span class="line">    &#125;</span><br><span class="line">    public Sauce createSauce() &#123;</span><br><span class="line">        return new MarinaraSauce();</span><br><span class="line">    &#125;</span><br><span class="line">    public Cheese createCheese() &#123;</span><br><span class="line">        return new ReggianoCheese();</span><br><span class="line">    &#125;</span><br><span class="line">    public Veggies[] createVeggies() &#123;</span><br><span class="line">        Veggies veggies[] = &#123; new Garlic(), new Onion(), new Mushroom(), new RedPepper() &#125;;</span><br><span class="line">        return veggies;</span><br><span class="line">    &#125;</span><br><span class="line">    public Pepperoni createPepperoni() &#123;</span><br><span class="line">        return new SlicedPepperoni();</span><br><span class="line">    &#125;</span><br><span class="line">    public Clam createClam() &#123;</span><br><span class="line">        return new FreshClams();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class ChicagoPizzaIngredientFactory implements PizzaIngredientFactory</span><br><span class="line">&#123;</span><br><span class="line">    public Dough createDough() &#123;</span><br><span class="line">        return new ThickCrustDough();</span><br><span class="line">    &#125;</span><br><span class="line">    public Sauce createSauce() &#123;</span><br><span class="line">        return new PlumTomatoSauce();</span><br><span class="line">    &#125;</span><br><span class="line">    public Cheese createCheese() &#123;</span><br><span class="line">        return new MozzarellaCheese();</span><br><span class="line">    &#125;</span><br><span class="line">    public Veggies[] createVeggies() &#123;</span><br><span class="line">        Veggies veggies[] = &#123; new BlackOlives(), new Spinach(), new Eggplant() &#125;;</span><br><span class="line">        return veggies;</span><br><span class="line">    &#125;</span><br><span class="line">    public Pepperoni createPepperoni() &#123;</span><br><span class="line">        return new SlicedPepperoni();</span><br><span class="line">    &#125;</span><br><span class="line">    public Clam createClam() &#123;</span><br><span class="line">        return new FrozenClams();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以看到不同的原料工厂会使用不同的原料类型。</p>
+<p>然后我们来看我们的pizzaStore，每个pizzaStore都会调用自己的PizzaIngredientFactory来生产所需要的原料，然后将原料作为输入送到各中pizza制作的函数中，这样就形成了口味不同的pizza。虽然调用的是同一个CheesePizza接口，但是由于原料的不同，进儿产生了不同的pizza。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">public class ChicagoPizzaStore extends PizzaStore &#123;</span><br><span class="line">    protected Pizza createPizza(String item) &#123;</span><br><span class="line">        Pizza pizza = null;</span><br><span class="line">        PizzaIngredientFactory ingredientFactory = new ChicagoPizzaIngredientFactory();</span><br><span class="line"></span><br><span class="line">        if (item.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">            pizza = new CheesePizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;Chicago Style Cheese Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;veggies&quot;)) &#123;</span><br><span class="line">            pizza = new VeggiePizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;Chicago Style veggies Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">            pizza = new ClamPizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;Chicago Style clam Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;pepperoni&quot;)) &#123;</span><br><span class="line">            pizza = new PepperoniPizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;Chicago Style pepperoni Pizza&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return pizza;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">public class NYPizzaStore extends PizzaStore &#123;</span><br><span class="line">    protected Pizza createPizza(String item) &#123;</span><br><span class="line">        Pizza pizza = null;</span><br><span class="line">        PizzaIngredientFactory ingredientFactory = new NYPizzaIngredientFactory();</span><br><span class="line"></span><br><span class="line">        if (item.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">            pizza = new CheesePizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;NY Style Cheese Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;veggies&quot;)) &#123;</span><br><span class="line">            pizza = new VeggiePizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;NY Style veggies Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">            pizza = new ClamPizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;NY Style clam Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;pepperoni&quot;)) &#123;</span><br><span class="line">            pizza = new PepperoniPizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;NY Style pepperoni Pizza&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return pizza;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而我们的各种pizza子类，也继承自pizza类，在子类中实现各自的prepare方法，这样我们在测试用例里面就可以直接调用orderPizza方法来实现不同的pizza类型的prepare函数调用了。</p>
+<h3 id="代码归档路径"><a href="#代码归档路径" class="headerlink" title="代码归档路径"></a>代码归档路径</h3><h3 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h3><blockquote>
+<p>抽象工厂模式提供了一个接口，用于创建相关或依赖对象的家族，而不需要明确的指定类。</p>
+</blockquote>
+<p>上面的原料模型代码就是抽象工厂的应用。</p>
+<h3 id="比较一下工厂方法和抽象工厂方法"><a href="#比较一下工厂方法和抽象工厂方法" class="headerlink" title="比较一下工厂方法和抽象工厂方法"></a>比较一下工厂方法和抽象工厂方法</h3><p>在工厂方法中，我们创建了一个工厂类，来创建所需要的pizza类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class ChicagoPizzaStore extends PizzaStore &#123;</span><br><span class="line">    Pizza createPizza(String type) &#123;</span><br><span class="line">        if (type.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">            return new ChicagoStyleCheesePizza();</span><br><span class="line">        &#125; else if (type.equals(&quot;veggie&quot;)) &#123;</span><br><span class="line">            return new ChicagoStyleVeggiePizza();</span><br><span class="line">        &#125; else if (type.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">            return new ChicagoStyleClamPizza();</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而PizzaStore中，也是实际上调用的工厂类的createPizza方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public abstract class PizzaStore &#123;</span><br><span class="line">    public Pizza orderPizza(String type) &#123;</span><br><span class="line">        Pizza pizza = createPizza(type);</span><br><span class="line"></span><br><span class="line">        pizza.prepare();</span><br><span class="line">        pizza.bake();</span><br><span class="line">        pizza.cut();</span><br><span class="line">        pizza.box();</span><br><span class="line">        return pizza;</span><br><span class="line">    &#125;</span><br><span class="line">    abstract Pizza createPizza(String type);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而在抽象工厂中，我们看我们实际上提供了一个接口，利用接口的特性，创建了产品的家族</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public interface PizzaIngredientFactory &#123;</span><br><span class="line">    public Dough createDough();</span><br><span class="line">    public Sauce createSauce();</span><br><span class="line">    public Cheese createCheese();</span><br><span class="line">    public Veggies[] createVeggies();</span><br><span class="line">    public Pepperoni createPepperoni();</span><br><span class="line">    public Clam createClam();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class NYPizzaIngredientFactory implements PizzaIngredientFactory &#123;</span><br><span class="line">    public Dough createDough() &#123;</span><br><span class="line">        return new ThinCrustDough();</span><br><span class="line">    &#125;</span><br><span class="line">    public Sauce createSauce() &#123;</span><br><span class="line">        return new MarinaraSauce();</span><br><span class="line">    &#125;</span><br><span class="line">    public Cheese createCheese() &#123;</span><br><span class="line">        return new ReggianoCheese();</span><br><span class="line">    &#125;</span><br><span class="line">    public Veggies[] createVeggies() &#123;</span><br><span class="line">        Veggies veggies[] = &#123; new Garlic(), new Onion(), new Mushroom(), new RedPepper() &#125;;</span><br><span class="line">        return veggies;</span><br><span class="line">    &#125;</span><br><span class="line">    public Pepperoni createPepperoni() &#123;</span><br><span class="line">        return new SlicedPepperoni();</span><br><span class="line">    &#125;</span><br><span class="line">    public Clam createClam() &#123;</span><br><span class="line">        return new FreshClams();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而当我们具体创建各个原料类的时候，实际上new的是各个子类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PizzaIngredientFactory ingredientFactory = new ChicagoPizzaIngredientFactory();</span><br></pre></td></tr></table></figure>
+<p>而在使用时则直接调用各个子类中的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class CheesePizza extends Pizza &#123;</span><br><span class="line">    PizzaIngredientFactory pizzaIngredientFactory;</span><br><span class="line"></span><br><span class="line">    public CheesePizza(PizzaIngredientFactory pizzaIngredientFactory) &#123;</span><br><span class="line">        this.pizzaIngredientFactory = pizzaIngredientFactory;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void prepare() &#123;</span><br><span class="line">        System.out.println(&quot;Prepare &quot; + name);</span><br><span class="line">        dough = pizzaIngredientFactory.createDough();</span><br><span class="line">        sauce = pizzaIngredientFactory.createSauce();</span><br><span class="line">        cheese = pizzaIngredientFactory.createCheese();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class ChicagoPizzaStore extends PizzaStore &#123;</span><br><span class="line">    protected Pizza createPizza(String item) &#123;</span><br><span class="line">        Pizza pizza = null;</span><br><span class="line">        PizzaIngredientFactory ingredientFactory = new ChicagoPizzaIngredientFactory();</span><br><span class="line"></span><br><span class="line">        if (item.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">            pizza = new CheesePizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;Chicago Style Cheese Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;veggies&quot;)) &#123;</span><br><span class="line">            pizza = new VeggiePizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;Chicago Style veggies Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">            pizza = new ClamPizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;Chicago Style clam Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;pepperoni&quot;)) &#123;</span><br><span class="line">            pizza = new PepperoniPizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;Chicago Style pepperoni Pizza&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return pizza;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="一句话就是一个是类，一个是接口（定义了一族类），工厂方法用的是继承，而抽象工厂方法用的是组合。"><a href="#一句话就是一个是类，一个是接口（定义了一族类），工厂方法用的是继承，而抽象工厂方法用的是组合。" class="headerlink" title="一句话就是一个是类，一个是接口（定义了一族类），工厂方法用的是继承，而抽象工厂方法用的是组合。"></a>一句话就是一个是类，一个是接口（定义了一族类），工厂方法用的是继承，而抽象工厂方法用的是组合。</h3><p>两种模式的类图如下所示：</p>
+<p><img src="/images/patternDesign/Factory.jpg" alt="Factory"></p>
+<p><img src="/images/patternDesign/abstractFactory.jpg" alt="abstractFactory"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/20/DesignPattern/装饰者模式/" rel="next" title="装饰者者模式">
+                <i class="fa fa-chevron-left"></i> 装饰者者模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/05/DesignPattern/单例模式/" rel="prev" title="单例模式">
+                单例模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一个pizza引发的血案"><span class="nav-number">1.</span> <span class="nav-text">一个pizza引发的血案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#上面的代码归档位置"><span class="nav-number">2.</span> <span class="nav-text">上面的代码归档位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#我们看上面的代码存在什么问题？"><span class="nav-number">3.</span> <span class="nav-text">我们看上面的代码存在什么问题？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类图如下所示"><span class="nav-number">4.</span> <span class="nav-text">类图如下所示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码归档如下"><span class="nav-number">5.</span> <span class="nav-text">代码归档如下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码归档如下-1"><span class="nav-number">6.</span> <span class="nav-text">代码归档如下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工厂模式"><span class="nav-number">7.</span> <span class="nav-text">工厂模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码归档路径"><span class="nav-number">8.</span> <span class="nav-text">代码归档路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抽象工厂模式"><span class="nav-number">9.</span> <span class="nav-text">抽象工厂模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#比较一下工厂方法和抽象工厂方法"><span class="nav-number">10.</span> <span class="nav-text">比较一下工厂方法和抽象工厂方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一句话就是一个是类，一个是接口（定义了一族类），工厂方法用的是继承，而抽象工厂方法用的是组合。"><span class="nav-number">11.</span> <span class="nav-text">一句话就是一个是类，一个是接口（定义了一族类），工厂方法用的是继承，而抽象工厂方法用的是组合。</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

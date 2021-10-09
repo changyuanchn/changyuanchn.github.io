@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,神经网络,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引言在机器学习领域，主要存在着两大流派，一派是统计学习方法，一派就是神经网络。统计学习方法大多具有严谨的数学推理，模型都有很完备的数学解释，像是SVM，就是通过核把非线性问题映射到高维空间变为线性问题。而神经网络则不然，一直没有找到合理的数学解释，迄今为止都属于实验推动，虽然说是思想来源于人类的神经元的模拟，但是没有数学解释垫背，终究没有那么大的底气。 神经网络在1943年就已经被提出了，然而直到">
+<meta name="keywords" content="机器学习,神经网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络">
+<meta property="og:url" content="http://yoursite.com/2018/05/05/MachineLearning/神经网络/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="引言在机器学习领域，主要存在着两大流派，一派是统计学习方法，一派就是神经网络。统计学习方法大多具有严谨的数学推理，模型都有很完备的数学解释，像是SVM，就是通过核把非线性问题映射到高维空间变为线性问题。而神经网络则不然，一直没有找到合理的数学解释，迄今为止都属于实验推动，虽然说是思想来源于人类的神经元的模拟，但是没有数学解释垫背，终究没有那么大的底气。 神经网络在1943年就已经被提出了，然而直到">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/20180505210156.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506133116.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180505210156.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506143957.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506144533.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506144857.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506151335.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506164511.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506164913.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506171100.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506172221.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506182158.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180508220112.jpg">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.658Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神经网络">
+<meta name="twitter:description" content="引言在机器学习领域，主要存在着两大流派，一派是统计学习方法，一派就是神经网络。统计学习方法大多具有严谨的数学推理，模型都有很完备的数学解释，像是SVM，就是通过核把非线性问题映射到高维空间变为线性问题。而神经网络则不然，一直没有找到合理的数学解释，迄今为止都属于实验推动，虽然说是思想来源于人类的神经元的模拟，但是没有数学解释垫背，终究没有那么大的底气。 神经网络在1943年就已经被提出了，然而直到">
+<meta name="twitter:image" content="http://yoursite.com/images/20180505210156.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/05/MachineLearning/神经网络/">
+
+
+
+
+
+  <title>神经网络 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/05/MachineLearning/神经网络/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">神经网络</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-05T00:00:00+08:00">
+                2018-05-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,059
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在机器学习领域，主要存在着两大流派，一派是统计学习方法，一派就是神经网络。统计学习方法大多具有严谨的数学推理，模型都有很完备的数学解释，像是SVM，就是通过核把非线性问题映射到高维空间变为线性问题。而神经网络则不然，一直没有找到合理的数学解释，迄今为止都属于实验推动，虽然说是思想来源于人类的神经元的模拟，但是没有数学解释垫背，终究没有那么大的底气。</p>
+<p>神经网络在1943年就已经被提出了，然而直到1969年提出了感知机的概念，才算是烧出了第一块砖。然而感知机毕竟只是一块砖，力量太过于薄弱了，处理线性可分的问题都好说，遇到非线性可分的问题就呵呵，包括最基本的异或问题都搞不定。后来人们尝试着把感知机组合起来生成神经网络，并且在1986年发明了反向传播算法，这样就形成了神经网络的早期的基石。随后人们不断尝试着把网络一层一层的加深，形成深度网络，然而由于梯度消失等问题，早期的深度网络存在极大的问题。屋漏偏逢连夜雨，Vapnik大神搞出了SVM，效果出奇的好，直接秒杀了早期的神经网络，致使神经网络的发展进入了低潮期。2006年Hinton横空出世, 提出了深度神经网络,利用受限玻尔兹曼机通过非监督学习的方式学习网络结构，然后利用反向传播算法学习网络内部的参数值，后面经过几位大神的推广和发展，导致如今深度学习遍地开花，硕果累累。</p>
+<p>下面我们首先介绍感知机，然后通过感知机引出早期的神经网络，最后介绍反向传播算法是如何训练学习神经网络的。</p>
+<h1 id="感知机"><a href="#感知机" class="headerlink" title="感知机"></a>感知机</h1><p>感知机的详细定义可以参见<a href="https://en.wikipedia.org/wiki/Perceptron" target="_blank" rel="noopener">维基百科</a>，这里感知机其实就是一个给定输入空间，能够映射到输出空间{0,1}的函数。具体的形式如下图所示：</p>
+<p><img src="/images/20180505210156.jpg" alt="感知机"></p>
+<p>给定输入,可以产生一个指定的二进制输出，其数学公式如下：</p>
+<script type="math/tex; mode=display">output = \left\{\begin{matrix} 0, & if \sum_{j}^{} & w_{j} *x_{j} \leq thresholds\\ 1,  & if \sum_{j}^{} & w_{j} *x_{j}> thresholds \end{matrix}\right.</script><p>用向量的方式表示的话，则可以简化为下面的格式：</p>
+<script type="math/tex; mode=display">output = \left\{\begin{matrix} 0, & if \ w*x+b \leq 0 \\ 1,  & if \ w*x+b > 0 \end{matrix}\right.</script><p>通过将过个感知机组合，可以形成感知机网络，如图所示，通过对上面的参数的学习，可以利用此感知机做决策。</p>
+<p><img src="/images/20180506133116.jpg" alt="感知机网络"></p>
+<h2 id="S型神经元"><a href="#S型神经元" class="headerlink" title="S型神经元"></a>S型神经元</h2><p>上面介绍了感知机，但是如果输出结果只是0,1的话，那么这个好像不怎么好用啊，同时细微的参数变动有可能会引起结果的反转，这个模型就非常不理想了，因此引入S型神经元。</p>
+<p><img src="/images/20180505210156.jpg" alt="感知机"></p>
+<p>所谓的S型神经元就是输出函数为<script type="math/tex">\sigma</script>的感知机,函数如下所示:</p>
+<script type="math/tex; mode=display">\sigma = \frac{1}{1+e^{-z}}</script><p>其中<script type="math/tex">z= \sum_{j}^{}  w_{j} *x_{j}  + b</script></p>
+<p>下图是S型神经元的函数形状，我们可以看到，sigmoid函数具有很优良的性质，首先他的输出可以是0到1之间的连续值，其次当我们选定阈值时，S型神经元可以退化为感知机。这是一个优良的数学模型。</p>
+<p><img src="/images/20180506143957.jpg" alt="S型神经元"></p>
+<h1 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h1><p>通过将多个S型神经元组合到一起，就搭建成了一个初步的神经网络，如下所示，其中input layer为输入层，output layer为输出层，中间的所有的层为隐藏层,所有的单节点都是一个S型神经元。</p>
+<p><img src="/images/20180506144533.jpg" alt="感知机网络"></p>
+<p>当然我们也可以构建多个输出的网络，如下所示：</p>
+<p><img src="/images/20180506144857.jpg" alt="神经网络"></p>
+<p>给定了神经网络的架构，那么我们就可以很自然的通过给定输入然后得到相应的输出结果，那么现在还剩下一个问题，我们怎样去通过调整神经网络的参数来得到我们想要的结果呢？大神们已经为我们准备好了工具，那就是梯度下降算法。</p>
+<h2 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h2><p>在介绍梯度下降算法之前，首先需要考虑一个问题，有了神经网络模型，给定了输入，可以得到输出，那么我们怎样去衡量输出的好坏呢？因此需要有个度量标准，这个度量标准就是代价函数。所谓的代价函数，就是衡量输出结果好坏的一个度量，一般我们可以定义下面的一个代价函数</p>
+<script type="math/tex; mode=display">C(w,b) = \frac{1}{2n} \sum_{x} || y(x) - a ||^{2}</script><p>其中<script type="math/tex">w</script>表示网络中权重的集合, <script type="math/tex">b</script>表示偏置，<script type="math/tex">n</script> 是训练样本的个数，<script type="math/tex">a</script> 表示输入为<script type="math/tex">x</script> 时的输出，<script type="math/tex">y(x)</script> 表示神经网络的输出。</p>
+<p>因此我们希望的训练得到的模型就是使代价函数最小的模型，也就是说通过修改<script type="math/tex">w</script>和<script type="math/tex">b</script>的值，使得输出结果与实际结果的误差总和最小。</p>
+<h2 id="梯度下降算法"><a href="#梯度下降算法" class="headerlink" title="梯度下降算法"></a>梯度下降算法</h2><p>通过上面的分析，我们可以得出结论，神经网络的训练问题实际上本质就是一个最小化函数<script type="math/tex">C(w,b)</script> 的问题。下面我们先通过一个二维的模型来讨论函数的最小化问题。</p>
+<p><img src="/images/20180506151335.jpg" alt="二维模型"></p>
+<p>在上面的函数中，我们可以一眼看到函数的最小值在哪里。但是如果我们没有画出函数的几何形状呢，我们要如何找到函数的最小值点呢？</p>
+<p>我们可以这样想，当我们沿着<script type="math/tex">v1</script>和 <script type="math/tex">v2</script>的方向分别移动一个很小的量<script type="math/tex">\Delta v1</script>和<script type="math/tex">\Delta v2</script>,那么根据微积分，我们可以得到下面的函数：</p>
+<script type="math/tex; mode=display">\Delta C \approx \frac{\partial C}{\partial v1} * \Delta v1 + \frac{\partial C}{\partial v2} *\Delta v2</script><p>（上面的函数省略掉了二阶偏导，不过不重要。）</p>
+<p>那么只要找到一个选择<script type="math/tex">v1</script>和 <script type="math/tex">v2</script>的方法使<script type="math/tex">\Delta C</script>为负，那么就可以保证函数一直是减小的，那么最终函数一定能到达到最小值（其实很多情况下是局部最小值）。</p>
+<p>定义<script type="math/tex">C</script>的偏导如下：</p>
+<script type="math/tex; mode=display">\triangledown C =  \left ( \frac{\partial C}{\partial v1} ,\frac{\partial C}{\partial v2}  \right )</script><p>定义：</p>
+<script type="math/tex; mode=display">\Delta v =(\Delta v1, \Delta v2)^{T}</script><p>则：</p>
+<script type="math/tex; mode=display">\Delta C = \triangledown C \bullet  \Delta v</script><p>如果令</p>
+<script type="math/tex; mode=display">\Delta v = -\eta \triangledown C</script><p>那么<script type="math/tex">\Delta C = -\eta||\triangledown C||^{2}</script>，只要保证<script type="math/tex">\eta</script>为正数，那么<script type="math/tex">\Delta C \leq 0</script></p>
+<p>因此可以使<script type="math/tex">v</script>沿着<script type="math/tex">\Delta v</script>的方向移动，就可以得到最小值。即：</p>
+<script type="math/tex; mode=display">v\rightarrow v^{'} = v - \eta \triangledown v</script><p>将上面的二维函数扩展到多为函数，则可以得到相同的结论，即</p>
+<script type="math/tex; mode=display">v\rightarrow v^{'} = v - \eta \triangledown v</script><p>其中<script type="math/tex">\Delta v = -\eta \triangledown C</script></p>
+<script type="math/tex; mode=display">\triangledown C =  \left ( \frac{\partial C}{\partial v1} ,......,\frac{\partial C}{\partial v_{m}}  \right )</script><script type="math/tex; mode=display">\Delta v =(\Delta v1,......, \Delta v_{m})^{T}</script><p>将上面的函数拓展到我们的神经网络中，可以得到下面的公式</p>
+<script type="math/tex; mode=display">w_{k}\rightarrow w_{k}^{'} = w_{k} - \eta \frac{\partial C}{\partial w_{k}}</script><script type="math/tex; mode=display">b_{l}\rightarrow b_{l}^{'} = b_{l} - \eta \frac{\partial C}{\partial b_{l}}</script><p>上面的两个公式就是<strong>梯度下降算法</strong>。只要我们沿着梯度下降的方向更新<script type="math/tex">w</script>和<script type="math/tex">b</script>的值，那么就能够最小化代价函数。</p>
+<p>通过我们不懈的努力，我们最终找到了更新神经网络的参数的方法，那么现在又有一个问题了，怎么计算<script type="math/tex">\frac{\partial C}{\partial w_{k}}</script>和<script type="math/tex">\frac{\partial C}{\partial b_{l}}</script>呢？ 这又是一个难办的问题了。但是大神们依旧给我们解决了，那就是反向传播算法。</p>
+<h2 id="反向传播算法"><a href="#反向传播算法" class="headerlink" title="反向传播算法"></a>反向传播算法</h2><h3 id="神经元的误差"><a href="#神经元的误差" class="headerlink" title="神经元的误差"></a>神经元的误差</h3><p>在介绍反向传播算法之前，首先明确几个小概念，</p>
+<p>第一个就是下图</p>
+<p><img src="/images/20180506164511.jpg" alt></p>
+<p>理解了<script type="math/tex">w_{jk}^{l}</script>,有助于我们下面的公式推导。</p>
+<p>第二个就是神经元的激活值<script type="math/tex">a_{j}^{l}</script>,如下图所示</p>
+<p><img src="/images/20180506164913.jpg" alt="神经元的激活值"></p>
+<p>其中，<script type="math/tex">l^{th}</script>层的第<script type="math/tex">j^{th}</script>个神经元的激活值<script type="math/tex">a_{j}^{l}</script> 就和<script type="math/tex">(l-1)^{th}</script> 层的激活值通过下面的方程可以关联起来了</p>
+<script type="math/tex; mode=display">a_{j}^{l} =\sigma(\sum_{k} w_{jk}^{l}a_{k}^{l-1}+b_{j}^{l})</script><p>第三，我们还要引入一个重要的概念：<br>即第<script type="math/tex">l^{th}</script>层的第<script type="math/tex">j^{th}</script> 个神经元上的误差<script type="math/tex">\delta^{l}_{j}</script></p>
+<p>定义<script type="math/tex">\delta^{l}_{j} =  \frac{\partial C}{\partial z^{l}_{j}}</script> </p>
+<p>其中<script type="math/tex">z^{l}_{j} = \sum_{k} w^{l}_{jk} a^{l-1}_{k} + b^{l}_{j}</script></p>
+<p>为何要引入这个误差呢？请看下图：</p>
+<p><img src="/images/20180506171100.jpg" alt></p>
+<p>假设在<script type="math/tex">l^{th}</script> 层的第<script type="math/tex">j^{th}</script>个神经元上有输入进来时，有个扰动，他会增加很小的变化<script type="math/tex">\Delta z^{l}_{j}</script> 在神经元的带权输入上，使得神经元输出由<script type="math/tex">\sigma( z^{l}_{j})</script>变成<script type="math/tex">\sigma( z^{l}_{j}+\Delta  z^{l}_{j})</script>,<br>这个变化会向网络后面的层进行传播，最终导致整个代价产生<script type="math/tex">\frac{\partial C}{\partial z^{l}_{j}} \Delta z^{l}_{j}</script> 的改变，因此<script type="math/tex">\frac{\partial C}{\partial z^{l}_{j}}</script>是神经元误差的一种度量。</p>
+<p>有了神经元的误差的概念，我们就可以逐步推导出反向传播算法的四个方程，进而能够逐步求得神经网络的权重和阈值的偏导，解决权重和阈值的更新问题。</p>
+<h3 id="反向传播的四个方程"><a href="#反向传播的四个方程" class="headerlink" title="反向传播的四个方程"></a>反向传播的四个方程</h3><p>我们首先列出反向传播的四个方程，然后在逐一证明这四个方程</p>
+<p><img src="/images/20180506172221.jpg" alt="反向传播的四个方程"></p>
+<p>首先对于（BP1），首先通过定义</p>
+<script type="math/tex; mode=display">\delta^{l}_{j} =  \frac{\partial C}{\partial z^{l}_{j}}</script><p>由链式求导法则，可以得到：</p>
+<script type="math/tex; mode=display">\delta^{L}_{j} =  \sum_{k} \frac{\partial C}{\partial a^{L}_{k}}  \frac{\partial a^{L}_{k}}{\partial z^{L}_{j}}</script><p>求和是在输出层的所有<script type="math/tex">k</script>  个神经元上运行的， 但是我们可以注意到第<script type="math/tex">k^{th}</script> 个神经元的激活值<script type="math/tex">a^{L}_{k}</script>只跟<script type="math/tex">k=j</script>时第<script type="math/tex">j^{th}</script> 个神经元的输入<script type="math/tex">z^{L}_{j}</script>有关,所以<script type="math/tex">k \neq j</script>时<script type="math/tex">\frac{\partial a^{L}_{k}}{\partial z^{L}_{j}}</script> 为0，因此可以得到下面的方程：</p>
+<script type="math/tex; mode=display">\delta^{L}_{j} = \frac{\partial C}{\partial a^{L}_{j}}  \frac{\partial a^{L}_{j}}{\partial z^{L}_{j}}</script><p>而<script type="math/tex">a_{j}^{l} =\sigma(z_{j}^{L})</script>,所以可以得到下面的方程：</p>
+<script type="math/tex; mode=display">\delta^{L}_{j} = \frac{\partial C}{\partial a^{L}_{j}} \sigma'(z_{j}^{L})</script><p>输出成向量的格式，即为：</p>
+<script type="math/tex; mode=display">\delta^{L} = \triangledown_{a}C \odot \sigma'(z^{L})</script><p>对于（BP2），通过链式求导法则，可得到：</p>
+<script type="math/tex; mode=display">\delta^{l}_{j} =  \frac{\partial C}{\partial z^{l}_{j}}  = \sum_{k} \frac{\partial C}{\partial z^{l+1}_{k}}  \frac{\partial z^{l+1}_{k}}{\partial z^{l}_{j}}  = \sum_{k} \frac{\partial  z^{l+1}_{k}}{\partial z^{l}_{j}} \delta^{l+1}_{k}</script><p>而<script type="math/tex">z^{l+1}_{k} = \sum_{j} w^{l+1}_{kj} a^{l}_{j} + b^{l+1}_{k} = \sum_{j} w^{l+1}_{kj} \sigma(z^{l}_{j}) + b^{l+1}_{k}</script></p>
+<p>所以<script type="math/tex">\frac{\partial  z^{l+1}_{k}}{\partial z^{l}_{j}} = w^{l+1}_{kj} \sigma'(z_{j}^{l})</script> </p>
+<p>所以可以得到：</p>
+<script type="math/tex; mode=display">\delta^{l}_{j} = \sum_{k}  w^{l+1}_{kj} \delta^{l+1}_{k} \sigma'(z_{j}^{l})</script><p>转换为向量表示即为：</p>
+<script type="math/tex; mode=display">\delta^{l} = (w^{l+1} (\delta^{l+1})^{T})\odot \sigma'(z^{l})</script><p>对于（BP3）</p>
+<script type="math/tex; mode=display">\delta^{l}_{j} =  \frac{\partial C}{\partial z^{l}_{j}}  = \frac{\partial C}{\partial b^{l}_{j}} \frac{\partial b^{l}_{j}}{\partial z^{l}_{j}}</script><p>而<script type="math/tex">z^{l}_{j} = \sum_{j} w^{l}_{kj} a^{l-1}_{j} + b^{l}_{k}</script></p>
+<p>所以<script type="math/tex">\frac{\partial z^{l}_{j}}{\partial b^{l}_{j}} = 1</script></p>
+<p>因此方程成立</p>
+<p>对于（BP4），通过链式求导法则</p>
+<script type="math/tex; mode=display">\delta^{l}_{j} =  \frac{\partial C}{\partial z^{l}_{j}}  = \frac{\partial C}{\partial w^{l}_{jk}} \frac{\partial w^{l}_{jk}}{\partial z^{l}_{j}}</script><p>而<script type="math/tex">z^{l}_{j} = \sum_{j} w^{l}_{kj} a^{l-1}_{j} + b^{l}_{k}</script></p>
+<p>所以<script type="math/tex">\frac{\partial z^{l}_{j}}{\partial w^{l}_{jk}} = a^{l-1}_{k}</script></p>
+<p>所以可以得到：</p>
+<script type="math/tex; mode=display">\frac{\partial C}{\partial w^{l}_{jk}}  = a^{l-1}_{k} \delta^{l}_{j}</script><p>自此，四个方程证明完毕。</p>
+<p>有个上面的四个方程作为支撑，我们就可以得出反向传播算法了,如下所示：</p>
+<p><img src="/images/20180506182158.jpg" alt="反向传播算法"></p>
+<p>反向传播算法从最后一层开始计算误差，然后根据误差不断向前反馈优化每一层的权重，进而调整整个网络的权重。其实这和自动控制里面的反馈有着同样的哲学原理。</p>
+<h1 id="神经网络权重的更新算法"><a href="#神经网络权重的更新算法" class="headerlink" title="神经网络权重的更新算法"></a>神经网络权重的更新算法</h1><p>有了上面的梯度下降算法以及反向传播算法，我们就可以得到神经网络的权重的更新算法，具体算法如下所示：</p>
+<p><img src="/images/20180508220112.jpg" alt="更新算法"></p>
+<p>算法中有一点需要注意的是：<br>这里的梯度下降，我们用的是随机梯度下降算法。思想就是随机选取小批量的训练样本来计算梯度，因为如果针对全部的训练数据进行梯度下降的话，会比较耗时，随机梯度下降能够加速学习，本质上讲，就是用部分随机选取的数据替代全量数据。</p>
+<h1 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h1><h2 id="关于神经元的选择"><a href="#关于神经元的选择" class="headerlink" title="关于神经元的选择"></a>关于神经元的选择</h2><p>本文中我们选用了sigmoid函数，也就是S型神经元，实际上还有很多种神经元可以选择，不同的神经元对于不同的问题可能会有更好的效果，因此具体问题需要具体分析。本质上讲sigmoid函数并不是很好，因为我们可以看到sigmoid函数的值域是[0,1]，这也就意味着对于同一神经元的所有权重要么同时增加，要么同时减少，这样会造成一定的偏置。</p>
+<h2 id="关于代价函数"><a href="#关于代价函数" class="headerlink" title="关于代价函数"></a>关于代价函数</h2><p>本文中我们用到的的二次代价函数，实际上也是有很多的代价函数可供选择的，一样的需要具体问题具体分析选用那种代价函数，二次代价函数是比较简单的一种，也是比较有效的一种。但是坦率的讲，选用不同的代价函数会对学习效率有较大的影响，这个后面我们会进行详细的分析。</p>
+<h2 id="关于过拟合问题"><a href="#关于过拟合问题" class="headerlink" title="关于过拟合问题"></a>关于过拟合问题</h2><p>本文没有涉及过拟合问题，实际上这是机器学习面对的一个大问题，如果发生了过拟合，那么会导致网络的泛化能力变差，也就是在训练数据集上效果非常好，在测试数据集上表现糟糕。后面博客会详细分析这一问题。</p>
+<h2 id="深度神经网络"><a href="#深度神经网络" class="headerlink" title="深度神经网络"></a>深度神经网络</h2><p>我们知道上古时代就已经发明了神经网络，在远古时代，反向传播算法也已经被发明出来了，那么为何直到近几年深度网络才火起来呢？这是一个问题。后续的博文会讲到为何中古时代大家都没有用到深度神经网络，他们遇到了什么样的问题，这些问题又是怎样解决的。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a href="http://neuralnetworksanddeeplearning.com/" target="_blank" rel="noopener">http://neuralnetworksanddeeplearning.com/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/神经网络/" rel="tag"># 神经网络</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/09/DataStructure/深度优先和广度优先/" rel="next" title="深度优先和广度优先">
+                <i class="fa fa-chevron-left"></i> 深度优先和广度优先
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/08/MachineLearning/神经网络之代价函数的选择/" rel="prev" title="神经网络之代价函数的选择">
+                神经网络之代价函数的选择 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#感知机"><span class="nav-number">2.</span> <span class="nav-text">感知机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#S型神经元"><span class="nav-number">2.1.</span> <span class="nav-text">S型神经元</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#神经网络"><span class="nav-number">3.</span> <span class="nav-text">神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#代价函数"><span class="nav-number">3.1.</span> <span class="nav-text">代价函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度下降算法"><span class="nav-number">3.2.</span> <span class="nav-text">梯度下降算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反向传播算法"><span class="nav-number">3.3.</span> <span class="nav-text">反向传播算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#神经元的误差"><span class="nav-number">3.3.1.</span> <span class="nav-text">神经元的误差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反向传播的四个方程"><span class="nav-number">3.3.2.</span> <span class="nav-text">反向传播的四个方程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#神经网络权重的更新算法"><span class="nav-number">4.</span> <span class="nav-text">神经网络权重的更新算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拓展"><span class="nav-number">5.</span> <span class="nav-text">拓展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于神经元的选择"><span class="nav-number">5.1.</span> <span class="nav-text">关于神经元的选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于代价函数"><span class="nav-number">5.2.</span> <span class="nav-text">关于代价函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于过拟合问题"><span class="nav-number">5.3.</span> <span class="nav-text">关于过拟合问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度神经网络"><span class="nav-number">5.4.</span> <span class="nav-text">深度神经网络</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

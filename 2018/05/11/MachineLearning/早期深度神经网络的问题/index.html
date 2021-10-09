@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,深度学习,神经网络,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引言在神经网络最开始被提出来的时候，人们设计的网络大多是这个样子的  一个输入层，一个输出层，一个隐藏层，用这样的网络能够解决很多实际的问题。但是一层隐藏层的网络能够学习到的东西毕竟是有限的，自然而然的人们就想到将网络进行扩展，给神经网络多增加隐藏层，那么神经网络就应该能够学习到更加复杂的模型，就如下所示：  人们发现对于很多问题，增加了一层隐藏层，效果有提升哎，那就就自然而然的继续增加网络的层数">
+<meta name="keywords" content="机器学习,深度学习,神经网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="早期深度神经网络的问题">
+<meta property="og:url" content="http://yoursite.com/2018/05/11/MachineLearning/早期深度神经网络的问题/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="引言在神经网络最开始被提出来的时候，人们设计的网络大多是这个样子的  一个输入层，一个输出层，一个隐藏层，用这样的网络能够解决很多实际的问题。但是一层隐藏层的网络能够学习到的东西毕竟是有限的，自然而然的人们就想到将网络进行扩展，给神经网络多增加隐藏层，那么神经网络就应该能够学习到更加复杂的模型，就如下所示：  人们发现对于很多问题，增加了一层隐藏层，效果有提升哎，那就就自然而然的继续增加网络的层数">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/20180506144857.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506144533.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180510233555.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180510233555.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180511231548.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506172221.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180506143957.jpg">
+<meta property="og:image" content="http://yoursite.com/images/20180512000348.jpg">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.652Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="早期深度神经网络的问题">
+<meta name="twitter:description" content="引言在神经网络最开始被提出来的时候，人们设计的网络大多是这个样子的  一个输入层，一个输出层，一个隐藏层，用这样的网络能够解决很多实际的问题。但是一层隐藏层的网络能够学习到的东西毕竟是有限的，自然而然的人们就想到将网络进行扩展，给神经网络多增加隐藏层，那么神经网络就应该能够学习到更加复杂的模型，就如下所示：  人们发现对于很多问题，增加了一层隐藏层，效果有提升哎，那就就自然而然的继续增加网络的层数">
+<meta name="twitter:image" content="http://yoursite.com/images/20180506144857.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/11/MachineLearning/早期深度神经网络的问题/">
+
+
+
+
+
+  <title>早期深度神经网络的问题 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/11/MachineLearning/早期深度神经网络的问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">早期深度神经网络的问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-11T00:00:00+08:00">
+                2018-05-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,084
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在神经网络最开始被提出来的时候，人们设计的网络大多是这个样子的</p>
+<p><img src="/images/20180506144857.jpg" alt="神经网络"></p>
+<p>一个输入层，一个输出层，一个隐藏层，用这样的网络能够解决很多实际的问题。但是一层隐藏层的网络能够学习到的东西毕竟是有限的，自然而然的人们就想到将网络进行扩展，给神经网络多增加隐藏层，那么神经网络就应该能够学习到更加复杂的模型，就如下所示：</p>
+<p><img src="/images/20180506144533.jpg" alt="两层神经网络"></p>
+<p>人们发现对于很多问题，增加了一层隐藏层，效果有提升哎，那就就自然而然的继续增加网络的层数，但是诡异的问题发生了，随着层数的不断增加，学习速度越来越慢（对于这一点，人们早就预料到了），但是还有另一个问题，效果不仅不提升，反而越来越劣化。</p>
+<p><img src="/images/20180510233555.jpg" alt="多层神经网络"></p>
+<p>这个到底是什么原因呢？是因为网络层次多了，学不到新的东西了？还是各个隐藏层之间发生了反作用？ 下面我们就来分析一下早期深度网络存在的问题。</p>
+<h1 id="不稳定梯度问题"><a href="#不稳定梯度问题" class="headerlink" title="不稳定梯度问题"></a>不稳定梯度问题</h1><p>在早期的多层神经网络中，人们利用下面这样的多层全连接的神经网络，利用梯度下降以及反向传播算法来学习网络的权重。</p>
+<p><img src="/images/20180510233555.jpg" alt="多层神经网络"></p>
+<p>那么这种方式有什么问题呢？下面我们简化一下模型，以单个连接的多层网络来举例说明</p>
+<p><img src="/images/20180511231548.jpg" alt="简化神经网络图"></p>
+<p>我们来看一下按照这个网络更新权重会发生什么问题呢？</p>
+<p>这里先定义一些参数，和之前<a href="/2018/05/05/神经网络/">神经网络</a>章节的定义是一致的,<script type="math/tex">a_j</script> 为第<script type="math/tex">j</script>层的激活值，<script type="math/tex">z_j</script> 为第<script type="math/tex">j</script>层的带权输入，因此有<script type="math/tex">a_j = \sigma(z_j)</script>，<script type="math/tex">z_j = w_ja_{j-1}+b_j</script>，假设神经网络的代价函数为<script type="math/tex">C</script>，那么根据之前推导的反向传播算法，有：</p>
+<p><img src="/images/20180506172221.jpg" alt="反向传播算法"></p>
+<p>其中</p>
+<script type="math/tex; mode=display">\frac{\partial C}{\partial w^{l}_{jk}}  = a^{l-1}_{k} \delta^{l}_{j}</script><script type="math/tex; mode=display">\frac{\partial C}{\partial b^{l}_{j}} = \delta^{l}_{j}</script><p>且有定义：<script type="math/tex">\delta^{l}_{j} =  \frac{\partial C}{\partial z^{l}_{j}}</script> </p>
+<p>对于图中我们简化的神经网络来说，有：</p>
+<script type="math/tex; mode=display">\frac{\partial C}{\partial b_{1}} = \delta_{1} =  \frac{\partial C}{\partial z_{1}} = \frac{\partial C}{\partial a_{4}} \frac{\partial a_4}{\partial b_{1}}</script><p>由于<script type="math/tex">a_j = \sigma(z_j)</script>，<script type="math/tex">z_j = w_ja_{j-1}+b_j</script>，所以</p>
+<script type="math/tex; mode=display">\frac{\partial a_4}{\partial b_{1}} =  \frac{\partial a_4}{\partial a_{3}}  \frac{\partial a_3}{\partial a_{2}}  \frac{\partial a_2}{\partial b_{1}} = w_4 \sigma'(z_4) w_3 \sigma'(z_3) w_2 \sigma'(z_2) \sigma'(z_1)</script><p>所以有：</p>
+<script type="math/tex; mode=display">\frac{\partial C}{\partial b_{1}} = \frac{\partial C}{\partial a_{4}}   w_4 \sigma'(z_4) w_3 \sigma'(z_3) w_2 \sigma'(z_2) \sigma'(z_1)</script><p>这也就意味着输出层的误差（我们是根据输出层的误差来调整参数的权重，进而学习到模型的）传到第一层，已经被乘以了一堆的系数，这些系数通常会导致梯度的消失或者激增。我们来看下为什么会导致梯度的消失或者激增。</p>
+<p>我们一般用的激活函数是logistic函数，图形如下所示：</p>
+<p><img src="/images/20180506143957.jpg" alt="logistic"></p>
+<p>这个函数的导数图像为：</p>
+<p><img src="/images/20180512000348.jpg" alt="logistic导数"></p>
+<p>正常的场景下我们一般会采用[0,1]高斯分布来随机设置<script type="math/tex">w</script> 和<script type="math/tex">b</script> 的值，那么就会导致我们的<script type="math/tex">w</script> 不会大于1，那么根据</p>
+<p><script type="math/tex">\frac{\partial C}{\partial b_{1}} = \frac{\partial C}{\partial a_{4}}   w_4 \sigma'(z_4) w_3 \sigma'(z_3) w_2 \sigma'(z_2) \sigma'(z_1)</script> 这个公式，<script type="math/tex">\frac{\partial C}{\partial b_{1}}</script>至少会衰减为<script type="math/tex">\frac{\partial C}{\partial a_{4}}</script>的<script type="math/tex">\frac {1}{64}</script>, 这就很难学到东西了。也就意味着随机分配了权重值后，经过反向传播算法训练，最初的几层的权重值会变化很小，也就意味着最初的几层根本就学习不到任何的知识。这也就以为着最初的几层没有用处了，同时实际上还可能起到了副作用，因为将图像的像素点给做了随机的加权，破坏了图像的原始信息。</p>
+<p>那大家可能还有一个疑问，如果我把权重<script type="math/tex">w</script>设置为很大的值呢？比如说100，这个一样的糟糕，这样就引入了梯度的激增问题，会放大最初的权重，一样的破坏了网络的结构。</p>
+<p>因此我们可以看到，多层的全连接网络，必然会导致梯度的不稳定，梯度的不稳定就会导致权重的学习困难。</p>
+<h1 id="训练时间长"><a href="#训练时间长" class="headerlink" title="训练时间长"></a>训练时间长</h1><p>深度的神经网络还有另外一个问题，就是权重参数非常多，这会导致权重的训练非常耗时。但是随着技术的发展，这个倒也不算是什么大的问题了。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>影响深度神经网络的学习的因素非常多，包括激活函数的选择，超参数的选择等等。本节主要介绍了梯度不稳定的问题，这个问题也是影响深度神经网络的一个主要问题了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/深度学习/" rel="tag"># 深度学习</a>
+          
+            <a href="/tags/神经网络/" rel="tag"># 神经网络</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/09/MachineLearning/过拟合/" rel="next" title="过拟合">
+                <i class="fa fa-chevron-left"></i> 过拟合
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/12/MachineLearning/遗传算法与进化算法/" rel="prev" title="遗传算法与进化算法">
+                遗传算法与进化算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不稳定梯度问题"><span class="nav-number">2.</span> <span class="nav-text">不稳定梯度问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#训练时间长"><span class="nav-number">3.</span> <span class="nav-text">训练时间长</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

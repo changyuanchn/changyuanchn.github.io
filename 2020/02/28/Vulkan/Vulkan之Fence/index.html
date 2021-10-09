@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vulkan,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="vulkan以并行的方式异步的运行，这样通过设备上的多个队列和主机一起使物理资源保持繁忙，这也就使得vulkan变得异常复杂，因此需要引入各种同步原语，使得主机和设备保持同步，不至于混乱执行，这里我们首先分析下fence。 1）fence是做什么的Fence提供了一种粗粒度的，从Device向Host单向传递信息的机制，可以理解为 CPU 与 GPU 端的同步信号，实际上也就是queue到CPU的">
+<meta name="keywords" content="vulkan">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vulkan之Fence">
+<meta property="og:url" content="http://yoursite.com/2020/02/28/Vulkan/Vulkan之Fence/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="vulkan以并行的方式异步的运行，这样通过设备上的多个队列和主机一起使物理资源保持繁忙，这也就使得vulkan变得异常复杂，因此需要引入各种同步原语，使得主机和设备保持同步，不至于混乱执行，这里我们首先分析下fence。 1）fence是做什么的Fence提供了一种粗粒度的，从Device向Host单向传递信息的机制，可以理解为 CPU 与 GPU 端的同步信号，实际上也就是queue到CPU的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.630Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vulkan之Fence">
+<meta name="twitter:description" content="vulkan以并行的方式异步的运行，这样通过设备上的多个队列和主机一起使物理资源保持繁忙，这也就使得vulkan变得异常复杂，因此需要引入各种同步原语，使得主机和设备保持同步，不至于混乱执行，这里我们首先分析下fence。 1）fence是做什么的Fence提供了一种粗粒度的，从Device向Host单向传递信息的机制，可以理解为 CPU 与 GPU 端的同步信号，实际上也就是queue到CPU的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/02/28/Vulkan/Vulkan之Fence/">
+
+
+
+
+
+  <title>Vulkan之Fence | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/28/Vulkan/Vulkan之Fence/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vulkan之Fence</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">
+                2020-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,323
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>vulkan以并行的方式异步的运行，这样通过设备上的多个队列和主机一起使物理资源保持繁忙，这也就使得vulkan变得异常复杂，因此需要引入各种同步原语，使得主机和设备保持同步，不至于混乱执行，这里我们首先分析下fence。</p>
+<h2 id="1）fence是做什么的"><a href="#1）fence是做什么的" class="headerlink" title="1）fence是做什么的"></a>1）fence是做什么的</h2><p>Fence提供了一种粗粒度的，从Device向Host单向传递信息的机制，可以理解为 CPU 与 GPU 端的同步信号，实际上也就是queue到CPU的一种同步信号。</p>
+<p>对于一个fence对象，Device会将其从unsignaled转到signaled状态，告诉Host一些工作已经完成。所以fence使用在Host/Device之间的，且是一种比较粗粒度的同步机制。</p>
+<h2 id="2）需要引入fence的原因"><a href="#2）需要引入fence的原因" class="headerlink" title="2）需要引入fence的原因"></a>2）需要引入fence的原因</h2><p>CPU端任务提交过快，而GPU端（实际上是queue）处理渲染慢，GPU端已经满载了（这实际上是我们希望的，因为要提升帧率就必然会让GPU满载工作），进而会导致queue端需要处理的指令积压严重，这会造成应用程序的内存使用量暴涨（也就是说实际上fence的目的是解决应用程序内存暴涨的问题，也就是不希望CPU端提交指令过多）</p>
+<p>同时fence还起到了阻塞CPU与GPU对同一资源的共同操作问题。在draw中，（由于swapchain的缓冲有限）在绘制同一个索引的framebuffer中，会修改uniformbuffer以及顶点数据等等（这在游戏或者视频中很常见）。如果没有fence，会导致GPU正在渲染的commandBuffer以及其中的资源被CPU修改了，进而导致渲染错乱。因此实质上fence也是阻断了CPU和GPU对同一帧资源的同时修改问题。</p>
+<h2 id="3）fence的状态"><a href="#3）fence的状态" class="headerlink" title="3）fence的状态"></a>3）fence的状态</h2><p>fence一共有两个状态signaled and unsignaled</p>
+<p>初始状态下，fence会被设置为signaled的状态；</p>
+<p>在调用vkQueueSubmit时，可以传入一个Fence，这样当Queue中的所有命令都被完成以后，Fence就会被设置成signaled的状态；</p>
+<p>vkWaitForFences会让CPU在当前位置被阻塞掉，然后一直等待到它接受的Fence变为signaled的状态，这样就可以实现在某个渲染队列内的所有任务被完成后，CPU再执行某些操作的同步情景。</p>
+<p>（fence被触发到signaled状态，必须存在一种方法，将之转回到unsignaled状态，这个功能由vkResetFences完成）</p>
+<h2 id="4）fence的创建"><a href="#4）fence的创建" class="headerlink" title="4）fence的创建"></a>4）fence的创建</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkFenceCreateInfo &#123;</span><br><span class="line">    VkStructureType       sType;</span><br><span class="line">    const void*           pNext;</span><br><span class="line">    VkFenceCreateFlags    flags;</span><br><span class="line">&#125; VkFenceCreateInfo;</span><br></pre></td></tr></table></figure>
+<p>sType要设置为VK_STRUCTURE_TYPE_FENCE_CREATE_INFO<br>flags在初始时一般要设置为VK_FENCE_CREATE_SIGNALED_BIT，这样我们新创建的fence就是signaled了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkCreateFence(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    const VkFenceCreateInfo*                    pCreateInfo,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator,</span><br><span class="line">    VkFence*                                    pFence);</span><br></pre></td></tr></table></figure></p>
+<p>当调用vkCreateFence成功后，会把一个新的fence对象的句柄放置到pFence指向的变量中。</p>
+<h2 id="5）fence的销毁"><a href="#5）fence的销毁" class="headerlink" title="5）fence的销毁"></a>5）fence的销毁</h2><p>fence是我们创建的对象，当程序结束时，我们需要手动将其销毁<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkDestroyFence(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    VkFence                                     fence,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator);</span><br></pre></td></tr></table></figure></p>
+<h2 id="6）vkWaitForFences"><a href="#6）vkWaitForFences" class="headerlink" title="6）vkWaitForFences"></a>6）vkWaitForFences</h2><p>vkWaitForFences会让CPU在当前位置被阻塞掉，然后一直等待到它接受的Fence变为signaled的状态，这样就可以实现在某个渲染队列内的所有任务被完成后，CPU再执行某些操作的同步情景。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkWaitForFences(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    uint32_t                                    fenceCount,   // 需要等待的fence的数量</span><br><span class="line">    const VkFence*                              pFences,      //  指向VkFence句柄的数组，这些句柄表示需要等待的fence</span><br><span class="line">    VkBool32                                    waitAll,      // VK_TRUE则表示要等待所有的fence变为有信号，VK_FALSE为任何一个有信号就返回</span><br><span class="line">    uint64_t                                    timeout);     // 超时时间</span><br></pre></td></tr></table></figure></p>
+<h2 id="7）vkResetFences"><a href="#7）vkResetFences" class="headerlink" title="7）vkResetFences"></a>7）vkResetFences</h2><p>很简单。就是将fence由signaled状态转回到unsignaled状态<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkResetFences(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    uint32_t                                    fenceCount,  // 待重置的fence的数目</span><br><span class="line">    const VkFence*                              pFences);   //  指向VkFence句柄的数组，这些句柄表示待重置的fence</span><br></pre></td></tr></table></figure></p>
+<h2 id="8）vkQueueSubmit"><a href="#8）vkQueueSubmit" class="headerlink" title="8）vkQueueSubmit"></a>8）vkQueueSubmit</h2><p>vkQueueSubmit的作用时提交渲染命令，在其他章节有介绍。<br>在调用vkQueueSubmit时，可以传入一个Fence（这个fence必须时unsignaled，这也就是为啥要在vkQueueSubmit之前调用vkResetFences的原因），这样当Queue中的所有命令都被完成以后，Fence就会被设置成signaled的状态；</p>
+<h2 id="9）-vkGetFenceStatus"><a href="#9）-vkGetFenceStatus" class="headerlink" title="9） vkGetFenceStatus"></a>9） vkGetFenceStatus</h2><p>应用程序可以直接调用此函数来查询fence的状态，不过这个好像使用的比较少。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkGetFenceStatus(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    VkFence                                     fence);</span><br></pre></td></tr></table></figure></p>
+<h2 id="10）-fence的实际使用"><a href="#10）-fence的实际使用" class="headerlink" title="10） fence的实际使用"></a>10） fence的实际使用</h2><p>我们从实际的代码分析<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;VkFence&gt; inFlightFences;</span><br><span class="line">std::vector&lt;VkFence&gt; imagesInFlight;</span><br><span class="line"></span><br><span class="line">inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);</span><br><span class="line">imagesInFlight.resize(swapChainImages.size(), VK_NULL_HANDLE);</span><br><span class="line"></span><br><span class="line">VkFenceCreateInfo fenceInfo&#123;&#125;;</span><br><span class="line">fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;</span><br><span class="line">fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;</span><br><span class="line">for (size_t i = 0; i &lt; MAX_FRAMES_IN_FLIGHT; i++) &#123;</span><br><span class="line">    vkCreateFence(device, &amp;fenceInfo, nullptr, &amp;inFlightFences[i])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void drawFrame() &#123;</span><br><span class="line">    vkWaitForFences(device, 1, &amp;inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);</span><br><span class="line">    ......</span><br><span class="line">    vkResetFences(device, 1, &amp;inFlightFences[currentFrame]);</span><br><span class="line">    if (vkQueueSubmit(graphicsQueue, 1, &amp;submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) &#123;</span><br><span class="line">        throw std::runtime_error(&quot;failed to submit draw command buffer!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们首先需要等待fence的状态，如果时signaled，则将其reset为unsignaled，然后再次提交新的命令vkQueueSubmit。这里我们用了并行渲染的模式，所以我们看到的是数组里的某一个fence。</p>
+<p>上面的inFlightFences解决了CPU命令提交过快问题，下面的imagesInFlight解决了GPU和CPU对同一资源一个读，一个改的问题。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) &#123;</span><br><span class="line">    vkWaitForFences(device, 1, &amp;imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);</span><br><span class="line">&#125;</span><br><span class="line">imagesInFlight[imageIndex] = inFlightFences[currentFrame];</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vulkan/" rel="tag"># vulkan</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/24/Vulkan/Vulkan之FrameBuffer/" rel="next" title="Vulkan之FrameBuffer">
+                <i class="fa fa-chevron-left"></i> Vulkan之FrameBuffer
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/04/Vulkan/Vulkan之Pipeline/" rel="prev" title="Vulkan之Pipeline">
+                Vulkan之Pipeline <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1）fence是做什么的"><span class="nav-number">1.</span> <span class="nav-text">1）fence是做什么的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2）需要引入fence的原因"><span class="nav-number">2.</span> <span class="nav-text">2）需要引入fence的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3）fence的状态"><span class="nav-number">3.</span> <span class="nav-text">3）fence的状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4）fence的创建"><span class="nav-number">4.</span> <span class="nav-text">4）fence的创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5）fence的销毁"><span class="nav-number">5.</span> <span class="nav-text">5）fence的销毁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6）vkWaitForFences"><span class="nav-number">6.</span> <span class="nav-text">6）vkWaitForFences</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7）vkResetFences"><span class="nav-number">7.</span> <span class="nav-text">7）vkResetFences</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8）vkQueueSubmit"><span class="nav-number">8.</span> <span class="nav-text">8）vkQueueSubmit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9）-vkGetFenceStatus"><span class="nav-number">9.</span> <span class="nav-text">9） vkGetFenceStatus</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10）-fence的实际使用"><span class="nav-number">10.</span> <span class="nav-text">10） fence的实际使用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

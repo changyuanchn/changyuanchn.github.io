@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C语言,读书笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第一章：Lexical Pitfalls主要讲了一些词汇层上的内容，比如说‘=’和‘==’是不一样的（这个当然），只不过在编程的时候比较容易写错，同理还有‘&amp;amp;&amp;amp;’和‘&amp;amp;’，‘||’和‘|’。 不过书中提到了一个比较有意思的问题：c编译器是怎样区分token的？，举个例子，a—-b(估计没人会这么写)。这个应该被理解为(a—)-b,因为c编译器的原则是Greedy lexic">
+<meta name="keywords" content="C语言,读书笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记之C Traps and Pitfalls">
+<meta property="og:url" content="http://yoursite.com/2013/11/10/ProgramingLanguage/读书笔记之C Traps and Pitfalls/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="第一章：Lexical Pitfalls主要讲了一些词汇层上的内容，比如说‘=’和‘==’是不一样的（这个当然），只不过在编程的时候比较容易写错，同理还有‘&amp;amp;&amp;amp;’和‘&amp;amp;’，‘||’和‘|’。 不过书中提到了一个比较有意思的问题：c编译器是怎样区分token的？，举个例子，a—-b(估计没人会这么写)。这个应该被理解为(a—)-b,因为c编译器的原则是Greedy lexic">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.662Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记之C Traps and Pitfalls">
+<meta name="twitter:description" content="第一章：Lexical Pitfalls主要讲了一些词汇层上的内容，比如说‘=’和‘==’是不一样的（这个当然），只不过在编程的时候比较容易写错，同理还有‘&amp;amp;&amp;amp;’和‘&amp;amp;’，‘||’和‘|’。 不过书中提到了一个比较有意思的问题：c编译器是怎样区分token的？，举个例子，a—-b(估计没人会这么写)。这个应该被理解为(a—)-b,因为c编译器的原则是Greedy lexic">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/11/10/ProgramingLanguage/读书笔记之C Traps and Pitfalls/">
+
+
+
+
+
+  <title>读书笔记之C Traps and Pitfalls | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/11/10/ProgramingLanguage/读书笔记之C Traps and Pitfalls/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">读书笔记之C Traps and Pitfalls</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-11-10T00:00:00+08:00">
+                2013-11-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5,134
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  19
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="第一章：Lexical-Pitfalls"><a href="#第一章：Lexical-Pitfalls" class="headerlink" title="第一章：Lexical Pitfalls"></a>第一章：Lexical Pitfalls</h3><p>主要讲了一些词汇层上的内容，比如说‘=’和‘==’是不一样的（这个当然），只不过在编程的时候比较容易写错，同理还有‘&amp;&amp;’和‘&amp;’，‘||’和‘|’。</p>
+<p>不过书中提到了一个比较有意思的问题：c编译器是怎样区分token的？，举个例子，a—-b(估计没人会这么写)。这个应该被理解为(a—)-b,因为c编译器的原则是Greedy lexical analysis. 也就是说它采取的是贪婪法则，会识别到最大的有意义的token。</p>
+<p>另外本章还提出‘’与“”是不同的，这个显然，但是文中解释还是不错的，‘’中包含的是一个字符，相当于一个integer（整数），而“”相当于一个指向一个省略了名字的数组的指针。因此char <em>s = ‘/’；是错误的，因为前者是char型指针，后者是整形常量。编译的话会得到这样的一个错误：cannot convert from ‘char’ to ‘char </em>‘。同时指针的内容是变量的地址，也不能是常量</p>
+<h3 id="第二章：Syntactic-Pitfalls"><a href="#第二章：Syntactic-Pitfalls" class="headerlink" title="第二章：Syntactic Pitfalls"></a>第二章：Syntactic Pitfalls</h3><p>这一章讲的是语法上可能会遇到的所谓的pitfalls。<br>2.1) 函数声明的问题：<br>（<em>(void (</em>)()) 0）();这个表达式确实很莫名其妙，话说直到现在我也没有明白它的具体意义何在，</p>
+<p>但书中对这个问题的分解还是比较有价值的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">float *g();  //函数g()返回float型的指针</span><br><span class="line">float (*h)(); //h是指向函数的指针，函数的返回值为float</span><br><span class="line">(float (*)()); //&apos;指向返回值为float的函数的指针&apos;的类型转换符</span><br><span class="line">(*fp)();  //表示调用fp所指向的函数，当fp为函数指针时</span><br></pre></td></tr></table></figure></p>
+<p>因此<figure class="highlight plain"><figcaption><span>(*)()) 0 ```   就是将常数0转换成“指向返回值为void的函数的指针”</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果fp是一个指向返回值为void类型的函数指针，那么fp的声明如下：void (*fp)();</span><br><span class="line">替换掉fp得到：```（*(void (*)()) 0）();</span><br></pre></td></tr></table></figure></p>
+<p>但是利用typedef来解决问题的那个方法还是没看懂。<br>2.2) 优先级的问题</p>
+<p>这个在之前的笔记中有了总结：<br>       (1): 括号，结构体选择符，数组下标这些不算operator的优先级最高<br>       (2): 一目&gt;双目&gt;三目&gt;赋值&gt;逗号<br>       (3): 算术&gt;移位&gt;关系&gt;逻辑<br>       (4): 逻辑运算符所有的优先级都不等，位运算符优先<br>2.3) 分号的问题</p>
+<p>注意不要在不该加的地方加上，比如说在有些if以及return的后面</p>
+<p>2.4) switch语句的break问题</p>
+<p>c语言中break加不加会产生很神奇的作用，看需求。对于case，因为c语言把case当作true来看待，所以程序会移植向下走，直到遇到break。</p>
+<p>2.5) else</p>
+<p>else会跟随最近的一个if，所以记得不要在这个问题上犯错误，很容易被格式上的缩进影响到else的配对问题</p>
+<h3 id="第三章：-Semantic-Pitfalls"><a href="#第三章：-Semantic-Pitfalls" class="headerlink" title="第三章： Semantic Pitfalls"></a>第三章： Semantic Pitfalls</h3><p>这一章的内容是讲的语义层上的缺陷，也就是说猿媛们写完程序后得到了与自己预期不一样的结果。我觉得这不能称之为c语言的缺陷，而是猿媛们自己不细心的结果，以及对一些问题没有很清晰的掌握。</p>
+<p>3.1) 首先提出的是数组和指针的问题</p>
+<p>(1)对于数组其实只可以做两件事，一个就是决定数组的大小，另一个就是获得首元素的指针.</p>
+<p>(2)当指针指向数组时，可以对指针进行加减法运算，这样才有意义。</p>
+<p>char *p;<br>p+1;<br>但是要注意不要加过了界，因为对于很多machine来说，指向的并不是下一个相邻的存储位置。<br>(3)指针和数组的共性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">char *p, a[10];</span><br><span class="line">p=a; // right</span><br><span class="line">p=&amp;a; //wrong</span><br></pre></td></tr></table></figure></p>
+<p>因为 &amp;a 是一个指向数组的指针了，p 只是一个指向char型的指针。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*a = 84；//对于数组名，可以当成指针用。</span><br></pre></td></tr></table></figure></p>
+<p>区别下面两个声明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int (*ap)[31];//ap是一个指向数组的指针，*ap是一个包含了31个int的数组</span><br><span class="line">int *ap[31]; //数组ap包含了31个指向int的指针，相当于多维数组</span><br></pre></td></tr></table></figure></p>
+<p>3.2) 数组不完全等同于指针</p>
+<p>(1) 当函数要调用指针或数组时，要首先分配存储空间。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//数组</span><br><span class="line">char r[100];</span><br><span class="line">strcmp(r,s);</span><br><span class="line">//指针</span><br><span class="line">char *r,*malloc;</span><br><span class="line">r= malloc(strlen(s)+strlen(t)+1);</span><br><span class="line">if(!r)</span><br><span class="line">&#123;</span><br><span class="line">    exit(1)</span><br><span class="line">&#125;</span><br><span class="line">strcmp(r,s);</span><br><span class="line">/* 一段时间后*/</span><br><span class="line">free(r)；</span><br></pre></td></tr></table></figure></p>
+<p>而如果是下面就是错的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">char *r;</span><br><span class="line">strcmp(r,s);</span><br></pre></td></tr></table></figure></p>
+<p>因为只是定义了，但是r没有指向任何存储空间。</p>
+<p>(2)前面笔记中还提到了一点，指针是变量，而数组名不是变量，因此不适用与变量的运算等等</p>
+<p>(3)指针的另一个作用是函数声明中</p>
+<p>(4)空指针并不是空字符串，空指针在c语言中是一个很特别的存在，可以定义不能引用</p>
+<p>3.3) 不对称边界的问题</p>
+<p>这里书中洋洋洒洒的写了很多篇幅，介绍了很多不对称边界的好处，其实个人感觉有些没必要。也举了一个例子，写了一大堆的东西，感觉跟本书的精炼有些不匹配。</p>
+<p>(1)    express a range by the firstelement of the range and the first elements beyond it.</p>
+<p>这句话试着翻译了一下，没翻译出味道，所以原文摘录。大意是表示一个区间时最好用半开半闭区间表示，这样比较好计算区间长度，符合不对称边界的思想。</p>
+<p>(2)    c语言允许将实际过界的不存在的数组元素拿来做赋值或者比较，但是不能引用，即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if(bufptr==&amp;buffer[N])&#123;&#125;;</span><br><span class="line">//这样是可以的，这样做是为了符合不对称边界的思想，虽然buffer[N]不存在。</span><br></pre></td></tr></table></figure></p>
+<p>但是不能去真正的引用这个值，因为它不存在。是非法的。</p>
+<p>不过话说不对称边界在做减法的时候还是很有优势的。对于指针来说，一般都是指向first free character，也就是还没有被引用到的地方。<br>3.4) 计算顺序问题</p>
+<p>这个主要是出现在逻辑运算符那里，只要注意到，当能够判定一个逻辑表达式是否为真假时，计算机就不会继续计算下去了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a&amp;&amp; b; //当a计算为假时，计算机是不会计算b的。</span><br></pre></td></tr></table></figure></p>
+<p> 还有一个问题是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[i++]= b[i]; //wrong</span><br></pre></td></tr></table></figure></p>
+<p>因为无法确定计算机是先计算左边还是右边，还是同时计算，所以做个表达式的结果是不定的。</p>
+<p>3.5) 整数溢出的问题</p>
+<p>整数溢出的问题只存在于signed类型中。</p>
+<p>3.6) main函数的返回值</p>
+<p>一般来说我们很少关心main函数的返回值问题。但是很多C系统需要通过main的返回值来确定程序是否运行成功（返回值为0）或者失败。</p>
+<h3 id="第四章：连接"><a href="#第四章：连接" class="headerlink" title="第四章：连接"></a>第四章：连接</h3><p>这一章主要是讲c语言编译器在连接的时候可能出现的问题</p>
+<p>4.1) linker</p>
+<p>C语言是分开编译的，然后才把不同的部分连接起来，因此连接器最主要的一个工作就是处理命名冲突问题。而linker对这个问题基本没什么太多的办法，所以采取了一个很简单的方式：不允许相同的命名存在。</p>
+<p>4.2) 声明以及定义</p>
+<p>有声明，则必须要在某些地方定义。而且声明可以多次，但是定义只能一次。</p>
+<p>4.3) 命名冲突与static修饰符</p>
+<p>Static修饰符的存在就是为了一定意义上的解决命名冲突而存在的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">static int a;</span><br></pre></td></tr></table></figure>
+<p>表明a只能在这个文件中有效，在其他文件中无效。因此可以把所有用到a的函数都放在这同一个文件中。在其他文件中也可以有外部变量叫做a，与前一个文件中的a不冲突。Static修饰符也可以用于函数，意义是一样的。</p>
+<p>4.4) 参数，变量，返回值</p>
+<p>(1)函数在使用之前要声明，否则会出现很多问题，一个可能是编译器找不到函数的意义，另一个可能是返回值的类型会出错。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">double sqrt(double);</span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">    doubles;</span><br><span class="line">    s= sqrt(2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果忘记了声明double sqrt(double); 那么编译器默认sqrt(2)会返回int型，而S是double型，所以必然会出错误。另外，由于没有声明，编译器无法把2（int型）转换成double型，因此也是会导致错误的。</p>
+<p>4.5) 检查外部类型</p>
+<p>对于外部变量，声明和定义的类型必须严格一致，”严格”意味着甚至连指针和数组都不能混着声明与定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Char filename[];//definition</span><br><span class="line">Extern char*filename; //declaration</span><br></pre></td></tr></table></figure></p>
+<p>这样子声明和定义是错的，这不是严格一致的。正确的应该是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Extern char filename[]; //declaration</span><br></pre></td></tr></table></figure></p>
+<p>还有可能出现问题的地方是：</p>
+<p>在外部声明时，一定要注意返回值的类型要正确，以及参数的类型要正确<br>4.6) 头文件</p>
+<p>头文件的出现就是为了避免上面出现的一些问题。有一个简单的规则：每个外部对象只在一个地方声明。把所有的声明都放到头文件中，当需要用时，直接包含头文件，则可以避免一些错误的产生。</p>
+<h3 id="第五章：库函数"><a href="#第五章：库函数" class="headerlink" title="第五章：库函数"></a>第五章：库函数</h3><p>这一章节主要讲的是使用库函数时有可能遇到的问题。</p>
+<p>5.1) getchar的返回值是int<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># include&lt;stdio.h&gt;</span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">    char c;</span><br><span class="line">    while((c=getchar())!=EOF)</span><br><span class="line">    putchar(c);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个函数的问题是把c定义成char型，是不对的，因为像EOF等字符时不包含在char中的，所以很多字符是无法读入到c中的，并且可能无法终止循环（无法识别EOF）。因此要定义c为int，即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int c;</span><br></pre></td></tr></table></figure></p>
+<p>5.2) 更新顺序文件</p>
+<p>这里提到的问题就是：对于文件的写与读是不能同时进行的，如果一定要同时操作输入输出，则需要调用fseek函数。</p>
+<p>5.3) 缓冲输出与内存分配</p>
+<p>程序需要输出时，并不需要立即输出给用户。程序输出一般有两种方式：一种是即时处理，另一种是先存入缓冲区，然后再大块输出。</p>
+<p>一般是利用setbuf函数来处理这一个问题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setbuf(stdout,buf);</span><br></pre></td></tr></table></figure></p>
+<p>下面是一个缓冲区的例子，但是不幸的是，它是错的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># include&lt;stdio.h&gt;</span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">    int c;</span><br><span class="line">    char buf(BUFSIZE);</span><br><span class="line">    setbuf(stdout,buf);</span><br><span class="line">    while((c=getchar())!=EOF)</span><br><span class="line">    putchar(c);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>C语言利用缓冲区输出时，一般是要么缓冲区满了然后输出，要么是缓冲区没有满，但是调用了fflush函数刷新使得缓冲区的内容输出。</p>
+<p>上面的函数buf最后一次被清空是在main函数结束后，而此时由于buf是自动变量，所以存储空间已经被释放了，所以是无法输出的。因此应该将buf[BUFSIZE]定义为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">static char buf(BUFSIZE);</span><br></pre></td></tr></table></figure></p>
+<p>另一种方法是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">char *malloc();</span><br><span class="line">setbuf(stdout,malloc(BUFSIZE));</span><br></pre></td></tr></table></figure></p>
+<p>并且不要把它free掉。但是个人感觉这样做并不好，因为不free掉空间，可能会导致后面的程序逐渐的没有了内存空间。</p>
+<p>当然书中提出的缺点是：如果malloc不到足够的空间的话，则malloc(BUFSIZE)会返回NULL，这就导致了没有缓冲区，也就是程序会“所得即输出“，这样程序会比较慢。</p>
+<p>5.4) errno</p>
+<p>有些跟操作系统有关的库函数，当程序失败时，会返回一个errno的外部变量，通知程序函数调用失败。但是问题是在库函数调用成功时，并没有要求errno设置为0，也没有禁止设置error，所以对errno的应用要小心，下面的程序就是一个错误<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if(errno)</span><br><span class="line">/*do sth*/;</span><br></pre></td></tr></table></figure></p>
+<p>同理下面的程序也是错的，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">errno=0</span><br><span class="line">if(errno)</span><br><span class="line">/*do sth*/;</span><br></pre></td></tr></table></figure></p>
+<p>这两个错误程序分别对应上面提到的两点。</p>
+<p>因此在调用库函数时，英爱先检测错误的返回值，然后在检测errno，找出错误原因<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if(error return)</span><br><span class="line">examine errno;</span><br></pre></td></tr></table></figure></p>
+<p>5.5)signal函数</p>
+<p>Signal是捕获一步事件的一种方式。文中提到做好不要用这个函数处理库函数。但是也没有给signal函数的例子，所以对此也是不明所以。</p>
+<h3 id="第六章：预处理器"><a href="#第六章：预处理器" class="headerlink" title="第六章：预处理器"></a>第六章：预处理器</h3><p>预处理器存在的意义有两点：一是可以批量的替换，而是可以利用宏替换替代函数以节省系统开销。</p>
+<p>6.1) 宏定义中的空格问题</p>
+<p>在宏定义的时候不要乱写空格，而且宏定义是不能加号的，因为宏定义不是一个语句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define f (x) ((x)-1)</span><br></pre></td></tr></table></figure></p>
+<p>这样子得到的其实是f替换的是(x) ((x)-1)</p>
+<p>而在应用宏替换的时候，空格则不是什么问题。</p>
+<p>6.2) 宏不是函数</p>
+<p>在这里主要是要注意2个方面，一个是在宏定义的时候要加上足够的括号，每一个参数都要加上括号。如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define max(a,b) ((a)&gt;(b)?(a):-(b))</span><br></pre></td></tr></table></figure></p>
+<p>这个主要是防范abs(a-b,c)这样的式子。</p>
+<p>另一个问题是i++的问题，因为宏替换时，很有可能会使i自增两次，这也是要很小心的地方，如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">biggest = x[0];</span><br><span class="line">i=1;</span><br><span class="line">while(i&lt;n)</span><br><span class="line">biggest = max(biggest,x[i++]);</span><br></pre></td></tr></table></figure></p>
+<p>在这个式子中，宏替换的话会使i自增两次。</p>
+<p>在这个问题中，如果max是函数的话，亦或者把i++;单独拿出作为单独语句的话，就不会出错了。</p>
+<p>下面的宏：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define putc(x,p) (--(p) -&gt;_cnt&gt;=0?(*(p)-&gt;_ptr++=(x)):_flsbuf(x,p))</span><br></pre></td></tr></table></figure></p>
+<p>这是一个输出宏替换，x是待输出字符，p是指向file的指针。这个宏中，虽然x计算两次，但由于是在‘：’两侧，所以相当于计算了一次(对于有些编译器可能会对x计算两次，所以这是个隐患)。而p则是计算了两次，但是由于p是指针，没有自增自减(因为‘-&gt;’的优先级高于‘—’)，所以也没有问题。但是这么写还是有隐患存在的。</p>
+<p>而下面的宏替换则会有更大的问题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define toupper(c) ((c)&gt;=’a’ &amp;&amp; (c)&lt;=’z’? (c)+(‘A’-‘a’) : (c))</span><br></pre></td></tr></table></figure></p>
+<p>这个宏遇到了toupper(*p++)就麻烦了。</p>
+<p>还有最后的一个问题是多层宏嵌套：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">max(a,max(b,max(c,d)))</span><br></pre></td></tr></table></figure></p>
+<p>这个系统开销是很恐怖的，因为宏会先把所有的都代入成表达式后，才计算的，这个还不如函数来的快。</p>
+<p>6.3) 宏不是语句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define assert(e) if (!e) assert_error(__FILE__,__LINE__)</span><br></pre></td></tr></table></figure></p>
+<p>当下面的程序调用宏的时候就会出问题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if(x&gt;0&amp;&amp;y&gt;0)</span><br><span class="line">         assert(x&gt;y);</span><br><span class="line">else</span><br><span class="line">         assert(y&gt;x);</span><br></pre></td></tr></table></figure></p>
+<p>看着是没问题，但是当宏替换后，else就变成了替换了的if的else，而不是if(x&gt;0&amp;&amp;y&gt;0)中的if，这是由于缩进，所以不太好看出来。即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if(x&gt;0&amp;&amp;y&gt;0)</span><br><span class="line">         if(!(x&gt;y)) assert_error(__FILE__,__LINE__);</span><br><span class="line">	else</span><br><span class="line">                  if (!(y&gt;x)) assert_error(__FILE__,__LINE__);</span><br></pre></td></tr></table></figure></p>
+<p>即使加了大括号，即<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define assert(e) &#123;if (!e) assert_error(__FILE__,__LINE__)；&#125;</span><br></pre></td></tr></table></figure></p>
+<p>也是有问题的，因为替换后会在{}后面加上’;’, 这在语法上是错误的。</p>
+<p>书中给出了一个正确的答案：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define assert(e) ((void) ((e)||assert_error(__FILE__,__LINE__)))</span><br><span class="line">// 如果e为真，则根本不会计算assert_error(__FILE__,__LINE__)。</span><br></pre></td></tr></table></figure></p>
+<p>6.4) 宏不是type definitions</p>
+<p>宏和typedef是有本质不同的，最好不要用宏来做type definitions<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typedef struct foo *T2;</span><br><span class="line">#define T1 struct foo *</span><br></pre></td></tr></table></figure></p>
+<p>这两个都能实现type definitions，但是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">T1 a, b; // 这个相当于#define struct foo *a, b; 也就是说a是指针，b是结构</span><br><span class="line">T2 c, d; //</span><br></pre></td></tr></table></figure>
+<p>因此这两者是不同的。 </p>
+<p>总结，宏替换能带来很大的优势，但是如果不小心，也会是程序出错，而且错误比较难以发现。</p>
+<h3 id="第七章：-可移植性问题"><a href="#第七章：-可移植性问题" class="headerlink" title="第七章： 可移植性问题"></a>第七章： 可移植性问题</h3><p>可移植性的问题之所以会出现是因为有很多的c编译器实现，而不同的编译器实现有着个自的特点，在有些细节上的实现有差别。同时由于本书写作过程中，ANSI C还没有定型以及普及，所以可移植性的问题会比较大。现在由于ANSI C的普及，在可移植性问题上，应该好了很多了。</p>
+<p>7.1) coping with change</p>
+<p>这话说的，不coping with change也不行啊，用哲学上的话说：事物是发展变化的，人如果不跟着change，也不行啊！</p>
+<p>7.2) 标示符的名字</p>
+<p>这里主要是不同的implementation对于标示符名字的长度的支持是不一样，有的识别标示符的所有的字符，有的只是别前面若干个。对于ANSI C</p>
+<p>(1)    对于外部变量，只保证识别前六个字符，所以printf_field与printf_float就会被认为是一样的了</p>
+<p>(2)    不区分大小写，所以STATE和state是一样的。</p>
+<p>7.3) 整数的大小</p>
+<p>C语言提供三种整形，short，int，long。有以下约束</p>
+<p>(1)    这三种类型的长度是非递减的</p>
+<p>(2)    int要足够大以便能够容下任何数组下标</p>
+<p>(3)    字符character的长度由硬件决定</p>
+<p>7.4) 字符应该是unsigned or signed</p>
+<p>当我们要把一个char转换成int时，这个问题才会成为问题。因为我们无法确定应该对char做signed还是unsigned处理呢？对于unsigned char则是直接在多余的位置补充0，而对于unsigned char则要复制符号位。</p>
+<p>所以我们最好声明为unsigned char。</p>
+<p>7.5）移位运算符</p>
+<p>移位一般可以用来代替乘除法，因为移位的速度很快。可是移位也会有一些可移植性的问题，主要是’向右移位时，空出来的位由0填充还是由符号位填充’。如果是无符号数的话，就用0；而如果是有符号数的话，就不一定了，是0还是符号位，这个由不同的implementation决定。如果很在意右移位的空位填充值得话，最好定义为unsigned类型。</p>
+<p>7.6) memory location 0</p>
+<p>内存位置0到底是什么。</p>
+<p>null指针不指向任何对象。因此除了赋值或比较运算，其他任何的使用null都是非法的。而对于非法读写NuLL的的结果，不同的implementation的处理结果是不同的。如果想检测机器的响应的话，可用以下的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio&gt;</span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">char *p;</span><br><span class="line">p=NULL;</span><br><span class="line">printf(“Location 0 contains %d\n”,*p);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>有的implementation禁止读，有的可以读不可以写，有的既可以读也可以写，对于这种，如果写了，有可能修改操作系统的内容，会造成灾难。</p>
+<p>7.7) 除法的截取问题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">q=a/b;</span><br><span class="line">r=a%b;</span><br></pre></td></tr></table></figure></p>
+<p>对于上面的两个算式的结果以及四个值a,b,r,q的值得约束，有下面三条：</p>
+<p>(1)    最重要的是 q*b+r==a;</p>
+<p>(2)    改变a的正负号，q的正负号也要改变，但是绝对值不应该改变</p>
+<p>(3)    当b&gt;0时，希望r&gt;=0且r&lt;b.</p>
+<p>很不幸，这三点不可能同时成立，所以不同的implementation采用了(1)(2)或(1)(3)。因此这个除法截取是有移植上的问题的。</p>
+<p>大部分implementation采用的是(1)(2)</p>
+<p>7.8) 随机数的大小</p>
+<p>不同的implementation的随机数大小不一样，有的是2^15-1,有的是2^31-1.</p>
+<p>7.9) 大小写转换</p>
+<p>这个问题在可移植性上的问题是，对于ASCII字符集，大小写字符的间隔是一致的，而对于别的字符集，间隔未必一致。所以前面章节定义的大小写转换宏就未必有效了。</p>
+<p>7.10) 释放与内存分配</p>
+<p>C语言的内存分配函数主要有malloc，realloc，free三个。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C语言/" rel="tag"># C语言</a>
+          
+            <a href="/tags/读书笔记/" rel="tag"># 读书笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/11/02/DataStructure/链表/" rel="next" title="链表">
+                <i class="fa fa-chevron-left"></i> 链表
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/11/12/DataStructure/栈/" rel="prev" title="栈">
+                栈 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一章：Lexical-Pitfalls"><span class="nav-number">1.</span> <span class="nav-text">第一章：Lexical Pitfalls</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二章：Syntactic-Pitfalls"><span class="nav-number">2.</span> <span class="nav-text">第二章：Syntactic Pitfalls</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三章：-Semantic-Pitfalls"><span class="nav-number">3.</span> <span class="nav-text">第三章： Semantic Pitfalls</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第四章：连接"><span class="nav-number">4.</span> <span class="nav-text">第四章：连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第五章：库函数"><span class="nav-number">5.</span> <span class="nav-text">第五章：库函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第六章：预处理器"><span class="nav-number">6.</span> <span class="nav-text">第六章：预处理器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第七章：-可移植性问题"><span class="nav-number">7.</span> <span class="nav-text">第七章： 可移植性问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

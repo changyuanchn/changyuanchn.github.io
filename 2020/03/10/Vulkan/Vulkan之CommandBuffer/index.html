@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vulkan,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="0）引言我们的渲染操作，实际上是通过一系列的命令的形式来实现的。命令记录在commandBuffer里面，讲命令记录完毕后，会将命令提交到某个队列中执行，以实现渲染。 而vulkan的实际操作中并不是直接创建commandBuffer（这样比较低效，同时不利于buffer的管理），而是通过创建commandBuffer pool，然后再从commandBuffer Pool中分配commandBu">
+<meta name="keywords" content="vulkan">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vulkan之CommandBuffer">
+<meta property="og:url" content="http://yoursite.com/2020/03/10/Vulkan/Vulkan之CommandBuffer/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="0）引言我们的渲染操作，实际上是通过一系列的命令的形式来实现的。命令记录在commandBuffer里面，讲命令记录完毕后，会将命令提交到某个队列中执行，以实现渲染。 而vulkan的实际操作中并不是直接创建commandBuffer（这样比较低效，同时不利于buffer的管理），而是通过创建commandBuffer pool，然后再从commandBuffer Pool中分配commandBu">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.629Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vulkan之CommandBuffer">
+<meta name="twitter:description" content="0）引言我们的渲染操作，实际上是通过一系列的命令的形式来实现的。命令记录在commandBuffer里面，讲命令记录完毕后，会将命令提交到某个队列中执行，以实现渲染。 而vulkan的实际操作中并不是直接创建commandBuffer（这样比较低效，同时不利于buffer的管理），而是通过创建commandBuffer pool，然后再从commandBuffer Pool中分配commandBu">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/03/10/Vulkan/Vulkan之CommandBuffer/">
+
+
+
+
+
+  <title>Vulkan之CommandBuffer | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/10/Vulkan/Vulkan之CommandBuffer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vulkan之CommandBuffer</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-10T00:00:00+08:00">
+                2020-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,788
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="0）引言"><a href="#0）引言" class="headerlink" title="0）引言"></a>0）引言</h2><p>我们的渲染操作，实际上是通过一系列的命令的形式来实现的。命令记录在commandBuffer里面，讲命令记录完毕后，会将命令提交到某个队列中执行，以实现渲染。</p>
+<p>而vulkan的实际操作中并不是直接创建commandBuffer（这样比较低效，同时不利于buffer的管理），而是通过创建commandBuffer pool，然后再从commandBuffer Pool中分配commandBuffer来实现的。</p>
+<h2 id="1）-commandBuffer-Pool创建"><a href="#1）-commandBuffer-Pool创建" class="headerlink" title="1） commandBuffer Pool创建"></a>1） commandBuffer Pool创建</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkCreateCommandPool(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    const VkCommandPoolCreateInfo*              pCreateInfo,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator,</span><br><span class="line">    VkCommandPool*                              pCommandPool);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkCommandPoolCreateInfo &#123;</span><br><span class="line">    VkStructureType             sType;  //VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO</span><br><span class="line">    const void*                 pNext;  // nullptr, 这个跟其他命令中的一样，指向另一个结构用于扩展</span><br><span class="line">    VkCommandPoolCreateFlags    flags;  // 标志位，决定了pool以及从pool中分配的commandBuffer的行为</span><br><span class="line">    uint32_t                    queueFamilyIndex; // 队列的索引，这个队列源于我们在创建屋里设备是选择的队列族</span><br><span class="line">&#125; VkCommandPoolCreateInfo;</span><br></pre></td></tr></table></figure>
+<p>flags标志位的取值范围<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkCommandPoolCreateFlagBits &#123;</span><br><span class="line">    VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = 0x00000001,  // 表示使用时间短，使用完将很快还给pool</span><br><span class="line">    VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = 0x00000002, // 表示允许单个commandBuffer可通过重置二重用</span><br><span class="line">    VK_COMMAND_POOL_CREATE_PROTECTED_BIT = 0x00000004,</span><br><span class="line">    VK_COMMAND_POOL_CREATE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkCommandPoolCreateFlagBits;</span><br></pre></td></tr></table></figure></p>
+<h2 id="2）-commandBuffer"><a href="#2）-commandBuffer" class="headerlink" title="2） commandBuffer"></a>2） commandBuffer</h2><p>之前说了，commandBuffer是由command Pool分配的，分配命令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkAllocateCommandBuffers(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    const VkCommandBufferAllocateInfo*          pAllocateInfo,</span><br><span class="line">    VkCommandBuffer*                            pCommandBuffers);</span><br></pre></td></tr></table></figure></p>
+<p>单纯来说，这个名利只是用来分配空间，实际上一般有多少个swapchainImage，我们就会设置多少个commandBuffer，因此pCommandBuffers实际上是一个数组的指针，这里vkAllocateCommandBuffers分配了整个数组的空间<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkCommandBufferAllocateInfo &#123;</span><br><span class="line">    VkStructureType         sType;  //VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO</span><br><span class="line">    const void*             pNext;  // nullptr, 这个跟其他命令中的一样，指向另一个结构用于扩展</span><br><span class="line">    VkCommandPool           commandPool;</span><br><span class="line">    VkCommandBufferLevel    level;</span><br><span class="line">    uint32_t                commandBufferCount; // commandBuffer的个数</span><br><span class="line">&#125; VkCommandBufferAllocateInfo;</span><br></pre></td></tr></table></figure></p>
+<p>这个结构的其他内容都好理解，这个level是指的commandBuffer的级别，目前只有两种，主要是VK_COMMAND_BUFFER_LEVEL_PRIMARY， secondaryBuffer后续会讲到，也是非常有用的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkCommandBufferLevel &#123;</span><br><span class="line">    VK_COMMAND_BUFFER_LEVEL_PRIMARY = 0,</span><br><span class="line">    VK_COMMAND_BUFFER_LEVEL_SECONDARY = 1,</span><br><span class="line">    VK_COMMAND_BUFFER_LEVEL_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkCommandBufferLevel;</span><br></pre></td></tr></table></figure></p>
+<h2 id="3）-command-record"><a href="#3）-command-record" class="headerlink" title="3） command record"></a>3） command record</h2><p>当我们创建好了commandBuffer后，下面的一步操作就是命令的录制了，这个标准流程如下图所示：</p>
+<p>这个图中的部分步骤是可以省略的，比如说设置scissor,viewport等，下面我们来看一下这些命令录制的内容</p>
+<h3 id="a-首先是Begin-comamndBuffer，用来启动命令缓冲区，将其重置为初始状态"><a href="#a-首先是Begin-comamndBuffer，用来启动命令缓冲区，将其重置为初始状态" class="headerlink" title="a) 首先是Begin comamndBuffer，用来启动命令缓冲区，将其重置为初始状态"></a>a) 首先是Begin comamndBuffer，用来启动命令缓冲区，将其重置为初始状态</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkBeginCommandBuffer(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    const VkCommandBufferBeginInfo*             pBeginInfo);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkCommandBufferBeginInfo &#123;</span><br><span class="line">    VkStructureType                          sType; //VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO</span><br><span class="line">    const void*                              pNext; //nullptr</span><br><span class="line">    VkCommandBufferUsageFlags                flags; //告诉vulkan命令缓冲区将会如何使用</span><br><span class="line">    const VkCommandBufferInheritanceInfo*    pInheritanceInfo;</span><br><span class="line">&#125; VkCommandBufferBeginInfo;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkCommandBufferUsageFlagBits &#123;</span><br><span class="line">    VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = 0x00000001,  // commandBuffer只会记录和执行一次，然后销毁</span><br><span class="line">    VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = 0x00000002,  // 在renderpass中使用，但是只在secondary commandBuffer中有效</span><br><span class="line">    VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = 0x00000004,  // commandBuffer可以多次执行或者暂停</span><br><span class="line">    VK_COMMAND_BUFFER_USAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF  // 用于开启secondary commandBuffer，定义哪些状态是从调用当前secondary commandBuffer的primary commandBuffer中继承的。</span><br><span class="line">&#125; VkCommandBufferUsageFlagBits;</span><br></pre></td></tr></table></figure>
+<h3 id="b）begin-renderpass"><a href="#b）begin-renderpass" class="headerlink" title="b）begin renderpass"></a>b）begin renderpass</h3><p>启动renderpass，也就意味着启动了一个渲染流程。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdBeginRenderPass(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    const VkRenderPassBeginInfo*                pRenderPassBegin,</span><br><span class="line">    VkSubpassContents                           contents);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkRenderPassBeginInfo &#123;</span><br><span class="line">    VkStructureType        sType;  // VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO</span><br><span class="line">    const void*            pNext;  </span><br><span class="line">    VkRenderPass           renderPass;</span><br><span class="line">    VkFramebuffer          framebuffer;</span><br><span class="line">    VkRect2D               renderArea; // 渲染的区域</span><br><span class="line">    uint32_t               clearValueCount;  </span><br><span class="line">    const VkClearValue*    pClearValues; // 渲染前的清屏设置</span><br><span class="line">&#125; VkRenderPassBeginInfo;</span><br></pre></td></tr></table></figure>
+<h3 id="c）绑定pipeline"><a href="#c）绑定pipeline" class="headerlink" title="c）绑定pipeline"></a>c）绑定pipeline</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdBindPipeline(</span><br><span class="line">    VkCommandBuffer                             commandBuffer, </span><br><span class="line">    VkPipelineBindPoint                         pipelineBindPoint,  // 是图形管线，还是计算管线，或者光线追踪管线的标志位</span><br><span class="line">    VkPipeline                                  pipeline);</span><br></pre></td></tr></table></figure>
+<h3 id="d）绑定顶点缓存"><a href="#d）绑定顶点缓存" class="headerlink" title="d）绑定顶点缓存"></a>d）绑定顶点缓存</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdBindVertexBuffers(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    uint32_t                                    firstBinding, // 第一个绑定点的索引，实际上指的vertexBuffer数组中的索引</span><br><span class="line">    uint32_t                                    bindingCount, // 绑定的vertexBuffer的数量</span><br><span class="line">    const VkBuffer*                             pBuffers,  // 指针，指向一个数组，这个数组中的内容是vertexBuffer</span><br><span class="line">    const VkDeviceSize*                         pOffsets); // 指针，指向一个数组，这个数组中的内容是Buffer的偏移量</span><br></pre></td></tr></table></figure>
+<h3 id="e）绑定索引缓存"><a href="#e）绑定索引缓存" class="headerlink" title="e）绑定索引缓存"></a>e）绑定索引缓存</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdBindIndexBuffer(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    VkBuffer                                    buffer,</span><br><span class="line">    VkDeviceSize                                offset, // indexBuffer中的起始索引偏移量</span><br><span class="line">    VkIndexType                                 indexType); // 索引的数据类型</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkIndexType &#123;</span><br><span class="line">    VK_INDEX_TYPE_UINT16 = 0,</span><br><span class="line">    VK_INDEX_TYPE_UINT32 = 1,</span><br><span class="line">    VK_INDEX_TYPE_NONE_KHR = 1000165000,</span><br><span class="line">    VK_INDEX_TYPE_UINT8_EXT = 1000265000,</span><br><span class="line">    VK_INDEX_TYPE_NONE_NV = VK_INDEX_TYPE_NONE_KHR,</span><br><span class="line">    VK_INDEX_TYPE_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkIndexType;</span><br></pre></td></tr></table></figure>
+<h3 id="f）绑定描述符集"><a href="#f）绑定描述符集" class="headerlink" title="f）绑定描述符集"></a>f）绑定描述符集</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdBindDescriptorSets(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    VkPipelineBindPoint                         pipelineBindPoint, // 管线类型</span><br><span class="line">    VkPipelineLayout                            layout, // 管线布局</span><br><span class="line">    uint32_t                                    firstSet, // 描述符集中的第一个值得索引</span><br><span class="line">    uint32_t                                    descriptorSetCount, //描述符集的个数</span><br><span class="line">    const VkDescriptorSet*                      pDescriptorSets, // 描述符集</span><br><span class="line">    uint32_t                                    dynamicOffsetCount, // 动态描述符集的个数</span><br><span class="line">    const uint32_t*                             pDynamicOffsets); // 动态描述符集的偏移</span><br></pre></td></tr></table></figure>
+<p>实际上DynamicOffsets是有很大的用处的，这个后面的章节会介绍。</p>
+<h3 id="g）设置Viewport和Scissor"><a href="#g）设置Viewport和Scissor" class="headerlink" title="g）设置Viewport和Scissor"></a>g）设置Viewport和Scissor</h3><p>实际上每次绘制是可以重新设置Viewport和Scissor的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdSetViewport(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    uint32_t                                    firstViewport,</span><br><span class="line">    uint32_t                                    viewportCount,</span><br><span class="line">    const VkViewport*                           pViewports);  // 一个指向VkViewport数组的指针，内容是要设置的viewport</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdSetScissor(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    uint32_t                                    firstScissor,</span><br><span class="line">    uint32_t                                    scissorCount,</span><br><span class="line">    const VkRect2D*                             pScissors);  // 一个指向VkRect2D数组的指针，内容是要设置的scissor</span><br></pre></td></tr></table></figure>
+<h3 id="h）绘制"><a href="#h）绘制" class="headerlink" title="h）绘制"></a>h）绘制</h3><p>下面两个函数的区别就在于一个是基于索引的绘制，一个是直接绘制vertexBuffer，没有索引<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdDrawIndexed(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    uint32_t                                    indexCount, // 要绘制的顶点数</span><br><span class="line">    uint32_t                                    instanceCount, // 要绘制的实例数</span><br><span class="line">    uint32_t                                    firstIndex, // 第一个索引的位置</span><br><span class="line">    int32_t                                     vertexOffset, // 在索引到顶点缓冲区之前添加到顶点索引的值</span><br><span class="line">    uint32_t                                    firstInstance); //要绘制的第一个实例的实例ID</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdDraw(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    uint32_t                                    vertexCount,</span><br><span class="line">    uint32_t                                    instanceCount,</span><br><span class="line">    uint32_t                                    firstVertex,</span><br><span class="line">    uint32_t                                    firstInstance);</span><br></pre></td></tr></table></figure>
+<p>除了这些还有vkCmdDrawIndirect，vkCmdDrawIndexedIndirect这两个间接绘制的命令，我们后续说明</p>
+<h3 id="i）结束render-pass"><a href="#i）结束render-pass" class="headerlink" title="i）结束render pass"></a>i）结束render pass</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdEndRenderPass(</span><br><span class="line">    VkCommandBuffer                             commandBuffer);</span><br></pre></td></tr></table></figure>
+<h3 id="j）结束命令录制"><a href="#j）结束命令录制" class="headerlink" title="j）结束命令录制"></a>j）结束命令录制</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkEndCommandBuffer(</span><br><span class="line">    VkCommandBuffer                             commandBuffer);</span><br></pre></td></tr></table></figure>
+<h2 id="4）其他命令的录制"><a href="#4）其他命令的录制" class="headerlink" title="4）其他命令的录制"></a>4）其他命令的录制</h2><p>实际上上面记录的是渲染一张图像的命令绘制，其实还有其他的命令绘制方式，但是大体上的流程是一致的。如缓冲区间的数据的复制，移动等等。</p>
+<h2 id="5）回收命令缓冲区"><a href="#5）回收命令缓冲区" class="headerlink" title="5）回收命令缓冲区"></a>5）回收命令缓冲区</h2><p>我们调用vkAllocateCommandBuffers分配commandBuffer，当我们不再使用时，可以调用vkFreeCommandBuffers将commandBuffer归还到Pool里面，但是这个操作是个很重量级的操作。如果我们记录的命令是相似的命令的话，我们可以直接调用vkResetCommandBuffer来重置缓冲区，这个命令是将CommandBuffer重新设置到初始状态。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkResetCommandBuffer(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    VkCommandBufferResetFlags                   flags); // 重置缓冲区的附加操作</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkFreeCommandBuffers(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    VkCommandPool                               commandPool,</span><br><span class="line">    uint32_t                                    commandBufferCount,</span><br><span class="line">    const VkCommandBuffer*                      pCommandBuffers);</span><br></pre></td></tr></table></figure>
+<p>下面的命令可以直接将Pool中的所有commandBuffer全部重置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkResetCommandPool(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    VkCommandPool                               commandPool,</span><br><span class="line">    VkCommandPoolResetFlags                     flags);</span><br></pre></td></tr></table></figure></p>
+<h2 id="6）命令提交"><a href="#6）命令提交" class="headerlink" title="6）命令提交"></a>6）命令提交</h2><p>我们绘制了命令是没用的，需要将其提交到queue中才能使其产生效果。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkQueueSubmit(</span><br><span class="line">    VkQueue                                     queue,</span><br><span class="line">    uint32_t                                    submitCount,</span><br><span class="line">    const VkSubmitInfo*                         pSubmits,</span><br><span class="line">    VkFence                                     fence);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkSubmitInfo &#123;</span><br><span class="line">    VkStructureType                sType;  // VK_STRUCTURE_TYPE_SUBMIT_INFO</span><br><span class="line">    const void*                    pNext;  </span><br><span class="line">    uint32_t                       waitSemaphoreCount;  </span><br><span class="line">    const VkSemaphore*             pWaitSemaphores;  // 等待的信号量</span><br><span class="line">    const VkPipelineStageFlags*    pWaitDstStageMask;  // 队列开始执行前需要等待的管线阶段</span><br><span class="line">    uint32_t                       commandBufferCount;</span><br><span class="line">    const VkCommandBuffer*         pCommandBuffers;</span><br><span class="line">    uint32_t                       signalSemaphoreCount;</span><br><span class="line">    const VkSemaphore*             pSignalSemaphores; // 发出的信号量</span><br><span class="line">&#125; VkSubmitInfo;</span><br></pre></td></tr></table></figure>
+<p>vkQueueSubmit这里真正需要注意的就是Semaphore，这个需要好好理解（见前面的章节）。</p>
+<h2 id="7）commandBuffer-Pool的销毁"><a href="#7）commandBuffer-Pool的销毁" class="headerlink" title="7）commandBuffer Pool的销毁"></a>7）commandBuffer Pool的销毁</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vkDestroyCommandPool(device, commandPool, nullptr);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vulkan/" rel="tag"># vulkan</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/04/Vulkan/Vulkan之Pipeline/" rel="next" title="Vulkan之Pipeline">
+                <i class="fa fa-chevron-left"></i> Vulkan之Pipeline
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/17/Vulkan/Vulkan之VertexBuffer/" rel="prev" title="Vulkan之VertexBuffer">
+                Vulkan之VertexBuffer <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0）引言"><span class="nav-number">1.</span> <span class="nav-text">0）引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1）-commandBuffer-Pool创建"><span class="nav-number">2.</span> <span class="nav-text">1） commandBuffer Pool创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2）-commandBuffer"><span class="nav-number">3.</span> <span class="nav-text">2） commandBuffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3）-command-record"><span class="nav-number">4.</span> <span class="nav-text">3） command record</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#a-首先是Begin-comamndBuffer，用来启动命令缓冲区，将其重置为初始状态"><span class="nav-number">4.1.</span> <span class="nav-text">a) 首先是Begin comamndBuffer，用来启动命令缓冲区，将其重置为初始状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#b）begin-renderpass"><span class="nav-number">4.2.</span> <span class="nav-text">b）begin renderpass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c）绑定pipeline"><span class="nav-number">4.3.</span> <span class="nav-text">c）绑定pipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#d）绑定顶点缓存"><span class="nav-number">4.4.</span> <span class="nav-text">d）绑定顶点缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#e）绑定索引缓存"><span class="nav-number">4.5.</span> <span class="nav-text">e）绑定索引缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#f）绑定描述符集"><span class="nav-number">4.6.</span> <span class="nav-text">f）绑定描述符集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#g）设置Viewport和Scissor"><span class="nav-number">4.7.</span> <span class="nav-text">g）设置Viewport和Scissor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#h）绘制"><span class="nav-number">4.8.</span> <span class="nav-text">h）绘制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#i）结束render-pass"><span class="nav-number">4.9.</span> <span class="nav-text">i）结束render pass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#j）结束命令录制"><span class="nav-number">4.10.</span> <span class="nav-text">j）结束命令录制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4）其他命令的录制"><span class="nav-number">5.</span> <span class="nav-text">4）其他命令的录制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5）回收命令缓冲区"><span class="nav-number">6.</span> <span class="nav-text">5）回收命令缓冲区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6）命令提交"><span class="nav-number">7.</span> <span class="nav-text">6）命令提交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7）commandBuffer-Pool的销毁"><span class="nav-number">8.</span> <span class="nav-text">7）commandBuffer Pool的销毁</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,kernel,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="核的定义根据李航的统计学习，对核有如下的定义： 设\chi为输入空间，H为特征空间（希尔伯特空间），如果存在一个从\chi到H的映射: \phi(x): \chi \rightarrow H使得对所有的x,z函数K(x,z)满足条件 K(x,z) = \phi(x) \cdot \phi(z)则称K(x,z)为核函数，\phi(x)为映射函数。 看完了定义，一地鸡毛。核定义看不懂，有什么用不知道，">
+<meta name="keywords" content="机器学习,kernel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="核思想（kernel trick）">
+<meta property="og:url" content="http://yoursite.com/2018/07/25/MachineLearning/核思想（kernel trick）/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="核的定义根据李航的统计学习，对核有如下的定义： 设\chi为输入空间，H为特征空间（希尔伯特空间），如果存在一个从\chi到H的映射: \phi(x): \chi \rightarrow H使得对所有的x,z函数K(x,z)满足条件 K(x,z) = \phi(x) \cdot \phi(z)则称K(x,z)为核函数，\phi(x)为映射函数。 看完了定义，一地鸡毛。核定义看不懂，有什么用不知道，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/kernel1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/kernel2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/kernel3.jpg">
+<meta property="og:image" content="http://yoursite.com/images/kernel4.jpg">
+<meta property="og:image" content="http://yoursite.com/images/kernel5.jpg">
+<meta property="og:updated_time" content="2021-06-23T15:32:54.654Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="核思想（kernel trick）">
+<meta name="twitter:description" content="核的定义根据李航的统计学习，对核有如下的定义： 设\chi为输入空间，H为特征空间（希尔伯特空间），如果存在一个从\chi到H的映射: \phi(x): \chi \rightarrow H使得对所有的x,z函数K(x,z)满足条件 K(x,z) = \phi(x) \cdot \phi(z)则称K(x,z)为核函数，\phi(x)为映射函数。 看完了定义，一地鸡毛。核定义看不懂，有什么用不知道，">
+<meta name="twitter:image" content="http://yoursite.com/images/kernel1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/25/MachineLearning/核思想（kernel trick）/">
+
+
+
+
+
+  <title>核思想（kernel trick） | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/25/MachineLearning/核思想（kernel trick）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">核思想（kernel trick）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-25T00:00:00+08:00">
+                2018-07-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,108
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="核的定义"><a href="#核的定义" class="headerlink" title="核的定义"></a>核的定义</h1><p>根据李航的统计学习，对核有如下的定义：</p>
+<p>设<script type="math/tex">\chi</script>为输入空间，<script type="math/tex">H</script>为特征空间（希尔伯特空间），如果存在一个从<script type="math/tex">\chi</script>到<script type="math/tex">H</script>的映射:</p>
+<script type="math/tex; mode=display">\phi(x): \chi \rightarrow H</script><p>使得对所有的<script type="math/tex">x,z</script>函数<script type="math/tex">K(x,z)</script>满足条件</p>
+<script type="math/tex; mode=display">K(x,z) = \phi(x) \cdot \phi(z)</script><p>则称<script type="math/tex">K(x,z)</script>为核函数，<script type="math/tex">\phi(x)</script>为映射函数。</p>
+<p>看完了定义，一地鸡毛。核定义看不懂，有什么用不知道，核函数是什么函数不知道，映射函数的表达是是什么也不知道。</p>
+<p>其实核的概念理解需要泛函的知识，有点难，我们机器学习只要知道怎么用，核能干什么就可以了。</p>
+<h1 id="核的作用"><a href="#核的作用" class="headerlink" title="核的作用"></a>核的作用</h1><p>机器学习引入核的概念是为了处理非线性数据的。正常我们的及其学习算法大多数都是在线性场景下有好的效果，对于非线性场景，效果较差，那么自然我们就想到将非线性通过一定的映射变为线性的就好了，核就可以实现这样的功能。</p>
+<p>我们看核的定义，映射函数<script type="math/tex">\phi(x)</script>将输出空间的非线性数据映射到希尔伯特空间（这个概念很难，我们只要知道就好，这个空间是无穷维的，且是完备的）变为线性的。也就是我们将低维的非线性数据映射为高维的线性数据，使其线性可分。</p>
+<p>那么这个映射函数要怎样设计呢？很抱歉，我们不需要知道映射函数的具体表达式，我们只要知道核函数的表达式就好了。核函数是映射函数的内积，因此只要我们的原空间的分类器有内积运算，那么我们将其映射到高维空间后，只需要用核函数替换掉映射函数的内积就可以了，简单，高效。</p>
+<p>下面我们直观看下为什么核能够将低维的非线性数据映射为高维的线性数据</p>
+<h1 id="核的直观显示："><a href="#核的直观显示：" class="headerlink" title="核的直观显示："></a>核的直观显示：</h1><p>下面我们给出核的一个直观显示，如下图是一张图像（来自知乎<a href="https://www.zhihu.com/question/24627666），我们无法设计一个线性的分类器将红色部分和黑色部分分开。" target="_blank" rel="noopener">https://www.zhihu.com/question/24627666），我们无法设计一个线性的分类器将红色部分和黑色部分分开。</a></p>
+<p><img src="/images/kernel1.jpg" alt="kernel1"></p>
+<p>但是当我们利用一个简单的内积平方和函数<script type="math/tex">K(x,y) =(x \cdot y)^2</script>，就可以将其映射到3维上，将其变为线性可分的了。</p>
+<p><img src="/images/kernel2.jpg" alt="kernel2"></p>
+<p>我们找一个更加具体的例子看一下（<a href="http://cn-static.udacity.com/mlnd/videos/Kernel.mp4）" target="_blank" rel="noopener">http://cn-static.udacity.com/mlnd/videos/Kernel.mp4）</a></p>
+<p>当给定下面四个点时，我们用一个线性分类器是无法将其分类的。</p>
+<p><img src="/images/kernel3.jpg" alt="kernel3"></p>
+<p>那么有两种方式解决这个问题，一个是用非线性分类器（图中的曲线解决）</p>
+<p>另一种就是如果我们能将二维空间扩展到3维，将两个绿点提升到另一个平面上，那么我们就可以用一个平面来分类两类点了。这就是核的思想。通过映射到高维变为线性可分。</p>
+<p>那么具体怎么做呢？</p>
+<p>我们看下图中的三个点，当我们引入内积<script type="math/tex">K(x,y) =(x \cdot y)</script>时，能够将问题完美解决。</p>
+<p><img src="/images/kernel4.jpg" alt="kernel4"></p>
+<p>那么内积到底做了什么事情呢，下图就给了我们一个完美的答案，引入核相当于多引入的一个维度，能够将二者分开。相当于在前两个维度两组数据是一样的，第三维度两组数据不一致，因此可以在高维将其分开。</p>
+<p><img src="/images/kernel5.jpg" alt="kernel5"></p>
+<h1 id="常用的核函数"><a href="#常用的核函数" class="headerlink" title="常用的核函数"></a>常用的核函数</h1><p>核函数的设计也是一个很艰难的问题，目前看，我们常用的核有下面的几种</p>
+<h2 id="多项式核"><a href="#多项式核" class="headerlink" title="多项式核"></a>多项式核</h2><script type="math/tex; mode=display">K(x,z) = (x \cdot z +1)^p</script><h2 id="高斯核"><a href="#高斯核" class="headerlink" title="高斯核"></a>高斯核</h2><script type="math/tex; mode=display">K(x,z) = exp(-\frac{||x - z||^2}{2\sigma^2})</script><h1 id="核的应用"><a href="#核的应用" class="headerlink" title="核的应用"></a>核的应用</h1><p>核函数一般应用于扩展分类器到非线性数据集上，比如SVM和KPCA等算法，后续会重点讲这两个算法，看下核在这里面的应用。</p>
+<h1 id="附加知识："><a href="#附加知识：" class="headerlink" title="附加知识："></a>附加知识：</h1><h2 id="几个空间"><a href="#几个空间" class="headerlink" title="几个空间"></a>几个空间</h2><p>欧氏空间：欧氏空间就是我们所在的空间，一般来说定义了距离度量的就是欧氏空间</p>
+<p>赋范空间：距离+线性结构+范数</p>
+<p>希尔伯特空间：赋范+内积+完备性</p>
+<h2 id="为什么核可以将数据映射到无限维度"><a href="#为什么核可以将数据映射到无限维度" class="headerlink" title="为什么核可以将数据映射到无限维度"></a>为什么核可以将数据映射到无限维度</h2><p>我们已高斯核为例子，将高斯核泰勒展开：</p>
+<script type="math/tex; mode=display">K(x,z) = exp(-\frac{||x - z||^2}{2\sigma^2}) = \sum_{j=0}^{\infty} \frac{(X^TZ)^j}{j!} exp(-\frac{||x||^2_2}{2})exp(-\frac{||z||^2_2}{2})</script><p>也就是说核函数可以分解为无穷维度的<script type="math/tex">x,z</script>内积的计算。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/kernel/" rel="tag"># kernel</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/15/MachineLearning/谱聚类/" rel="next" title="谱聚类">
+                <i class="fa fa-chevron-left"></i> 谱聚类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/26/MachineLearning/基于流形学习的数据降维/" rel="prev" title="基于流形学习的数据降维">
+                基于流形学习的数据降维 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#核的定义"><span class="nav-number">1.</span> <span class="nav-text">核的定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#核的作用"><span class="nav-number">2.</span> <span class="nav-text">核的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#核的直观显示："><span class="nav-number">3.</span> <span class="nav-text">核的直观显示：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常用的核函数"><span class="nav-number">4.</span> <span class="nav-text">常用的核函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#多项式核"><span class="nav-number">4.1.</span> <span class="nav-text">多项式核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高斯核"><span class="nav-number">4.2.</span> <span class="nav-text">高斯核</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#核的应用"><span class="nav-number">5.</span> <span class="nav-text">核的应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#附加知识："><span class="nav-number">6.</span> <span class="nav-text">附加知识：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#几个空间"><span class="nav-number">6.1.</span> <span class="nav-text">几个空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么核可以将数据映射到无限维度"><span class="nav-number">6.2.</span> <span class="nav-text">为什么核可以将数据映射到无限维度</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

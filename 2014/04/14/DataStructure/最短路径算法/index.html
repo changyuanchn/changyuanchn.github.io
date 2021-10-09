@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="算法,图论,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引论正如名字所言，最短路径算法就是为了找到一个图中，某一个点到其他点的最短路径或者是距离。 最短路径算法一般分为四种情况：  无权重的最短路径 有权重的最短路径 边的权重为负的图 无圈的图  ps：上面的情况针对的都是有向图。 无权重的最短路径下图是一个例子：假设我们取点v3作为初始点，计算点v3到图中所有点的路径以及距离（包括点v3）。  v3到v3的路径长为0。 沿着v3的邻接点查找，找到v1">
+<meta name="keywords" content="算法,图论">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最短路径算法">
+<meta property="og:url" content="http://yoursite.com/2014/04/14/DataStructure/最短路径算法/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="引论正如名字所言，最短路径算法就是为了找到一个图中，某一个点到其他点的最短路径或者是距离。 最短路径算法一般分为四种情况：  无权重的最短路径 有权重的最短路径 边的权重为负的图 无圈的图  ps：上面的情况针对的都是有向图。 无权重的最短路径下图是一个例子：假设我们取点v3作为初始点，计算点v3到图中所有点的路径以及距离（包括点v3）。  v3到v3的路径长为0。 沿着v3的邻接点查找，找到v1">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/graph4.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/graph3.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/graph9.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/graph10.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/graph11.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/graph12.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/graph5.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/graph6.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/graph7.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/graph8.png">
+<meta property="og:updated_time" content="2021-10-09T15:39:43.150Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="最短路径算法">
+<meta name="twitter:description" content="引论正如名字所言，最短路径算法就是为了找到一个图中，某一个点到其他点的最短路径或者是距离。 最短路径算法一般分为四种情况：  无权重的最短路径 有权重的最短路径 边的权重为负的图 无圈的图  ps：上面的情况针对的都是有向图。 无权重的最短路径下图是一个例子：假设我们取点v3作为初始点，计算点v3到图中所有点的路径以及距离（包括点v3）。  v3到v3的路径长为0。 沿着v3的邻接点查找，找到v1">
+<meta name="twitter:image" content="http://yoursite.com/images/DataStructure/graph4.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2014/04/14/DataStructure/最短路径算法/">
+
+
+
+
+
+  <title>最短路径算法 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/04/14/DataStructure/最短路径算法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">最短路径算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-04-14T00:00:00+08:00">
+                2014-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,986
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="引论"><a href="#引论" class="headerlink" title="引论"></a>引论</h3><p>正如名字所言，最短路径算法就是为了找到一个图中，某一个点到其他点的最短路径或者是距离。</p>
+<p>最短路径算法一般分为四种情况：</p>
+<ul>
+<li>无权重的最短路径</li>
+<li>有权重的最短路径</li>
+<li>边的权重为负的图</li>
+<li>无圈的图</li>
+</ul>
+<p><em>ps：上面的情况针对的都是有向图。</em></p>
+<h3 id="无权重的最短路径"><a href="#无权重的最短路径" class="headerlink" title="无权重的最短路径"></a>无权重的最短路径</h3><p>下图是一个例子：假设我们取点v3作为初始点，计算点v3到图中所有点的路径以及距离（包括点v3）。</p>
+<ul>
+<li>v3到v3的路径长为0。</li>
+<li>沿着v3的邻接点查找，找到v1，那么v3到v1的路径长为1；找到v6，那么v3到v6的路径长为1。</li>
+<li>v3的邻接点已经找完了，接下来找v1，v6的邻接点。</li>
+<li>v1的邻接点为v2，v4，它们对应的路经长为2；v6无邻接点，v6部分结束。</li>
+<li>v2的邻接点为v4，v5，而v4已经查找过了，舍弃；v2到v5的路径长为3；v4的邻接点为v5，v7，而v5已经查找过了，舍弃；v4到v7的路径长为3。</li>
+<li>至此，结束。</li>
+</ul>
+<p><img src="/images/DataStructure/graph4.png" alt="graph4"></p>
+<p>对于这一步骤，可以用一个表格来表示，以便于编程理解：</p>
+<p>表中有3个表示状态的变量：</p>
+<ul>
+<li>dv表示点s到图中每个点的距离，结合上面的例子，s=v3.</li>
+<li>pv表示图中点的路径前继点。</li>
+<li>Known表示点是否被处理，处理了，则标记为1 。</li>
+</ul>
+<p><img src="/images/DataStructure/graph3.png" alt="graph3"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">void Unweighted(Table T)</span><br><span class="line">&#123;</span><br><span class="line">	int CurrDist;</span><br><span class="line">	Vertex V,W;</span><br><span class="line">	for(CurrDist=0;CurrDist&lt;NumVertex;CurrDist++)</span><br><span class="line">	&#123;</span><br><span class="line">		for each vertex V</span><br><span class="line">			if(!T[V].Known&amp;&amp;T[V].Dist==CurrDist)</span><br><span class="line">			&#123;</span><br><span class="line">				T[V].Known = True;</span><br><span class="line">				for each W adjacent to V</span><br><span class="line">					if(T[W].Dist == Infinity)</span><br><span class="line">					&#123;</span><br><span class="line">						T[W].Dist = CurrDist+1;</span><br><span class="line">						T[W].Path = V;</span><br><span class="line">					&#125;</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通拓扑排序一样，对于上面的程序也是存在改进的地方的（<code>for each vertex V</code>），我们没有必要去对each vertex V做一下这么多的步骤，只需要对相邻接的点做就好了。因此用一个队列来使每一个处理的点入队，然后处理其邻接的点。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">void Unweighted(Table T)</span><br><span class="line">&#123;</span><br><span class="line">	Queue Q;</span><br><span class="line">	Vertex V,W;</span><br><span class="line"> </span><br><span class="line">	Q = CreateQueue(NumVertex);</span><br><span class="line">	MakeEmpty(Q);</span><br><span class="line">	Enqueue(S,Q);//S is the start Vertex</span><br><span class="line"> </span><br><span class="line">	while(!IsEmpty(Q))</span><br><span class="line">	&#123;</span><br><span class="line">		V = Dequeue(Q);</span><br><span class="line">		T[V].Known=True;</span><br><span class="line">		for each W adjacent to V</span><br><span class="line">			if(T[W].Dist == Infinity)</span><br><span class="line">			&#123;</span><br><span class="line">				T[W].Dist = T[V].Dist+1;</span><br><span class="line">				T[W].Path = V;</span><br><span class="line">				Enqueue(W,Q);</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	Free(Q);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个优化实际上就是BFS（广度优先算法）。</p>
+<h3 id="有权重的最短路径"><a href="#有权重的最短路径" class="headerlink" title="有权重的最短路径"></a>有权重的最短路径</h3><p>有权重的最短路径算法，称之为Dijkstra‘s algorithm。相对于无权重的最短路径算法，有权重的最短路径算法会显得难一点，这是因为权重的引入会使某些路径的加权重长度发生颠倒。</p>
+<p>Dijkstra‘s algorithm是一种greedy algorithm。贪婪算法就是在算法的每一个阶段都取最大值。一般情况下，贪婪算法能取得较好的效果。但是贪婪算法是有其缺陷的，也就是说能达到局部最优，而未必能达到全局最优，举个例子，假设要兑换15分的硬币，而硬币有12分的，10分的，5分的，1分的，那么根据贪婪算法，最终的兑换结果为1个12分的，3个一分的；而最优结果应该是一个10分的，一个5分的。（这里我们定义最优为硬币个数最少）。</p>
+<p>Dijkstra‘s algorithm的步骤是：<br>对于每一个阶段，Dijkstra‘s algorithm会在所有未处理的点中选取一个最小距离的点v，然后把给定点s到v的路径定义为最小路径。</p>
+<p>下面我们来分析下图的例子：<br><img src="/images/DataStructure/graph9.png" alt="graph9"></p>
+<p>对应的表的形式如下：<br><img src="/images/DataStructure/graph10.png" alt="graph10"><br><img src="/images/DataStructure/graph11.png" alt="graph11"><br><img src="/images/DataStructure/graph12.png" alt="graph12"></p>
+<p>下面是具体的实现说明：</p>
+<ul>
+<li><p>最初的点s=v1；计算s到图中所有点的最短路径。</p>
+</li>
+<li><p>找到v1邻接的点v2，v4，分别标出s到v2，v4的路径长，同时对v1标注T[v1].Known=1。</p>
+</li>
+<li><p>由于v4路径长较小，因此选择v4，找到v4邻接的点v3，v5，v6，v7，标注出他们的路径长；同时对v1标注T[v4].Known=1。</p>
+</li>
+<li><p>现有的所有未处理路径中v2最短，因此处理v2，找到v2邻接的点v4，v5； v2到v4，v5的路径长远大于v4，v5已有的路径长，因此不更新。同时T[v2].Known=1。</p>
+</li>
+<li><p>现有的所有未处理路径中v3，v5最短，处理v3，邻接点为v1，v6，路径分别为7,8；对于v3到v6的距离，因为8&lt;9，因此需要更新；对于v3到v1的距离不需要更新。同时T[v3].Known=1。</p>
+</li>
+<li><p>对于v5，邻接点为v7，v5到v7的路径长为 3+6&gt;5，因此不更新；同时T[v5].Known=1。</p>
+</li>
+<li><p>现在处理v7，v7的邻接点为v6，v7到v6的路径长为5+1&lt;8，因此需要更新；同时T[v7].Known=1。</p>
+</li>
+<li><p>现在处理v6，v6没有邻接点了，因此可以结束了。同时T[v6].Known=1。</p>
+</li>
+</ul>
+<p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">typedef int Vertex;</span><br><span class="line">typedef int DistType;</span><br><span class="line"> </span><br><span class="line">struct TableEntry</span><br><span class="line">&#123;</span><br><span class="line">	List Header;</span><br><span class="line">	int Known;</span><br><span class="line">	DistType Dist;</span><br><span class="line">	Vertex Path;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">#define NotAVertex (-1)</span><br><span class="line">typedef struct TableEntry Table[NumVertex];</span><br><span class="line"> </span><br><span class="line">void InitTable(Vertex Start,Graph G,Table T)</span><br><span class="line">&#123;</span><br><span class="line">	int i;</span><br><span class="line">	ReadGraph(G,T);</span><br><span class="line">	for(i=0;i&lt;NumVertex;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		T[i].Known = 0;</span><br><span class="line">		T[i].Dist = Infinity;</span><br><span class="line">		T[i].Path = NotAVertex;</span><br><span class="line">	&#125;</span><br><span class="line">	T[Start].Dist = 0;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">void Dijkstra(Table T)</span><br><span class="line">&#123;</span><br><span class="line">	Vertex V,W;</span><br><span class="line">	for(;;)</span><br><span class="line">	&#123;</span><br><span class="line">		V = FindSmallestUnknownDistanceVertex();</span><br><span class="line">		if(V==NotAVertex)</span><br><span class="line">			break;</span><br><span class="line">		T[V].Known = Ture;</span><br><span class="line">		for each W adjacent to V</span><br><span class="line">			if(!T[V].Known)</span><br><span class="line">				if(T[V].Dist+Cvw&lt;T[W].Dist)</span><br><span class="line">				&#123;</span><br><span class="line">					Decrease(T[W].Dist to T[V].Dist+Cvw);</span><br><span class="line">					T[W].Path = V;</span><br><span class="line">				&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="边的权重为负的图"><a href="#边的权重为负的图" class="headerlink" title="边的权重为负的图"></a>边的权重为负的图</h3><p>边的权重为负，这将是一个比较糟糕的事情，这无法利用上面的两种方法处理，因为只要循环负边，则路径可以无限变小，如下图所示：</p>
+<p><img src="/images/DataStructure/graph5.png" alt="graph5"></p>
+<p>点1到点6的最短路径是2么？当然不是，我们没法求出其最短路径，因为我们可以沿着路径1,6,5,7,6这样一次下来，路径为-3，由于6,5,7,6是一个圈，我们可以一直循环下去且路径为负值，因此无法确定点1到点6的最短路径。</p>
+<p>那么遇到这种问题该怎么解决呢？</p>
+<ul>
+<li>给所有权重加上一个正值，是所有权重均为非负，上面的例子中，所有权重加上11，则就可以应用Dijkstra方法处理了。</li>
+</ul>
+<h3 id="无圈的图"><a href="#无圈的图" class="headerlink" title="无圈的图"></a>无圈的图</h3><p>对于无圈图，也可以应用Dijkstra方法处理，无圈图也可以看做是上面的一种特例。对于无圈图，可以利用拓扑排序的顺序选择起始点，权重的更新也可以按照拓扑排序的顺序进行，因此算法可以一次进行，这个可以看做是对Dijkstra方法的改进，并且是向简单方向的改进。</p>
+<p>无圈图可以模拟像下坡滑雪等问题，一直需要沿着向下的方向，不应该有圈。</p>
+<p>而无圈图的最大应用不在这里，而是一个被称之为关键路径分析法的应用。</p>
+<p>如下图所示：</p>
+<p><img src="/images/DataStructure/graph6.png" alt="graph6"></p>
+<p>这幅图表示的意思是要想做D中的事情，必须先做完A和B，而A,B则是可以并行的。因此这个图中的问题不是寻找最短路径，而是找到并行完成图中的所有点所需要的最短时间，以及最晚的时间。</p>
+<p>解决这个问题需要把上面的动作节点图转换为下面的事件节点图</p>
+<p><img src="/images/DataStructure/graph7.png" alt="graph7"></p>
+<p>对于事件节点图，只需要找出第一个事件到最后一个事件的最长路径的长就好了。</p>
+<p>假设$EC<em>i$表示节点i的最早完成时间，那么利用下面的法则<br>$EC_i = 0$<br>$EC_w = max</em>{ (v, w) \in E } (EC<em>v + C</em>{v, w})$</p>
+<p>最早完成时间结果为：</p>
+<p><img src="/images/DataStructure/graph8.png" alt="graph8"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag"># 算法</a>
+          
+            <a href="/tags/图论/" rel="tag"># 图论</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/03/24/DataStructure/拓扑排序/" rel="next" title="拓扑排序">
+                <i class="fa fa-chevron-left"></i> 拓扑排序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/05/ProgramingLanguage/数组不等于指针/" rel="prev" title="数组不等于指针">
+                数组不等于指针 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引论"><span class="nav-number">1.</span> <span class="nav-text">引论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无权重的最短路径"><span class="nav-number">2.</span> <span class="nav-text">无权重的最短路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有权重的最短路径"><span class="nav-number">3.</span> <span class="nav-text">有权重的最短路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#边的权重为负的图"><span class="nav-number">4.</span> <span class="nav-text">边的权重为负的图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无圈的图"><span class="nav-number">5.</span> <span class="nav-text">无圈的图</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">142.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共142.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
