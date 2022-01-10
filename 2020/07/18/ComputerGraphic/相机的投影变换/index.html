@@ -97,7 +97,7 @@
 <meta property="og:image" content="http://yoursite.com/images/computerGraph/FrustumCuboid.png">
 <meta property="og:image" content="http://yoursite.com/images/computerGraph/cameraPerspective2.png">
 <meta property="og:image" content="http://yoursite.com/images/computerGraph/left_right_hand.png">
-<meta property="og:updated_time" content="2021-09-03T14:59:07.230Z">
+<meta property="og:updated_time" content="2021-10-14T15:08:20.016Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="相机的投影变换">
 <meta name="twitter:description" content="空间变换在计算机图形学中，我们将一个物体渲染到最终的屏幕上是需要经过一系列的空间变化的，如下图所示： 我们可以看到M矩阵是将物体从局部空间变换到世界空间，V矩阵是将物体从世界空间变换到观察空间。本章节我们重点看下P矩阵，它将物体从观察空间变换到裁剪空间。为什么要做这个变化呢？在上图中我们的view space和clip space看起来是一样的啊。 为什么要做投影变换投影变换的一个最主要的原因是要">
@@ -362,7 +362,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,763
+                  1,713
                 </span>
               
 
@@ -378,7 +378,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  7
+                  6
                 </span>
               
             </div>
@@ -426,8 +426,12 @@
 0&0&0&1\\
 \end{bmatrix}</script><p>其中$w,h,n,f$分别表示视锥的宽，高，相机的近，远平面。</p>
 <p><em>注意：这里推导出来的公式可能跟某些地方的不太一致，这是因为对z的定义导致的。如果我们认为近远平面的范围是[-1，1], 那么就是上面的公式，如果我们设定近远平面的范围是[0, 1]，那么公式就应当为如下所示：</em></p>
-<p>$M_{ortho}  = \begin{bmatrix}<br>\frac{2}{w}&amp;0&amp;0&amp;0\<br>0&amp;\frac{2}{h}&amp;0&amp;0\<br>0&amp;0&amp;\frac{1}{n - f}&amp;-\frac{f}{n-f}\<br>0&amp;0&amp;0&amp;1\<br>\end{bmatrix}<br>$</p>
-<p><em>同时对于左手坐标系，上面的公式也是有些许的变化的</em></p>
+<script type="math/tex; mode=display">M_{ortho}  = \begin{bmatrix}
+\frac{2}{w}&0&0&0\\
+0&\frac{2}{h}&0&0\\
+0&0&\frac{1}{n - f}&-\frac{f}{n-f}\\
+0&0&0&1\\
+\end{bmatrix}</script><p><em>同时对于左手坐标系，上面的公式也是有些许的变化的</em></p>
 <h3 id="透视投影"><a href="#透视投影" class="headerlink" title="透视投影"></a>透视投影</h3><p>正射投影比较简单，一个平移一个缩放，顺序无所谓，主要是没有产生形变，所以可以这样简单的变换。但是透视投影可不一样了，透视投影也就意味着近处的物体大，远处的物体小，并且在无穷远处交于一点。因此透视投影的推导会相对有一些难度。</p>
 <p>透视投影：<br><img src="/images/computerGraph/perspective.png" alt="perspective"></p>
 <p>对于透视投影我们要做的是什么？就是把左边的这个视锥空间转换为右边的<br><img src="/images/computerGraph/FrustumCuboid.png" alt="FrustumCuboid"></p>
@@ -440,8 +444,7 @@
 <p><img src="/images/computerGraph/FrustumCuboid.png" alt="FrustumCuboid"></p>
 <p>我们先将视锥体变换为近平面大小的长方体</p>
 <p>对于边界上线段上的点，根据相似三角形原理，我们可以得到如下的结论：<br>点$(x^{‘}, y^{‘}, z^{‘})$ 要变换成与近平面平行的点（x, y相同，z不同），根据相似三角形原理，有如下的变换：</p>
-<p>$x^{‘} = \frac{n}{z} <em> x$<br>$y^{‘} = \frac{n}{z} </em> y$</p>
-<p>对于齐次坐标，有如下的公式：</p>
+<script type="math/tex; mode=display">x^{'} = \frac{n}{z} * x</script><script type="math/tex; mode=display">y^{'} = \frac{n}{z} * y</script><p>对于齐次坐标，有如下的公式：</p>
 <script type="math/tex; mode=display">\begin{pmatrix}
 x&\\
 y&\\
@@ -534,7 +537,7 @@ n&0&0&0\\
 0&n&0&0\\
 0&0&n+f&-n*f\\
 0&0&1&0\\
-\end{pmatrix}</script><p>有了$M<em>{persp \Rightarrow ortho}$矩阵后，我们可以将视锥变换到正射投影空间，我们只需要再乘以$M</em>{ortho}$矩阵就可以将其变换到NDC空间了。因此我们的透视投影的推导可以分成两部分，先将其变换到ortho空间，然后再利用$M_{ortho}$矩阵将其变换到NDC空间即可。</p>
+\end{pmatrix}</script><p>有了<script type="math/tex">M_{persp \Rightarrow ortho}</script>矩阵后，我们可以将视锥变换到正射投影空间，我们只需要再乘以<script type="math/tex">M_{ortho}</script>矩阵就可以将其变换到NDC空间了。因此我们的透视投影的推导可以分成两部分，先将其变换到ortho空间，然后再利用<script type="math/tex">M_{ortho}</script>矩阵将其变换到NDC空间即可。</p>
 <p>因此有：</p>
 <script type="math/tex; mode=display">M_{persp} = M_{ortho} * M_{persp \Rightarrow ortho} = 
 \begin{pmatrix}
@@ -622,8 +625,8 @@ n&0&0&0\\
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/03/02/GPUGem/GPU结构初识/" rel="prev" title="GPU结构初识">
-                GPU结构初识 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/08/09/DataStructure/深度优先/" rel="prev" title="深度优先算法">
+                深度优先算法 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -708,7 +711,7 @@ n&0&0&0\\
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-count">150</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -730,7 +733,7 @@ n&0&0&0\\
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -800,7 +803,7 @@ n&0&0&0\\
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -814,7 +817,7 @@ n&0&0&0\\
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">142.7k</span>
+    <span title="Site words total count">165.8k</span>
   
 </div>
 
@@ -843,7 +846,7 @@ n&0&0&0\\
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共142.7k字</span>
+  <span class="post-count">博客全站共165.8k字</span>
 </div>
         
 <div class="busuanzi-count">
@@ -1010,7 +1013,56 @@ n&0&0&0\\
         j.async = true;
         e.parentNode.insertBefore(j, e);
       })(document, 'script');
-    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -1028,35 +1080,6 @@ n&0&0&0\\
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
   
 
 

@@ -79,18 +79,23 @@
 
 
 
-<meta name="description" content="所谓妖，只不过是求而不得的人，修而未成的果。">
+<meta name="description" content="引论哈希（Hashing）是以一种能以常数平均时间进行插入，查找，删除的技术。常数时间一般意义上是指O(1)。 是的，Hashing是一种技术，从英文名也可以看出，这是动名词，一般动名词大多表示的不是一个静态的东西。就像抽象数据结构（ADT），ADT是一系列的操作的集合。而不应该是一般以为的抽象的一种数据结构。可见不同语言的表示以及翻译是一件很重要的事情。扯远了，回到正题。 不同于二叉查找树，二叉">
 <meta name="keywords" content="数据结构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="哈希">
 <meta property="og:url" content="http://yoursite.com/2014/02/02/DataStructure/哈希/index.html">
 <meta property="og:site_name" content="axis tech zone">
-<meta property="og:description" content="所谓妖，只不过是求而不得的人，修而未成的果。">
+<meta property="og:description" content="引论哈希（Hashing）是以一种能以常数平均时间进行插入，查找，删除的技术。常数时间一般意义上是指O(1)。 是的，Hashing是一种技术，从英文名也可以看出，这是动名词，一般动名词大多表示的不是一个静态的东西。就像抽象数据结构（ADT），ADT是一系列的操作的集合。而不应该是一般以为的抽象的一种数据结构。可见不同语言的表示以及翻译是一件很重要的事情。扯远了，回到正题。 不同于二叉查找树，二叉">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2021-10-08T13:54:09.424Z">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/hash.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/hash1.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/hash2.png">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/hash3.png">
+<meta property="og:updated_time" content="2021-10-14T14:55:45.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="哈希">
-<meta name="twitter:description" content="所谓妖，只不过是求而不得的人，修而未成的果。">
+<meta name="twitter:description" content="引论哈希（Hashing）是以一种能以常数平均时间进行插入，查找，删除的技术。常数时间一般意义上是指O(1)。 是的，Hashing是一种技术，从英文名也可以看出，这是动名词，一般动名词大多表示的不是一个静态的东西。就像抽象数据结构（ADT），ADT是一系列的操作的集合。而不应该是一般以为的抽象的一种数据结构。可见不同语言的表示以及翻译是一件很重要的事情。扯远了，回到正题。 不同于二叉查找树，二叉">
+<meta name="twitter:image" content="http://yoursite.com/images/DataStructure/hash.png">
 
 
 
@@ -351,7 +356,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  0
+                  3,686
                 </span>
               
 
@@ -367,7 +372,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  15
                 </span>
               
             </div>
@@ -388,7 +393,124 @@
       
 
       
-        
+        <h1 id="引论"><a href="#引论" class="headerlink" title="引论"></a>引论</h1><p>哈希（Hashing）是以一种能以常数平均时间进行插入，查找，删除的技术。常数时间一般意义上是指O(1)。</p>
+<p>是的，Hashing是一种技术，从英文名也可以看出，这是动名词，一般动名词大多表示的不是一个静态的东西。就像抽象数据结构（ADT），ADT是一系列的操作的集合。而不应该是一般以为的抽象的一种数据结构。可见不同语言的表示以及翻译是一件很重要的事情。扯远了，回到正题。</p>
+<p>不同于二叉查找树，二叉查找树有很多的操作，像什么找最大，找最小等等；哈希只有简单的插入，查找，删除这3种操作，而且哈希并不能支持排序信息，也就是在哈希表中的信息都是无序的。但是哈希最大的优点就是执行插入，查找，删除这3种操作只需要常数时间，这是什么概念呢，基本是瞬时啊，尤其对于查找，二叉树的查找的平均时间是O(logN),都认为是很快很有效的了，而哈希表的查找时间是O(1)。这就是价值所在。可以有很多的缺点，但是只有有一个优点无人能及就够了。</p>
+<p>哈希的应用很广泛，主要利用的就是它查找很快的优点。</p>
+<p>例如编译器对于声明的变量的检查，声明了新的变量，只要O(1)的时间就可以插入；要查询某个变量是否被声明过，也只需要O(1)的时间就可以知道结果。</p>
+<h1 id="哈希的思想"><a href="#哈希的思想" class="headerlink" title="哈希的思想"></a>哈希的思想</h1><p>哈希表就是一个固定长度的数组，包含有keys，每个key（key可以是字符，字符串，或者是数字，亦或者是什么其他信息等等）都与一个数值（数值一般来说就是0到TableSize-1，TableSize就是哈希表的长度，也就是那个数组的长度）对应。</p>
+<p>就像数组原理一样，a[0] = ‘c’; a[0]中包含着字符’c’；哈希表的0位置，包含了一个key, 1位置包含了另一个key等等。当然不会是这样简单，否则就没有必要引入哈希了，数组皆可以了，而且这样也不可能达到上面说的好处。要实现哈希，最重要的部分就是哈希函数。</p>
+<h1 id="哈希函数"><a href="#哈希函数" class="headerlink" title="哈希函数"></a>哈希函数</h1><p>哈希函数（Hash function）是一个把key映射到数值（也就是0到TableSize-1）的函数。</p>
+<p>对于这个函数，一般有两个要求</p>
+<ul>
+<li><p>运算简单</p>
+</li>
+<li><p>能够把key均匀的映射到数值上（也就是0到TableSize-1），也就是cell里。</p>
+</li>
+</ul>
+<p>哈希函数的格式为：</p>
+<script type="math/tex; mode=display">(Key) mod (TableSize)</script><p>对于key而言，如果是数值，那么我们直接用就可以了，但是当key是字符串时，这是无法直接用到函数中的，而这也正是最常见的情况。对于这种情况，一种解决方法是把字符串中的字符的ASCII码加起来得到一个数值，将其用于哈希函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Index Hash(const char *key,int TableSise)</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int HashVal = 0;</span><br><span class="line">	while(*key!=&apos;\0&apos;)</span><br><span class="line">		HashVal += *key++;</span><br><span class="line">	return HashVal%TableSize;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而对于TableSize，一般来说要取质数，这样可以比较平均的做hashing。例如我们去TableSize=10；而我们的数据都是10的整数倍的话，那么所有的数据都会被映射到同一个cell上，这是不利于均匀分布的。</p>
+<p>另外一种比较好的hash函数是：</p>
+<p>$ \sum^{KeySize - 1}_{i = 0} key[KeySize - i - 1] * 32^i $</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Index Hash(const char *key,int TableSize)</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int HashVal = 0;</span><br><span class="line">	while(*key!=&apos;\0&apos;)</span><br><span class="line">		HashVal = (HashVal&lt;&lt;5) + *key++;</span><br><span class="line">	return HashVal%TableSize;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="冲突"><a href="#冲突" class="headerlink" title="冲突"></a>冲突</h1><p>有了哈希的思想，也有了哈希的手段（哈希函数），那么剩下的问题就是冲突了。在哈希中，冲突时一个很常见的问题，因为数组的大小是有限的，而key是无限的；而且当用哈希函数映射时，不同的key映射到同一个cell(也就是同一个值)是很常见的事情，因此应对这种冲突是Hashing一个最基本的问题。</p>
+<p>主要的方法有两种</p>
+<ul>
+<li><p>分离链表法（separate chain）</p>
+</li>
+<li><p>开放地址法（open addressing）</p>
+</li>
+</ul>
+<p>下面来一个个的分析。</p>
+<h2 id="分离链表法（separate-chain）"><a href="#分离链表法（separate-chain）" class="headerlink" title="分离链表法（separate chain）"></a>分离链表法（separate chain）</h2><p>分离链表法的思想极其简单，就是在每个哈希表的cell中引出一个链表，实际的cell中存放的是链表的头指针，数据存放在链表中，当有冲突数据产生，在链表中加入数据就好了。如下图所示：</p>
+<p><img src="/images/DataStructure/hash.png" alt="hash"></p>
+<h3 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h3><ul>
+<li>哈希表定义</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">struct ListNode;</span><br><span class="line">typedef struct ListNode *List;</span><br><span class="line">typedef struct ListNode *Position;</span><br><span class="line">struct HashTbl;</span><br><span class="line">typedef struct HashTbl *HashTable;</span><br><span class="line"> </span><br><span class="line">struct ListNode</span><br><span class="line">&#123;</span><br><span class="line">	ElementType Element;</span><br><span class="line">	Position Next;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">struct HashTbl</span><br><span class="line">&#123;</span><br><span class="line">	int TableSize;</span><br><span class="line">	List *TheLists;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从代码定义可以看出，哈希表主要就是包含两个东西，一个是表的大小，另一个是一个数组，这个数组中包含的元素是指针，这些指针是链表的头结点，即也是一个指针。而这里，对数组的定义也是采用的指针形式：<br><code>List *TheLists;</code><br>因此TheLists其实是指向指针的指针。从上面的定义我们就能看出哈希表的一个整体的结构。</p>
+<ul>
+<li>哈希表的初始化<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">HashTable InitializeTable(int TableSize)</span><br><span class="line">&#123;</span><br><span class="line">	HashTable H;</span><br><span class="line">	int i;</span><br><span class="line">	if(TableSize&lt;MiniSize)</span><br><span class="line">	&#123;</span><br><span class="line">		Error(&quot;Table size too small!!&quot;);</span><br><span class="line">		return NULL;</span><br><span class="line">	&#125;</span><br><span class="line">	H = malloc(sizeof(struct HashTbl));</span><br><span class="line">	if(H==NULL)</span><br><span class="line">		Error(&quot;Out of Space!!&quot;);</span><br><span class="line">	// The TableSize should be prime</span><br><span class="line">	H-&gt;TableSize = NextPrime(TableSize);</span><br><span class="line">	// H-&gt;TheLists is a pointer point to Array consists of pointer that point to list</span><br><span class="line">	H-&gt;TheLists = malloc(sizeof(List)*H-&gt;TableSize);</span><br><span class="line">	if(H-&gt;TheLists==NULL)</span><br><span class="line">		Error(&quot;Out of Space!!&quot;);</span><br><span class="line"> </span><br><span class="line">	//header</span><br><span class="line">	for(i=0;i&lt;TableSize-1;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		H-&gt;TheLists[i] = malloc(sizeof(struct ListNode));</span><br><span class="line">		if(H-&gt;TheLists[i]==NULL)</span><br><span class="line">			Error(&quot;Out of Space!!&quot;);</span><br><span class="line">		else</span><br><span class="line">			H-&gt;TheLists[i]-&gt;Next = NULL;</span><br><span class="line">	&#125;</span><br><span class="line">	return H;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>初始化就是定义哈希表的大小，让哈希表的数组中包含头结点，然后将头结点指向NULL。并做一些质数约束等等。</p>
+<ul>
+<li>哈希表的查找Find</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Position Find(ElementType Key,HashTable H)</span><br><span class="line">&#123;</span><br><span class="line">	Position P;</span><br><span class="line">	List L;</span><br><span class="line">	//find the position in HashTable</span><br><span class="line">	L = H-&gt;TheLists[Hash(Key,H-&gt;TableSize)];</span><br><span class="line">	P = L-&gt;Next;</span><br><span class="line">	while(P!=NULL &amp;&amp; P-&gt;Element != Key)</span><br><span class="line">		P = P-&gt;Next;</span><br><span class="line">	return P;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查找的顺序就是先找到哈希表中的位置，然后再在对应的链表里查找。</p>
+<ul>
+<li>哈希表的插入：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">void Insert(ElementType Key,HashTable H)</span><br><span class="line">&#123;</span><br><span class="line">	Position P,NewP;</span><br><span class="line">	List L;</span><br><span class="line">	P = Find(Key,H);</span><br><span class="line">	if(P==NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		NewP = malloc(sizeof(struct List));</span><br><span class="line">		if(NewP==NULL)</span><br><span class="line">			Error(&quot;Out of Space!!!&quot;);</span><br><span class="line">		else</span><br><span class="line">		&#123;</span><br><span class="line">			// //Find the position in HashTable</span><br><span class="line">			L = H-&gt;TheLists[Hash(Key,H-&gt;TableSize)];</span><br><span class="line">			// Insert the Key after the header</span><br><span class="line">			NewP-&gt;Next = L-&gt;Next;</span><br><span class="line">			NewP-&gt;Element = Key;</span><br><span class="line">			L-&gt;Next = NewP;</span><br><span class="line">		&#125;</span><br><span class="line"> </span><br><span class="line">	&#125;</span><br><span class="line">&#125;`</span><br></pre></td></tr></table></figure>
+<p>插入的做法是：先查找看hash表中有没有key，如果有的话就do nothing。否则的话就要增加节点。首先找到hash表中的位置，然后在链表表头处插入节点。关于为什么在表头处插入，主要有两点原因</p>
+<ol>
+<li>表头处插入比较省时，不需要再去遍历链表了</li>
+<li>新插入的Key在下次被访问的概率很大。这个类似的结论在计算机的各个部分很普遍。</li>
+</ol>
+<ul>
+<li>哈希表的删除：<br>分离链表法的删除Key的方法，思想等同于在链表中删除节点。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">void Delete(ElementType Key,HashTable H)</span><br><span class="line">&#123;</span><br><span class="line">	Position P,NP;</span><br><span class="line">	List L;</span><br><span class="line">	L = H-&gt;TheLists[Hash(Key,H-&gt;TableSize)];</span><br><span class="line"> </span><br><span class="line">	P = L-&gt;Next;</span><br><span class="line">	while(P-&gt;Next != NULL &amp;&amp; P-&gt;Element != Key)</span><br><span class="line">	&#123;</span><br><span class="line">		P = P-&gt;Next;</span><br><span class="line">		if(P-&gt;Element == Key)</span><br><span class="line">		&#123;</span><br><span class="line">			NP = P_&gt;Next;</span><br><span class="line">			P-&gt;Next = NP-&gt;Next;</span><br><span class="line">			free(NP);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="开放地址法（open-addressing）"><a href="#开放地址法（open-addressing）" class="headerlink" title="开放地址法（open addressing）"></a>开放地址法（open addressing）</h2><p>开放地址法的思想在于当一个冲突发生时，去查找下一个空的cell来装这个key，这个查找是有规矩的。这个思想的实现基于下面的哈希函数</p>
+<script type="math/tex; mode=display">h_i(X) = (Hash(X) + F(i))</script><p>$F（i）$就是查找下一个空的位置所要遵循的约束。</p>
+<p>开放地址法一般有三种形式，这是根据F(i)的形式分的</p>
+<ul>
+<li><p>线性探测法，即F(i) = i;</p>
+</li>
+<li><p>平方探测法，即F(i)=i*i;</p>
+</li>
+<li><p>双哈希探测法，即F(i) = i*hash2(X);</p>
+</li>
+</ul>
+<p>开放地址法的优点就是所有的数据Key都在Hash表的表内，不需要因为外部的链表来处理冲突。但是这个表要足够大，一般要达到数据量Key的2倍。</p>
+<h3 id="线性探测法，即-F-i-i"><a href="#线性探测法，即-F-i-i" class="headerlink" title="线性探测法，即$F(i) = i$;"></a>线性探测法，即$F(i) = i$;</h3><p><img src="/images/DataStructure/hash1.png" alt="hash"></p>
+<h3 id="平方探测法，即-F-i-i-i"><a href="#平方探测法，即-F-i-i-i" class="headerlink" title="平方探测法，即$F(i)=i*i$;"></a>平方探测法，即$F(i)=i*i$;</h3><p>平方探测比线性探测法要节省时间，比较快，但是对于平方探测法，当数据量大于哈希表的大小的一半时，就会失效，这个很明显。</p>
+<p><img src="/images/DataStructure/hash2.png" alt="hash"></p>
+<h3 id="双哈希探测法，即-F-i-i-hash2-X"><a href="#双哈希探测法，即-F-i-i-hash2-X" class="headerlink" title="双哈希探测法，即$F(i) = i*hash2(X)$;"></a>双哈希探测法，即$F(i) = i*hash2(X)$;</h3><p>这个方法的难度在于怎样选取hash2(X);这个函数选择不好的话，就别想得到好的结果了。</p>
+<p><img src="/images/DataStructure/hash3.png" alt="hash"></p>
+<h3 id="代码实现（以平方探测为例子）"><a href="#代码实现（以平方探测为例子）" class="headerlink" title="代码实现（以平方探测为例子）"></a>代码实现（以平方探测为例子）</h3><ul>
+<li>哈希表定义：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">typedef unsigned int Index;</span><br><span class="line">typedef Index Position;</span><br><span class="line">struct HashTbl;</span><br><span class="line">typedef struct HashTbl *HashTable;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">enum KindofEntry &#123;Legitimate,Empty,Deleted&#125;;</span><br><span class="line">struct HashEntry</span><br><span class="line">&#123;</span><br><span class="line">	ElementType Element;</span><br><span class="line">	enum KindofEntry Info;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">typedef struct HashEntry Cell;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">struct HashTbl</span><br><span class="line">&#123;</span><br><span class="line">	int TableSize;</span><br><span class="line">	Cell *HashCell;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这个定义中，对每一个hash小cell中有两个东西，一个是Key，另一个是状态信息。哈希表也有两个结构，一个是哈希表的大小，另一个是指向存储哈希表的第一个单元的指针。</p>
+<ul>
+<li><p>哈希表初始化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">HashTable InitializeTable (int TableSize)</span><br><span class="line">&#123;</span><br><span class="line">	HashTable H;</span><br><span class="line">	if(TableSize&lt;MiniSize)</span><br><span class="line">	&#123;</span><br><span class="line">		Error(&quot;TableSize too Small!!&quot;);</span><br><span class="line">		return NULL;</span><br><span class="line">	&#125;</span><br><span class="line">	H = malloc(sizeof(struct HashTbl));</span><br><span class="line">	if(H==NULL)</span><br><span class="line">		Error(&quot;Out of Space!!!&quot;);</span><br><span class="line">	H-&gt;TableSize = NextPrime(TableSize);</span><br><span class="line">	H-&gt;HashCell = malloc(sizeof(struct HashEntry)*H-&gt;TableSize);</span><br><span class="line">	if(H-&gt;HashCell == NULL)</span><br><span class="line">		Error(&quot;Out of Space!!!&quot;);</span><br><span class="line">	int i;</span><br><span class="line">	for(i=0;i&lt;H-&gt;TableSize;i++)</span><br><span class="line">		H-&gt;HashCell[i].Info = Empty;</span><br><span class="line">	return H;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>哈希表的查找Find：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Position Find(ElementType Key,HashTable H)</span><br><span class="line">&#123;</span><br><span class="line">	Position P;</span><br><span class="line">	P = hash(Key,H-&gt;TableSize);</span><br><span class="line">	int i=0; //collision funciton F(i)=i*i = F(i-1)+2*i-1;</span><br><span class="line">	while(H-&gt;HashCell[P].Info!=Empty &amp;&amp; H-&gt;HashCell[P].Element!=Key)</span><br><span class="line">	&#123;</span><br><span class="line">		P += 2*++i -1;</span><br><span class="line">		if(P&gt;H-&gt;TableSize)</span><br><span class="line">			P -= H-&gt;TableSize;</span><br><span class="line">	&#125;</span><br><span class="line">	return P;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果Key没在hash表中的话，这个函数是没办法表达这个的，它只能返回位置P,P要么是找到的值得位置，要么是这个位置的状态是Empty。这要下面的插入删除程序自己判断得知。</p>
+<ul>
+<li>哈希表的插入Insert：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">void Insert(ElementType Key,HashTable H)</span><br><span class="line">&#123;</span><br><span class="line">	Position P;</span><br><span class="line">	P = Find(Key,H);</span><br><span class="line">	if(H-&gt;HashCell[P].Info!=Legitimate)</span><br><span class="line">	&#123;</span><br><span class="line">		H-&gt;HashCell[P].Info == Legitimate;</span><br><span class="line">		H-&gt;HashCell[P].Element = Key;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>只要判断P的位置没有Key，就可以插入Key。</p>
+<ul>
+<li>哈希表的删除Delete：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">void Delete(ElementType Key,HashTable H)</span><br><span class="line">&#123;</span><br><span class="line">	Position P;</span><br><span class="line">	P = Find(Key,H);</span><br><span class="line">	if(H-&gt;HashCell[P].Info == Legitimate)</span><br><span class="line">	&#123;</span><br><span class="line">		H-&gt;HashCell[P].Info == Delete;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>哈希表的删除采用懒惰删除，懒惰删除（lazy deletion）指的是从一个哈希表中删除 元素的一种方法。在这个方法中，删除仅仅是指标记一个元素被删除，而不是整个清除它。被删除的位点在插入时被当作空元素，在搜索之时被当作已占据。因此只要把要删除的Key的位置标记为delete就可以了。</p>
+<h1 id="重新哈希"><a href="#重新哈希" class="headerlink" title="重新哈希"></a>重新哈希</h1><p>Refresh Hashing的提出是基于这样的一个背景问题：当我们采用平方探测的开放地址法时，随着插入Key的增多，运行的效率会变得越来越慢（因为会有更多的冲突需要处理）而随着key的数目超过TableSize的一半时，这种方法有可能要失效，并且及时能够再次插入，效率也都要降低的可怕，因此引入了Refresh Hashing，急重新哈希。</p>
+<p>思想：我们把一个插入Key过多的表重新哈希到一个TableSize是原表2倍大的新的哈希表中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">HashTable Rehash(HashTable H)</span><br><span class="line">&#123;</span><br><span class="line">	int i;</span><br><span class="line">	int OldSize;</span><br><span class="line">	Cell *OldCell;</span><br><span class="line">	OldCell = H-&gt;HashCell</span><br><span class="line">	OldSize = H-&gt;TableSize;</span><br><span class="line">	H = InitializeTable(2*OldSize);</span><br><span class="line">	for(i=0;i&lt;OldSize;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		if(OldCell[i].Info == Legitimate)</span><br><span class="line">			Insert(OldCell[i].Element,H);</span><br><span class="line">	&#125;</span><br><span class="line">	free(OldCell);</span><br><span class="line">	return H;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个程序做的事情就是把旧的Key取出来，映射到新的哈希表中。<br>关于到底什么时候Refresh Hash,一般有三种选择</p>
+<ul>
+<li>哈希表已经装满了一半了</li>
+<li>插入失败的时候</li>
+<li>当哈希表达到一个临界的载入因子的时候，这个是一个折中的方法。</li>
+</ul>
+<h1 id="载入因子"><a href="#载入因子" class="headerlink" title="载入因子"></a>载入因子</h1><p>载入因子（Load Factor）是指表中Key的个数与哈希表的TableSize的比值。在Hash method中，这个才是最重要的概念，因为载入因子直接影响到哈希表的效率。</p>
+<p>我们在分离链表法中，尽量要使载入因子=1，只有这样才能保证平均O(1)的时间复杂度，如果载入因子很大的话，那么表明会有很多Key插入到了链表中，链表会比较深，那么就不可能有平均O(1)的时间复杂度。</p>
+<p>在开放地址法中，我们要尽量让载入因子&lt;0.5.否则平方探测法有可能失效。同时，无论是线性还是平方探测，当载入因子过大时，因为要处理很多的冲突，那么必然要导致时间花费，故很难保证平均O(1)的时间复杂度。所以当载入因子比较大时，要果断Refresh Hashing。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>哈希表的操作只有查找，插入，删除这几种。哈希表是没有排序信息的，如果需要排序信息，请绕道。因为很多的应用是不需要排序信息的，只需要快速的查找，因此哈希表具有很大的优势。哈希表的平均时间复杂度为O(1)，这是非常理想的。</p>
+<p>哈希表中最重要的是冲突的处理，有分离链表法和开放地址法。因为冲突的处理uhi影响查找的速度，因此要尽量使载入因子取合理的值，以减少冲突的处理次数。</p>
+<p>刚开始接触哈希表时，根本就搞不清楚这是怎么一回事，怎么可以是O(1)时间。当时完全被链表，树那些数据结构给思维禁锢了。其实哈希表时用了数学函数的映射方法使得能在O(1)时间内查找。给定一个输入，直接输入到函数，就可以得到它的位置，直接到这个位置找就可以了（有冲突时，需要按照冲突的规矩向下查找），所以可以达到O(1)的时间。</p>
+
       
     </div>
     
@@ -487,8 +609,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -505,7 +636,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-count">150</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -527,7 +658,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -567,6 +698,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引论"><span class="nav-number">1.</span> <span class="nav-text">引论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#哈希的思想"><span class="nav-number">2.</span> <span class="nav-text">哈希的思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#哈希函数"><span class="nav-number">3.</span> <span class="nav-text">哈希函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#冲突"><span class="nav-number">4.</span> <span class="nav-text">冲突</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分离链表法（separate-chain）"><span class="nav-number">4.1.</span> <span class="nav-text">分离链表法（separate chain）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现："><span class="nav-number">4.1.1.</span> <span class="nav-text">代码实现：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开放地址法（open-addressing）"><span class="nav-number">4.2.</span> <span class="nav-text">开放地址法（open addressing）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#线性探测法，即-F-i-i"><span class="nav-number">4.2.1.</span> <span class="nav-text">线性探测法，即$F(i) = i$;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#平方探测法，即-F-i-i-i"><span class="nav-number">4.2.2.</span> <span class="nav-text">平方探测法，即$F(i)=i*i$;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#双哈希探测法，即-F-i-i-hash2-X"><span class="nav-number">4.2.3.</span> <span class="nav-text">双哈希探测法，即$F(i) = i*hash2(X)$;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现（以平方探测为例子）"><span class="nav-number">4.2.4.</span> <span class="nav-text">代码实现（以平方探测为例子）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重新哈希"><span class="nav-number">5.</span> <span class="nav-text">重新哈希</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#载入因子"><span class="nav-number">6.</span> <span class="nav-text">载入因子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -581,7 +728,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -595,7 +742,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">142.7k</span>
+    <span title="Site words total count">165.8k</span>
   
 </div>
 
@@ -624,7 +771,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共142.7k字</span>
+  <span class="post-count">博客全站共165.8k字</span>
 </div>
         
 <div class="busuanzi-count">
@@ -791,7 +938,56 @@
         j.async = true;
         e.parentNode.insertBefore(j, e);
       })(document, 'script');
-    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -809,35 +1005,6 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
   
 
 

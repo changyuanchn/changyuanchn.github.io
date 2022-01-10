@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="-— title: Vulkan的同步问题 date: 2022-01-03 00:00:00 tags: [vulkan] categories: 计算机图形学 -— GPU是高度并行化的设备，其不仅对处理的数据是并行化的，而且GPU的渲染流程中各个阶段的处理也都是并行化的。如果彼此间真的不存在关联，那么这种并行化就没有任何问题，但是当各个处理流程或者数据间是有关联的，那么这个并行就麻烦了，他们">
+<meta property="og:type" content="article">
+<meta property="og:title" content="axis tech zone">
+<meta property="og:url" content="http://yoursite.com/2022/01/10/Vulkan/Vulkan的同步问题/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="-— title: Vulkan的同步问题 date: 2022-01-03 00:00:00 tags: [vulkan] categories: 计算机图形学 -— GPU是高度并行化的设备，其不仅对处理的数据是并行化的，而且GPU的渲染流程中各个阶段的处理也都是并行化的。如果彼此间真的不存在关联，那么这种并行化就没有任何问题，但是当各个处理流程或者数据间是有关联的，那么这个并行就麻烦了，他们">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-01-10T13:08:04.321Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="axis tech zone">
+<meta name="twitter:description" content="-— title: Vulkan的同步问题 date: 2022-01-03 00:00:00 tags: [vulkan] categories: 计算机图形学 -— GPU是高度并行化的设备，其不仅对处理的数据是并行化的，而且GPU的渲染流程中各个阶段的处理也都是并行化的。如果彼此间真的不存在关联，那么这种并行化就没有任何问题，但是当各个处理流程或者数据间是有关联的，那么这个并行就麻烦了，他们">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/01/10/Vulkan/Vulkan的同步问题/">
+
+
+
+
+
+  <title> | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/01/10/Vulkan/Vulkan的同步问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-10T21:21:10+08:00">
+                2022-01-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,476
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>-—</p>
+<p>title: Vulkan的同步问题</p>
+<p>date: 2022-01-03 00:00:00</p>
+<p>tags: [vulkan]</p>
+<p>categories: 计算机图形学</p>
+<p>-—</p>
+<p>GPU是高度并行化的设备，其不仅对处理的数据是并行化的，而且GPU的渲染流程中各个阶段的处理也都是并行化的。如果彼此间真的不存在关联，那么这种并行化就没有任何问题，但是当各个处理流程或者数据间是有关联的，那么这个并行就麻烦了，他们之间一定要有一定的先后顺序，否则就一定后导致混乱的发生。比如说对同一资源的读写访问等，一个读，一个写，如果没有相应的同步机制保障，则必然后导致读写混乱。</p>
+<p>vulkan提供了一套完善而复杂的同步逻辑来保证GPU的并发执行，下面我们就来分析一下。</p>
+<h1 id="同步原语"><a href="#同步原语" class="headerlink" title="同步原语"></a>同步原语</h1><h2 id="Fence"><a href="#Fence" class="headerlink" title="Fence"></a>Fence</h2><p>fence用于CPU与GPU之间的同步.</p>
+<p>比如说对于UniformBuffer，CPU负责修改其内容，GPU负责读取其内容，由于CPU与GPU是同时各自独立执行的，那么就必然会有同时读写的存在，fence就是为了解决这个问题而产生的。</p>
+<p>首先创建fence，并将其设置为unsignaled的状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vkCreateFence(device, &amp;fenceInfo, nullptr, &amp;inFlightFences[i])</span><br></pre></td></tr></table></figure>
+<p>然后再draw的时候，需要调用<code>vkWaitForFences</code>，让CPU在当前位置被阻塞掉，然后一直等待到它接受的Fence变为signaled的状态，这样就可以实现在某个渲染队列内的所有任务被完成后，CPU再执行某些操作的同步情景，如UpdateUniformBuffer等操作</p>
+<p>然后调用<code>vkResetFences(device, 1, &amp;inFlightFences[currentFrame])</code>函数将fence的状态切换为unsignaled</p>
+<p>最后在调用vkQueueSubmit提交命令时，传入unsignaled的fence</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">void drawFrame() &#123;</span><br><span class="line">    vkWaitForFences(device, 1, &amp;inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);</span><br><span class="line"></span><br><span class="line">    uint32_t imageIndex;</span><br><span class="line">    VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &amp;imageIndex);</span><br><span class="line"></span><br><span class="line">    if (result == VK_ERROR_OUT_OF_DATE_KHR) &#123;</span><br><span class="line">        recreateSwapChain();</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    else if (result != VK_SUCCESS &amp;&amp; result != VK_SUBOPTIMAL_KHR) &#123;</span><br><span class="line">        throw std::runtime_error(&quot;failed to acquire swap chain image!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    updateUniformBuffer(imageIndex);</span><br><span class="line"></span><br><span class="line">    if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) &#123;</span><br><span class="line">        vkWaitForFences(device, 1, &amp;imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);</span><br><span class="line">    &#125;</span><br><span class="line">    imagesInFlight[imageIndex] = inFlightFences[currentFrame];</span><br><span class="line"></span><br><span class="line">    VkSubmitInfo submitInfo&#123;&#125;;</span><br><span class="line">    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;</span><br><span class="line"></span><br><span class="line">    VkSemaphore waitSemaphores[] = &#123; imageAvailableSemaphores[currentFrame] &#125;;</span><br><span class="line">    VkPipelineStageFlags waitStages[] = &#123; VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT &#125;;</span><br><span class="line">    submitInfo.waitSemaphoreCount = 1;</span><br><span class="line">    submitInfo.pWaitSemaphores = waitSemaphores;</span><br><span class="line">    submitInfo.pWaitDstStageMask = waitStages;</span><br><span class="line"></span><br><span class="line">    submitInfo.commandBufferCount = 1;</span><br><span class="line">    submitInfo.pCommandBuffers = &amp;commandBuffers[imageIndex];</span><br><span class="line"></span><br><span class="line">    VkSemaphore signalSemaphores[] = &#123; renderFinishedSemaphores[currentFrame] &#125;;</span><br><span class="line">    submitInfo.signalSemaphoreCount = 1;</span><br><span class="line">    submitInfo.pSignalSemaphores = signalSemaphores;</span><br><span class="line"></span><br><span class="line">    vkResetFences(device, 1, &amp;inFlightFences[currentFrame]);</span><br><span class="line"></span><br><span class="line">    if (vkQueueSubmit(graphicsQueue, 1, &amp;submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) &#123;</span><br><span class="line">        throw std::runtime_error(&quot;failed to submit draw command buffer!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Semaphore"><a href="#Semaphore" class="headerlink" title="Semaphore"></a>Semaphore</h2><p>semaphore用于同步GPU不同的queue之间，或者同一个queue不同的submission之间的执行顺序。</p>
+<p>比如说在渲染流程中一般至少存在两个并发任务，一个是渲染（render），一个是呈现（present）。他们都是GPU的任务，按照业务逻辑，需要首先完成渲染，然后再进行呈现。而同样的渲染和呈现是分开独立进行的，如果没有干预，会发生把正在渲染的半成品呈现到屏幕的问题，因此需要同步机制干预，vulkan中用Semaphore来解决这个问题。</p>
+<p>一般来讲，对于上面例子的任务，会设置两个Semaphore：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VkSemaphore imageAvailableSemaphore;</span><br><span class="line">VkSemaphore renderFinishedSemaphore;</span><br></pre></td></tr></table></figure>
+<p>将其设置到提交渲染命令（vkQueueSubmit）的信息中，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">VkSubmitInfo submitInfo&#123;&#125;;</span><br><span class="line">submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;</span><br><span class="line"></span><br><span class="line">VkSemaphore waitSemaphores[] = &#123; imageAvailableSemaphore &#125;;  </span><br><span class="line">VkPipelineStageFlags waitStages[] = &#123; VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT &#125;;</span><br><span class="line">submitInfo.waitSemaphoreCount = 1;</span><br><span class="line">submitInfo.pWaitSemaphores = waitSemaphores; // 需要等待的semaphore</span><br><span class="line">submitInfo.pWaitDstStageMask = waitStages;</span><br><span class="line"></span><br><span class="line">submitInfo.commandBufferCount = 1;</span><br><span class="line">submitInfo.pCommandBuffers = &amp;commandBuffers[imageIndex];</span><br><span class="line"></span><br><span class="line">VkSemaphore signalSemaphores[] = &#123; renderFinishedSemaphore&#125;; </span><br><span class="line">submitInfo.signalSemaphoreCount = 1;</span><br><span class="line">submitInfo.pSignalSemaphores = signalSemaphores;  // 需要设置的semaphore</span><br><span class="line"></span><br><span class="line">vkQueueSubmit(graphicsQueue, 1, &amp;submitInfo, inFlightFences[currentFrame]);</span><br></pre></td></tr></table></figure>
+<p>也就是说在本次提交到Queue中的命令<code>commandBuffers[imageIndex];</code>需要等待<code>imageAvailableSemaphore</code>，然后再执行完毕后，设置<code>renderFinishedSemaphore</code>。</p>
+<p>在present任务中，需要等待<code>renderFinishedSemaphore</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">VkPresentInfoKHR presentInfo&#123;&#125;;</span><br><span class="line">presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;</span><br><span class="line"></span><br><span class="line">presentInfo.waitSemaphoreCount = 1;</span><br><span class="line">presentInfo.pWaitSemaphores = signalSemaphores;</span><br><span class="line"></span><br><span class="line">VkSwapchainKHR swapChains[] = &#123; swapChain &#125;;</span><br><span class="line">presentInfo.swapchainCount = 1;</span><br><span class="line">presentInfo.pSwapchains = swapChains;</span><br><span class="line"></span><br><span class="line">presentInfo.pImageIndices = &amp;imageIndex;</span><br><span class="line"></span><br><span class="line">result = vkQueuePresentKHR(presentQueue, &amp;presentInfo);</span><br></pre></td></tr></table></figure>
+<p>这样就解决了上面提到的同步问题。</p>
+<p>但是上面这样搞，原本的并行就变为了串行了啊，因此在具体的业务实现中，一般采用多buffer的机制，来实现并行处理。</p>
+<p>通过上面的例子，我们可以看到Semaphore是解决每次提交的一批命令与另一批命令之间的同步关系的。那么同一批commands之中的command的同步要怎么解决呢？下面的Barrier就会解决这个问题</p>
+<h2 id="Event"><a href="#Event" class="headerlink" title="Event"></a>Event</h2><p>Event是一个细粒度的同步原语，用于精确的界定管线里发生的操作。</p>
+<p>Event用于同步提交到同一队列的不同命令，或者同步CPU和队列。Event不能用于不同队列的命令间的同步。</p>
+<p>Event有两种状态signaled和unsignaled。</p>
+<p>无论是设备还是主机，都可以直接操作event，不过他们是有区别的，主机可以使用vkGetEventStatus立即获取事件对象的状态，但是不能直接等待事件，而设备正好相反，不能直接获取事件对象的状态，但是能等待一个或者多个事件。</p>
+<h2 id="Barrier"><a href="#Barrier" class="headerlink" title="Barrier"></a>Barrier</h2><p>上面的fence用于CPU与GPU之间的同步，semaphore用于GPU与GPU之间不同submission间的commandBuffers的同步问题，那么同一个commandBuffers中的不同的command之间的同步问题，该怎么办呢？vulkan提供了Barrier来解决。</p>
+<p>Barrier实际上是屏障的意思，something material that blocks or is intended to block passage，就是阻挡通道的一些blocks。那么在queue的commands里面就是插入一个barrier，将所有的commands分成两部分，一部分执行完毕了，后面一部分才能执行。</p>
+<p>不同的command执行的先后有什么问题么？如果不涉及到对资源的访问，那么就没什么问题。如果不同的command涉及到了对同一资源的访问以及修改，那么就有问题了，也正是因此我们看Barrier的设置函数中会专门对资源进行设置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdPipelineBarrier(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    VkPipelineStageFlags                        srcStageMask,</span><br><span class="line">    VkPipelineStageFlags                        dstStageMask,</span><br><span class="line">    VkDependencyFlags                           dependencyFlags,</span><br><span class="line">    uint32_t                                    memoryBarrierCount,</span><br><span class="line">    const VkMemoryBarrier*                      pMemoryBarriers,</span><br><span class="line">    uint32_t                                    bufferMemoryBarrierCount,</span><br><span class="line">    const VkBufferMemoryBarrier*                pBufferMemoryBarriers,</span><br><span class="line">    uint32_t                                    imageMemoryBarrierCount,</span><br><span class="line">    const VkImageMemoryBarrier*                 pImageMemoryBarriers);</span><br></pre></td></tr></table></figure>
+<p>看上面的API，</p>
+<h2 id="命令的提交顺序"><a href="#命令的提交顺序" class="headerlink" title="命令的提交顺序"></a>命令的提交顺序</h2><p>对于vulkan而言，所有的操作最终都是需要变为command，然后提交到queue中，然后执行的。</p>
+<p>然而GPU是并行的，后提交的命令有可能在先提交的命令之前完成，所以需要引入各种的同步机制来保证渲染或者计算业务的正确运行。</p>
+<p>虽然执行的快慢不一定，但是命令的提交，或者说执行是有序的，一般而言先提交的命令会先执行，但是不保证先执行的任务先完成。</p>
+<p>同时在录制命令的时候，也是有提交顺序的，如下所示：</p>
+<ul>
+<li><p>CPU通过多次调用<code>vkQueueSubmit</code>提交的命令，一定是按照<code>vkQueueSubmit</code>调用的先后顺序提交的，也就是说<code>submitInfo</code>中的command一定比<code>submitInfo1</code>中的任务先提交到Queue中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vkQueueSubmit(graphicsQueue, 1, &amp;submitInfo, inFlightFences[currentFrame]);</span><br><span class="line">vkQueueSubmit(graphicsQueue, 1, &amp;submitInfo1, inFlightFences[currentFrame]);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在同一次vkQueueSubmit中，传入了一个或多个<code>VkSubmitInfo</code>，这些<code>VkSubmitInfo</code>中的命令，按照<code>VkSubmitInfo</code>的下标顺序排列，即在<code>pSubmits</code>所指向的<code>VkSubmitInfo</code>数组中，下标靠前的<code>VkSubmitInfo</code>中所记录的所有命令都在下标靠后的<code>VkSubmitInfo</code>中所记录的所有命令之前。也就是说<code>submitInfo[0]</code>一定比<code>submitInfo[1]</code>先提交到Queue中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkQueueSubmit(</span><br><span class="line">    VkQueue                                     queue,</span><br><span class="line">    uint32_t                                    submitCount,</span><br><span class="line">    const VkSubmitInfo*                         pSubmits,</span><br><span class="line">    VkFence                                     fence);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>同一个<code>VkSubmitInfo</code>中，填入了多个<code>commandBuffer</code>(<code>pCommandBuffers</code>指向数组)，这些<code>commandBuffer</code>中的命令也是按照下标顺序提交，即<code>commandBuffer[0]</code>一定比<code>commandBuffer[1]</code>先提交到Queue中，和上面的逻辑一致。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkSubmitInfo &#123;</span><br><span class="line">    VkStructureType                sType;</span><br><span class="line">    const void*                    pNext;</span><br><span class="line">    uint32_t                       waitSemaphoreCount;</span><br><span class="line">    const VkSemaphore*             pWaitSemaphores;</span><br><span class="line">    const VkPipelineStageFlags*    pWaitDstStageMask;</span><br><span class="line">    uint32_t                       commandBufferCount;</span><br><span class="line">    const VkCommandBuffer*         pCommandBuffers;</span><br><span class="line">    uint32_t                       signalSemaphoreCount;</span><br><span class="line">    const VkSemaphore*             pSignalSemaphores;</span><br><span class="line">&#125; VkSubmitInfo;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>同一个commandBuffer中，有两种情况</p>
+<ul>
+<li>不在<code>RenderPass</code>中的命令，即除去所有在<code>vkCmdBeginRenderPass</code>和<code>vkCmdEndRenderPass</code>之间的命令，这些命令的提交顺序为按照在CPU上写入<code>CommandBuffer</code>时的顺序。</li>
+<li>在<code>RenderPass</code>中的命令，只定义在同一<code>SubPass</code>中的其他命令的提交顺序，这些命令的提交顺序也是按照在CPU上写入<code>CommandBuffer</code>时的顺序。如果几个命令在<code>vkCmdBeginRenderPass</code>和<code>vkCmdEndRenderPass</code>之间，但是它们不在同一<code>SubPass</code>中，那么它们之间是不存在任何提交顺序的</li>
+</ul>
+</li>
+</ul>
+<p>vulkan还提供了一些隐式的同步机制，这些机制实际上都遵循了一个准则，那就是<strong>按照提交的先后顺序开始执行，但是不保证结束也是按照顺序完成</strong></p>
+<ul>
+<li><p>所有的Action类命令（Draw、Transfer、Clear、Copy等）以及显示地使用同步机制的命令（这个在之后会介绍），这些命令在执行<code>VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</code>时，会遵循提交顺序。即这些命令开始执行的顺序，是严格遵循提交顺序的。（但这并不意味着这些命令结束执行时的顺序会有什么约束，所有的这些命令，到底是哪个先结束，隐式同步并没有严格的规定，也就是说任何一个命令都有可能最先结束。）</p>
+</li>
+<li><p>所有的设置状态类的命令（bind pipelines, descriptor sets, and buffers等），由于它们不需要在GPU上执行，它们只负责设置CPU上相应CommandBuffer的状态，所以它们的执行顺序，遵循它们在CPU上写入CommandBuffer时的顺序。</p>
+</li>
+<li><p>所有的Draw类命令在处理Primitive时，首先遵循提交顺序，即先提交的Draw中的Primitive会先被处理。而在一个Draw内所提交的Primitive，会按照顶点和索引的下标顺序执行。</p>
+</li>
+<li><p>ImageLayout的转移，是通过ImageMemoryBarrier实现的（也是一种显式的同步原语），它们遵循提交顺序，即先提交的先转移。</p>
+</li>
+</ul>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://blog.csdn.net/yjr3426619/article/details/101371746" target="_blank" rel="noopener">【Vulkan学习记录-基础篇-4】Vulkan中的同步机制_syddf-CSDN博客</a></p>
+<p><a href="https://www.khronos.org/blog/understanding-vulkan-synchronization" target="_blank" rel="noopener">Understanding Vulkan Synchronization - The Khronos Group Inc</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/01/10/Vulkan/Vulkan同步之Barrier/" rel="next" title>
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/01/10/Vulkan/ComputePipeline/" rel="prev" title>
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">150</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#同步原语"><span class="nav-number">1.</span> <span class="nav-text">同步原语</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Fence"><span class="nav-number">1.1.</span> <span class="nav-text">Fence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Semaphore"><span class="nav-number">1.2.</span> <span class="nav-text">Semaphore</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Event"><span class="nav-number">1.3.</span> <span class="nav-text">Event</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Barrier"><span class="nav-number">1.4.</span> <span class="nav-text">Barrier</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命令的提交顺序"><span class="nav-number">1.5.</span> <span class="nav-text">命令的提交顺序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">2.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">165.8k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共165.8k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

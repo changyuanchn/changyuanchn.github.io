@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="图算法,算法,">
+  <meta name="keywords" content="算法,图,">
 
 
 
@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="算法思想Floyd算法是一个可以处理有向图或负权重的最短路径问题的一个算法。她的算法思想很简单，就是： 如果想要让任意两个点间的距离缩短，那么必然要引入第三个点，只有通过第三个点的中转，才能实现缩短路程。 假设$ D_{i,j,k}$为$ i$到$ j$的只以$ (1,k)$集合中的节点为中间节点的最短路径的长度，那么如果最短路径经过$ k$点，则： $ D{i,j,k} = D{i,j,k-1}">
-<meta name="keywords" content="图算法,算法">
+<meta name="description" content="算法思想Floyd算法是一个可以处理有向图或负权重的最短路径问题的一个算法。她的算法思想很简单，就是： 如果想要让任意两个点间的距离缩短，那么必然要引入第三个点，只有通过第三个点的中转，才能实现缩短路程。 假设D_{i,j,k}为i到j的只以(1,k)集合中的节点为中间节点的最短路径的长度，那么如果最短路径经过k点，则： D_{i,j,k} = D_{i,j,k-1} +D_{k,j,k-1}如果">
+<meta name="keywords" content="算法,图">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Floyd算法">
 <meta property="og:url" content="http://yoursite.com/2018/07/29/DataStructure/Floyd算法/index.html">
 <meta property="og:site_name" content="axis tech zone">
-<meta property="og:description" content="算法思想Floyd算法是一个可以处理有向图或负权重的最短路径问题的一个算法。她的算法思想很简单，就是： 如果想要让任意两个点间的距离缩短，那么必然要引入第三个点，只有通过第三个点的中转，才能实现缩短路程。 假设$ D_{i,j,k}$为$ i$到$ j$的只以$ (1,k)$集合中的节点为中间节点的最短路径的长度，那么如果最短路径经过$ k$点，则： $ D{i,j,k} = D{i,j,k-1}">
+<meta property="og:description" content="算法思想Floyd算法是一个可以处理有向图或负权重的最短路径问题的一个算法。她的算法思想很简单，就是： 如果想要让任意两个点间的距离缩短，那么必然要引入第三个点，只有通过第三个点的中转，才能实现缩短路程。 假设D_{i,j,k}为i到j的只以(1,k)集合中的节点为中间节点的最短路径的长度，那么如果最短路径经过k点，则： D_{i,j,k} = D_{i,j,k-1} +D_{k,j,k-1}如果">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/DataStructure/Floyd.png">
-<meta property="og:updated_time" content="2021-10-09T15:32:10.390Z">
+<meta property="og:updated_time" content="2021-10-12T15:21:26.009Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Floyd算法">
-<meta name="twitter:description" content="算法思想Floyd算法是一个可以处理有向图或负权重的最短路径问题的一个算法。她的算法思想很简单，就是： 如果想要让任意两个点间的距离缩短，那么必然要引入第三个点，只有通过第三个点的中转，才能实现缩短路程。 假设$ D_{i,j,k}$为$ i$到$ j$的只以$ (1,k)$集合中的节点为中间节点的最短路径的长度，那么如果最短路径经过$ k$点，则： $ D{i,j,k} = D{i,j,k-1}">
+<meta name="twitter:description" content="算法思想Floyd算法是一个可以处理有向图或负权重的最短路径问题的一个算法。她的算法思想很简单，就是： 如果想要让任意两个点间的距离缩短，那么必然要引入第三个点，只有通过第三个点的中转，才能实现缩短路程。 假设D_{i,j,k}为i到j的只以(1,k)集合中的节点为中间节点的最短路径的长度，那么如果最短路径经过k点，则： D_{i,j,k} = D_{i,j,k-1} +D_{k,j,k-1}如果">
 <meta name="twitter:image" content="http://yoursite.com/images/DataStructure/Floyd.png">
 
 
@@ -353,7 +353,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  401
+                  328
                 </span>
               
 
@@ -369,7 +369,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  1
                 </span>
               
             </div>
@@ -392,20 +392,17 @@
       
         <h3 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h3><p>Floyd算法是一个可以处理有向图或负权重的最短路径问题的一个算法。她的算法思想很简单，就是：</p>
 <p>如果想要让任意两个点间的距离缩短，那么必然要引入第三个点，只有通过第三个点的中转，才能实现缩短路程。</p>
-<p>假设$ D_{i,j,k}$为$ i$到$ j$的只以$ (1,k)$集合中的节点为中间节点的最短路径的长度，那么如果最短路径经过$ k$点，则：</p>
-<p>$ D<em>{i,j,k} = D</em>{i,j,k-1} +D_{k,j,k-1}   $</p>
-<p>如果最短路径不经过点$ k$，则：</p>
-<p>$ D<em>{i,j,k} = D</em>{i,j,k-1} $</p>
-<p>因此：</p>
-<p>$ D<em>{i,j,k} = min(D</em>{i,j,k-1}, D<em>{i,j,k-1} +D</em>{k,j,k-1} ) $</p>
-<h3 id="距离实例解析："><a href="#距离实例解析：" class="headerlink" title="距离实例解析："></a>距离实例解析：</h3><p>请参见下面的案例：</p>
+<p>假设<script type="math/tex">D_{i,j,k}</script>为<script type="math/tex">i</script>到<script type="math/tex">j</script>的只以<script type="math/tex">(1,k)</script>集合中的节点为中间节点的最短路径的长度，那么如果最短路径经过<script type="math/tex">k</script>点，则：</p>
+<script type="math/tex; mode=display">D_{i,j,k} = D_{i,j,k-1} +D_{k,j,k-1}</script><p>如果最短路径不经过点$k$，则：</p>
+<script type="math/tex; mode=display">D_{i,j,k} = D_{i,j,k-1}</script><p>因此：</p>
+<script type="math/tex; mode=display">D_{i,j,k} = min(D_{i,j,k-1}, D_{i,j,k-1} +D_{k,j,k-1} )</script><h3 id="距离实例解析："><a href="#距离实例解析：" class="headerlink" title="距离实例解析："></a>距离实例解析：</h3><p>请参见下面的案例：</p>
 <p><a href="http://wiki.jikexueyuan.com/project/easy-learn-algorithm/floyd.html" target="_blank" rel="noopener">只有5行代码的Floy算法</a></p>
 <h3 id="5行代码的实现"><a href="#5行代码的实现" class="headerlink" title="5行代码的实现"></a>5行代码的实现</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for(k=1;k&lt;=n;k++)</span><br><span class="line">    for(i=1;i&lt;=n;i++)</span><br><span class="line">        for(j=1;j&lt;=n;j++)</span><br><span class="line">            if(e[i][j]&gt;e[i][k]+e[k][j])</span><br><span class="line">                 e[i][j]=e[i][k]+e[k][j];</span><br></pre></td></tr></table></figure>
 <p>已案例中的例子分析一下这段代码：</p>
 <p><img src="/images/DataStructure/Floyd.png" alt="Floyd"></p>
-<p>当$k=2$时，if之前，$e[i][j]$为$i$到$j$的直达，或$i$到$j$经过点1的距离的最小值</p>
-<p>所以$k=2$时，整个函数是$i$到$j$经过2的的距离或$i$到$j$的直达，或$i$到$j$经过1，2的距离的最小值。</p>
-<p>Floyd是多源路径算法，能够求得任意两点之间的距离。就是效率比较差，时间复杂度为$O(N^3)$,空间复杂度为$O(N^2)$。</p>
+<p>当<script type="math/tex">k=2</script>时，if之前，<script type="math/tex">e[i][j]</script>为<script type="math/tex">i</script>到<script type="math/tex">j</script>的直达，或<script type="math/tex">i</script>到<script type="math/tex">j</script>经过点1的距离的最小值</p>
+<p>所以$k=2$时，整个函数是<script type="math/tex">i</script>到<script type="math/tex">j</script>经过2的的距离或<script type="math/tex">i</script>到<script type="math/tex">j</script>的直达，或<script type="math/tex">i</script>到<script type="math/tex">j</script>经过1，2的距离的最小值。</p>
+<p>Floyd是多源路径算法，能够求得任意两点之间的距离。就是效率比较差，时间复杂度为<script type="math/tex">O(N^3)</script>,空间复杂度为<script type="math/tex">O(N^2)</script>。</p>
 
       
     </div>
@@ -423,9 +420,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/图算法/" rel="tag"># 图算法</a>
-          
             <a href="/tags/算法/" rel="tag"># 算法</a>
+          
+            <a href="/tags/图/" rel="tag"># 图</a>
           
         </div>
       
@@ -438,8 +435,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/29/MachineLearning/典型相关分析（CCA）/" rel="next" title="典型相关分析（CCA）">
-                <i class="fa fa-chevron-left"></i> 典型相关分析（CCA）
+              <a href="/2018/07/29/MachineLearning/LDA线性判别分析/" rel="next" title="LDA线性判别分析">
+                <i class="fa fa-chevron-left"></i> LDA线性判别分析
               </a>
             
           </div>
@@ -534,7 +531,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-count">150</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -556,7 +553,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -626,7 +623,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -640,7 +637,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">142.7k</span>
+    <span title="Site words total count">165.8k</span>
   
 </div>
 
@@ -669,7 +666,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共142.7k字</span>
+  <span class="post-count">博客全站共165.8k字</span>
 </div>
         
 <div class="busuanzi-count">

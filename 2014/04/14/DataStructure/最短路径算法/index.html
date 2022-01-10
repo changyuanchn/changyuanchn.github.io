@@ -97,7 +97,7 @@
 <meta property="og:image" content="http://yoursite.com/images/DataStructure/graph6.png">
 <meta property="og:image" content="http://yoursite.com/images/DataStructure/graph7.png">
 <meta property="og:image" content="http://yoursite.com/images/DataStructure/graph8.png">
-<meta property="og:updated_time" content="2021-10-09T15:39:43.150Z">
+<meta property="og:updated_time" content="2021-10-09T15:59:49.127Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="最短路径算法">
 <meta name="twitter:description" content="引论正如名字所言，最短路径算法就是为了找到一个图中，某一个点到其他点的最短路径或者是距离。 最短路径算法一般分为四种情况：  无权重的最短路径 有权重的最短路径 边的权重为负的图 无圈的图  ps：上面的情况针对的都是有向图。 无权重的最短路径下图是一个例子：假设我们取点v3作为初始点，计算点v3到图中所有点的路径以及距离（包括点v3）。  v3到v3的路径长为0。 沿着v3的邻接点查找，找到v1">
@@ -471,7 +471,7 @@
 <p>解决这个问题需要把上面的动作节点图转换为下面的事件节点图</p>
 <p><img src="/images/DataStructure/graph7.png" alt="graph7"></p>
 <p>对于事件节点图，只需要找出第一个事件到最后一个事件的最长路径的长就好了。</p>
-<p>假设$EC<em>i$表示节点i的最早完成时间，那么利用下面的法则<br>$EC_i = 0$<br>$EC_w = max</em>{ (v, w) \in E } (EC<em>v + C</em>{v, w})$</p>
+<p>假设$EC<em>i$表示节点$i$的最早完成时间，那么利用下面的法则<br>$EC_i = 0$<br>$EC_w = max</em>{ (v, w) \in E } (EC<em>v + C</em>{v, w})$</p>
 <p>最早完成时间结果为：</p>
 <p><img src="/images/DataStructure/graph8.png" alt="graph8"></p>
 
@@ -506,8 +506,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2014/03/24/DataStructure/拓扑排序/" rel="next" title="拓扑排序">
-                <i class="fa fa-chevron-left"></i> 拓扑排序
+              <a href="/2014/04/03/DataStructure/网络流/" rel="next" title="网络流">
+                <i class="fa fa-chevron-left"></i> 网络流
               </a>
             
           </div>
@@ -516,8 +516,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/05/05/ProgramingLanguage/数组不等于指针/" rel="prev" title="数组不等于指针">
-                数组不等于指针 <i class="fa fa-chevron-right"></i>
+              <a href="/2014/05/29/DataStructure/Huffman编码/" rel="prev" title="Huffman编码">
+                Huffman编码 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -602,7 +602,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-count">150</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -624,7 +624,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -694,7 +694,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -708,7 +708,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">142.7k</span>
+    <span title="Site words total count">165.8k</span>
   
 </div>
 
@@ -737,7 +737,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共142.7k字</span>
+  <span class="post-count">博客全站共165.8k字</span>
 </div>
         
 <div class="busuanzi-count">

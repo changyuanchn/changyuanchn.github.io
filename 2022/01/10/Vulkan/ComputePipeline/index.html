@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="-— title: 计算管线 date: 2022-01-01 00:00:00 tags: [vulkan] categories: 计算机图形学 -— GPU不仅可以用来渲染，也可以用来做通用计算。实际上渲染操作也是一系列的运算，进而得到最终的输出颜色结果。在NPU出现之前，GPU一直是神经网络的利器。GPU是高度并行化的器件，因此用GPU来进行并行计算，将会极大的提升效率。 Vulkan也提">
+<meta property="og:type" content="article">
+<meta property="og:title" content="axis tech zone">
+<meta property="og:url" content="http://yoursite.com/2022/01/10/Vulkan/ComputePipeline/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="-— title: 计算管线 date: 2022-01-01 00:00:00 tags: [vulkan] categories: 计算机图形学 -— GPU不仅可以用来渲染，也可以用来做通用计算。实际上渲染操作也是一系列的运算，进而得到最终的输出颜色结果。在NPU出现之前，GPU一直是神经网络的利器。GPU是高度并行化的器件，因此用GPU来进行并行计算，将会极大的提升效率。 Vulkan也提">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/vulkan/computePipeline1.png">
+<meta property="og:image" content="http://yoursite.com/images/vulkan/computePipeline2.png">
+<meta property="og:image" content="http://yoursite.com/images/vulkan/computePipeline3.png">
+<meta property="og:image" content="http://yoursite.com/images/vulkan/computePipeline4.png">
+<meta property="og:image" content="http://yoursite.com/images/vulkan/computePipeline5.png">
+<meta property="og:image" content="http://yoursite.com/images/vulkan/computePipeline6.png">
+<meta property="og:updated_time" content="2022-01-10T13:24:43.698Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="axis tech zone">
+<meta name="twitter:description" content="-— title: 计算管线 date: 2022-01-01 00:00:00 tags: [vulkan] categories: 计算机图形学 -— GPU不仅可以用来渲染，也可以用来做通用计算。实际上渲染操作也是一系列的运算，进而得到最终的输出颜色结果。在NPU出现之前，GPU一直是神经网络的利器。GPU是高度并行化的器件，因此用GPU来进行并行计算，将会极大的提升效率。 Vulkan也提">
+<meta name="twitter:image" content="http://yoursite.com/images/vulkan/computePipeline1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/01/10/Vulkan/ComputePipeline/">
+
+
+
+
+
+  <title> | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/01/10/Vulkan/ComputePipeline/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-10T21:21:10+08:00">
+                2022-01-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,305
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>-—</p>
+<p>title: 计算管线</p>
+<p>date: 2022-01-01 00:00:00</p>
+<p>tags: [vulkan]</p>
+<p>categories: 计算机图形学</p>
+<p>-—</p>
+<p>GPU不仅可以用来渲染，也可以用来做通用计算。实际上渲染操作也是一系列的运算，进而得到最终的输出颜色结果。在NPU出现之前，GPU一直是神经网络的利器。GPU是高度并行化的器件，因此用GPU来进行并行计算，将会极大的提升效率。</p>
+<p>Vulkan也提供了计算管线用来实现GPU的计算功能。</p>
+<h3 id="work-group"><a href="#work-group" class="headerlink" title="work group"></a>work group</h3><p>计算着色器运行在一个抽象的3维空间中。这个空间被称为工作组（work group）；这是用户可以执行的最小计算操作量。或者换句话说，用户可以执行一定数量的工作组。工作组是计算着色器的基本内容。</p>
+<p>首先在compute shader中最小的一个执行单元为:</p>
+<ul>
+<li><code>Thread</code>也称作<code>Invocation</code></li>
+</ul>
+<p>shader执行一次<code>main</code>函数，也就算是一次<code>Invocation</code></p>
+<p><img src="/images/vulkan/computePipeline1.png" alt="barrier1"></p>
+<ul>
+<li><code>local work group</code></li>
+</ul>
+<p>而GPU在执行的时候是以一个<code>work group</code>的形式来执行的，也就是每次会下发一批的任务，这个就被称作<code>local work group</code>，也就是本地工作组。</p>
+<p>本地工作组的大小需要在shader中指定，例如下图中的<code>local work group</code>的设置应该为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">layout (local_size_x = 5, local_size_y = 3, local_size_z = 1) in;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/vulkan/computePipeline2.png" alt="image-20220104232602258"></p>
+<p>虽然图中是二维的，但是<code>local work group</code>可以设置为1D/2D/3D的。</p>
+<ul>
+<li><code>global work group</code></li>
+</ul>
+<p>而一次<code>vkCmdDispatch</code>调用则会下发一个完整的<code>global work group</code>，这是命令执行的一个单位。<code>global work group</code>实际上就是包含了一组的<code>local work group</code>，如下图所示：</p>
+<p>在vulkan中，有如下的命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vkCmdDispatch(commandBuffer, 4, 8, 1);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/vulkan/computePipeline3.png" alt="image-20220104232428540"></p>
+<h3 id="如何设置local-work-group的大小"><a href="#如何设置local-work-group的大小" class="headerlink" title="如何设置local work group的大小"></a>如何设置<code>local work group</code>的大小</h3><p>上面讲了各种<code>work group</code>的概念，那么我们可以看到在shader中需要设置<code>local work group</code>，并且在中，也要根据<code>local work group</code>的大小设置<code>local work group</code>的数量，那么如何设置<code>local work group</code>的大小呢？也就是shader中的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">layout (local_size_x = 16, local_size_y = 16) in;</span><br></pre></td></tr></table></figure>
+<p>实际上这个值是实验设定的，也就是说一般情况下设置为任何值皆可，但是<code>local work group</code>的大小是会影响到最终的运行时间的，因此一般需要通过实验求得。</p>
+<p>当然为了修改方便，这个值也可以通过代码传入，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">layout( local_size_variable ) in;</span><br></pre></td></tr></table></figure>
+<p>当然上面说的是一般情况下，在某些特殊情况下，比如存在依赖的场景，那么这个<code>local work group</code>的大小就需要根据实际设置了。</p>
+<h3 id="vkCmdDispatch"><a href="#vkCmdDispatch" class="headerlink" title="vkCmdDispatch"></a>vkCmdDispatch</h3><p>计算管线使用<code>vkCmdDispatch</code>进行计算任务的下发执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdDispatch(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    uint32_t                                    groupCountX,</span><br><span class="line">    uint32_t                                    groupCountY,</span><br><span class="line">    uint32_t                                    groupCountZ);</span><br></pre></td></tr></table></figure>
+<p>它一共有四个参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">commandBuffer is the command buffer into which the command will be recorded.</span><br><span class="line">groupCountX is the number of local workgroups to dispatch in the X dimension.</span><br><span class="line">groupCountY is the number of local workgroups to dispatch in the Y dimension.</span><br><span class="line">groupCountZ is the number of local workgroups to dispatch in the Z dimension.</span><br></pre></td></tr></table></figure>
+<p>每个<code>vkCmdDispatch</code>对应一个global work group</p>
+<h3 id="Compute-Shader"><a href="#Compute-Shader" class="headerlink" title="Compute Shader"></a>Compute Shader</h3><p>compute shader在openGL4.3中被引入，是一个完全用于计算任务的stage，它通常用与与绘制三角形和像素无关的任务，比如图像处理，粒子运动等等。</p>
+<p>compute shader在openGL的流程中如下所示：</p>
+<p><img src="/images/vulkan/computePipeline4.png" alt="image-20220103144516623"></p>
+<p>计算管线的shader的命名如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*.comp</span><br></pre></td></tr></table></figure>
+<p>同样的需要编译为spv文件才能被加载运行。</p>
+<p>相对于传统的渲染管线，一般来将，它有vertex Shader和Fragment Shader，用来从显存读取数据（利用location），然后将最终的渲染结果输出到Frame Buffer。然而对于Compute Shader，它没有location的输入，也没有Frame Buffer的输出。一个Compute Shader的输入输出都是通过描述符的形式（UBO，texture等资源）利用binding的方式进去读取，然后处理，处理后写出的。如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">layout (binding = 0, rgba8) uniform readonly image2D inputImage;</span><br><span class="line">layout (binding = 1, rgba8) uniform image2D resultImage;</span><br></pre></td></tr></table></figure>
+<p>同时对于Compute Shader，需要指定一个抽象的计算空间，在shader中需要明确如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">layout (local_size_x = 16, local_size_y = 16) in;</span><br></pre></td></tr></table></figure>
+<p>local_size_x、local_size_y、local_size_z分别表示在3个维度上的本地工作组的大小，如果不写，默认为1。这个是必须要指定的。</p>
+<h3 id="GLSL-built-in-variables"><a href="#GLSL-built-in-variables" class="headerlink" title="GLSL built-in variables"></a>GLSL built-in variables</h3><p>glsl内置了几个变量用来在Compute Shader获取具体的位置数据，如下所示：</p>
+<p><img src="/images/vulkan/computePipeline5.png" alt="image-20220104232850421"></p>
+<p>假设我们下发了上图的任务，那么红色的就是一个<code>Thread</code>，那么我们怎么获取到它的具体位置呢（假设是2D的）？其中：</p>
+<ul>
+<li><p><code>gl_GlobalInvocationID</code>获取Thread在全局工作组的位置，（0，0）点在左下方，则它的位置为（13，12，0）</p>
+</li>
+<li><p><code>gl_LocalInvocationID</code>获取Thread在本地工作组的位置，本地工作组会定位到途中的具体块，即为如下：</p>
+<p><img src="/images/vulkan/computePipeline6.png" alt="image-20220104233631807"></p>
+<p>那么Thread在local work group中的值为（3，0，0）</p>
+</li>
+<li><p><code>gl_WorkGroupID</code>为<code>local work group</code>在<code>global work group</code>中的位置信息，则为（2，4，0）</p>
+</li>
+</ul>
+<h3 id="Compute-Pipeline"><a href="#Compute-Pipeline" class="headerlink" title="Compute Pipeline"></a>Compute Pipeline</h3><p>计算管线的创建跟渲染管线的创建基本一致，只是需要调用下面的接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR VkResult VKAPI_CALL vkCreateComputePipelines(</span><br><span class="line">    VkDevice                                    device,</span><br><span class="line">    VkPipelineCache                             pipelineCache,</span><br><span class="line">    uint32_t                                    createInfoCount,</span><br><span class="line">    const VkComputePipelineCreateInfo*          pCreateInfos,</span><br><span class="line">    const VkAllocationCallbacks*                pAllocator,</span><br><span class="line">    VkPipeline*                                 pPipelines);</span><br></pre></td></tr></table></figure>
+<h3 id="Shader-Storage-Buffer-Object"><a href="#Shader-Storage-Buffer-Object" class="headerlink" title="Shader Storage Buffer Object"></a>Shader Storage Buffer Object</h3><p>在Compute Shader中，我们没有办法拿到纹理坐标，也不是做纹理采样，因此我们创建的资源也不是纹理采样器，而是Storage Buffer。</p>
+<ul>
+<li>shader中的image2D</li>
+</ul>
+<p>因此在shader中，我们有如下的资源设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">layout (binding = 0, rgba8) uniform readonly image2D inputImage;</span><br><span class="line">layout (binding = 1, rgba8) uniform image2D resultImage;</span><br></pre></td></tr></table></figure>
+<p><code>image2D</code>表示我们需要的是图片而不是采样器，<strong>我们使用像素坐标来获取像素颜色值，而并不是通过纹理坐标采样颜色值</strong>。</p>
+<p>使用 <code>readonly</code> 表示这张图片我们只会读取（image load）它而不会去将数据写入（image store）它。</p>
+<ul>
+<li><code>VkImageCreateInfo</code></li>
+</ul>
+<p>在创建图像资源时，因为我们的图像要用来做通用计算，因此我们需要将其设置为：<code>VK_IMAGE_USAGE_STORAGE_BIT</code></p>
+<p>同时如果这个图像如果还要在后续的渲染流程中使用，则需要将其设置为：<code>VK_IMAGE_USAGE_SAMPLED_BIT</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VkImageCreateInfo imageCreateInfo = vks::initializers::imageCreateInfo();</span><br><span class="line">......</span><br><span class="line">// Image will be sampled in the fragment shader and used as storage target in the compute shader</span><br><span class="line">imageCreateInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>VkDescriptorSetLayoutBinding</li>
+</ul>
+<p>在描述符集中需要将资源格式设置为<code>VK_DESCRIPTOR_TYPE_STORAGE_IMAGE</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &amp;allocInfo, &amp;compute.descriptorSet));</span><br><span class="line">std::vector&lt;VkWriteDescriptorSet&gt; computeWriteDescriptorSets = &#123;</span><br><span class="line">    vks::initializers::writeDescriptorSet(compute.descriptorSet, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 0, &amp;textureColorMap.descriptor),</span><br><span class="line">    vks::initializers::writeDescriptorSet(compute.descriptorSet, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1, &amp;textureComputeTarget.descriptor)</span><br><span class="line">&#125;;</span><br><span class="line">vkUpdateDescriptorSets(device, computeWriteDescriptorSets.size(), computeWriteDescriptorSets.data(), 0, NULL);</span><br></pre></td></tr></table></figure>
+<p>同样的在Pipeline Layout中也需要修改格式为<code>VK_DESCRIPTOR_TYPE_STORAGE_IMAGE</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;VkDescriptorSetLayoutBinding&gt; setLayoutBindings = &#123;</span><br><span class="line">	// Binding 0: Input image (read-only)</span><br><span class="line">	vks::initializers::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, VK_SHADER_STAGE_COMPUTE_BIT, 0),</span><br><span class="line">	// Binding 1: Output image (write)</span><br><span class="line">	vks::initializers::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, VK_SHADER_STAGE_COMPUTE_BIT, 1),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="Synchronization"><a href="#Synchronization" class="headerlink" title="Synchronization"></a>Synchronization</h3><p>在经典的图像处理例子中，我们首先要利用计算管线对图像进行处理，然后再利用渲染管线将其输出，那么这就会遇到一个同步问题：</p>
+<p><strong>我们要保证渲染要在计算完成后执行</strong></p>
+<p>但是由于GPU的管线是并行的，渲染管线拿到的图像很有可能是计算管线还没有处理完的半成品，因此需要同步机制来确保这个先后顺序。</p>
+<ul>
+<li>利用<code>semaphore</code>来确保命令的提交顺序</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">void draw()</span><br><span class="line">&#123;</span><br><span class="line">	// Wait for rendering finished</span><br><span class="line">	VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;</span><br><span class="line"></span><br><span class="line">	// Submit compute commands</span><br><span class="line">	VkSubmitInfo computeSubmitInfo = vks::initializers::submitInfo();</span><br><span class="line">	computeSubmitInfo.commandBufferCount = 1;</span><br><span class="line">	computeSubmitInfo.pCommandBuffers = &amp;compute.commandBuffer;</span><br><span class="line">	computeSubmitInfo.waitSemaphoreCount = 1;</span><br><span class="line">	computeSubmitInfo.pWaitSemaphores = &amp;graphics.semaphore;</span><br><span class="line">	computeSubmitInfo.pWaitDstStageMask = &amp;waitStageMask;</span><br><span class="line">	computeSubmitInfo.signalSemaphoreCount = 1;</span><br><span class="line">	computeSubmitInfo.pSignalSemaphores = &amp;compute.semaphore;</span><br><span class="line">	VK_CHECK_RESULT(vkQueueSubmit(compute.queue, 1, &amp;computeSubmitInfo, VK_NULL_HANDLE));	</span><br><span class="line">	VulkanExampleBase::prepareFrame();</span><br><span class="line"></span><br><span class="line">	VkPipelineStageFlags graphicsWaitStageMasks[] = &#123; VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT &#125;;</span><br><span class="line">	VkSemaphore graphicsWaitSemaphores[] = &#123; compute.semaphore, semaphores.presentComplete &#125;;</span><br><span class="line">	VkSemaphore graphicsSignalSemaphores[] = &#123; graphics.semaphore, semaphores.renderComplete &#125;;</span><br><span class="line"></span><br><span class="line">	// Submit graphics commands</span><br><span class="line">	submitInfo.commandBufferCount = 1;</span><br><span class="line">	submitInfo.pCommandBuffers = &amp;drawCmdBuffers[currentBuffer];</span><br><span class="line">	submitInfo.waitSemaphoreCount = 2;</span><br><span class="line">	submitInfo.pWaitSemaphores = graphicsWaitSemaphores;</span><br><span class="line">	submitInfo.pWaitDstStageMask = graphicsWaitStageMasks;</span><br><span class="line">	submitInfo.signalSemaphoreCount = 2;</span><br><span class="line">	submitInfo.pSignalSemaphores = graphicsSignalSemaphores;</span><br><span class="line">	VK_CHECK_RESULT(vkQueueSubmit(queue, 1, &amp;submitInfo, VK_NULL_HANDLE));</span><br><span class="line"></span><br><span class="line">	VulkanExampleBase::submitFrame();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>利用Barrier来确保资源的读取与写入顺序</li>
+</ul>
+<p>由于我们需要在计算管线写入完图像后，在利用渲染管线将图像输出，因此需要在图形管线的commandBuffer提交前设置Image Memory Barrier。如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// Image memory barrier to make sure that compute shader writes are finished before sampling from the texture</span><br><span class="line">VkImageMemoryBarrier imageMemoryBarrier = &#123;&#125;;</span><br><span class="line">imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;</span><br><span class="line">// We won&apos;t be changing the layout of the image</span><br><span class="line">imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_GENERAL;</span><br><span class="line">imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;</span><br><span class="line">imageMemoryBarrier.image = textureComputeTarget.image;</span><br><span class="line">imageMemoryBarrier.subresourceRange = &#123; VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 &#125;;</span><br><span class="line">imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;</span><br><span class="line">imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;</span><br><span class="line">imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;</span><br><span class="line">imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;</span><br><span class="line">vkCmdPipelineBarrier(</span><br><span class="line">    drawCmdBuffers[i],</span><br><span class="line">    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,</span><br><span class="line">	VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,</span><br><span class="line">	VK_FLAGS_NONE,</span><br><span class="line">	0, nullptr,</span><br><span class="line">	0, nullptr,</span><br><span class="line">	1, &amp;imageMemoryBarrier);</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<p><code>srcStageMask</code>为<code>VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT</code>，</p>
+<p><code>dstStageMask</code>为<code>VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT</code></p>
+<p><code>srcAccessMask</code> 为 <code>VK_ACCESS_SHADER_WRITE_BIT</code><br><code>dstAccessMask</code> 为 <code>VK_ACCESS_SHADER_READ_BIT</code></p>
+<h3 id="Compute-Shader-vs-Graphic-Shader"><a href="#Compute-Shader-vs-Graphic-Shader" class="headerlink" title="Compute Shader vs Graphic Shader"></a>Compute Shader vs Graphic Shader</h3><p>渲染管线的fragment shader也可以对图像进行处理，那么为什么还要引入Compute shader呢？</p>
+<p>一个原因是渲染管线在着色后还有ROP等操作，这些操作对图像处理是不需要的，简化了这些流程能较大的提升GPU的处理性能。</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="https://www.khronos.org/opengl/wiki/Compute_Shader" target="_blank" rel="noopener">https://www.khronos.org/opengl/wiki/Compute_Shader</a></p>
+<p><a href="https://links.jianshu.com/go?to=https%3A%2F%2Fwww.cg.tuwien.ac.at%2Fcourses%2FRealtime%2Frepetitorium%2FVU.WS.2014%2Frtr_rep_2014_ComputeShader.pdf" target="_blank" rel="noopener">https://www.cg.tuwien.ac.at/courses/Realtime/repetitorium/VU.WS.2014/rtr_rep_2014_ComputeShader.pdf</a></p>
+<p><a href="https://www.khronos.org/assets/uploads/developers/library/2014-siggraph-bof/KITE-BOF_Aug14.pdf" target="_blank" rel="noopener">Microsoft PowerPoint - kite.compute.shader.pptx (khronos.org)</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/129016287" target="_blank" rel="noopener">《OpenGL编程指南（原书第8版）》——计算着色器 - 知乎 (zhihu.com)</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/129229812" target="_blank" rel="noopener">OpenGL4.3新特性: 计算着色器 Compute Shader - 知乎 (zhihu.com)</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/133902917" target="_blank" rel="noopener">OpenGL-Executing Compute Shaders - 知乎 (zhihu.com)</a></p>
+<p><a href="https://www.codercto.com/a/44753.html" target="_blank" rel="noopener">OpenGL/OpenCL中的gl_GlobalInvocationID, local_size_x的理解 | 码农网 (codercto.com)</a></p>
+<p><a href="https://github.com/SaschaWillems/Vulkan" target="_blank" rel="noopener">GitHub - SaschaWillems/Vulkan: Examples and demos for the new Vulkan API</a></p>
+<p><a href="https://computergraphics.stackexchange.com/questions/54/when-is-a-compute-shader-more-efficient-than-a-pixel-shader-for-image-filtering" target="_blank" rel="noopener">performance - When is a compute shader more efficient than a pixel shader for image filtering? - Computer Graphics Stack Exchange</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/01/10/Vulkan/Vulkan的同步问题/" rel="next" title>
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/01/10/Vulkan/vulkan同步原语Event/" rel="prev" title>
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">150</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#work-group"><span class="nav-number">1.</span> <span class="nav-text">work group</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何设置local-work-group的大小"><span class="nav-number">2.</span> <span class="nav-text">如何设置local work group的大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vkCmdDispatch"><span class="nav-number">3.</span> <span class="nav-text">vkCmdDispatch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compute-Shader"><span class="nav-number">4.</span> <span class="nav-text">Compute Shader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GLSL-built-in-variables"><span class="nav-number">5.</span> <span class="nav-text">GLSL built-in variables</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compute-Pipeline"><span class="nav-number">6.</span> <span class="nav-text">Compute Pipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shader-Storage-Buffer-Object"><span class="nav-number">7.</span> <span class="nav-text">Shader Storage Buffer Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Synchronization"><span class="nav-number">8.</span> <span class="nav-text">Synchronization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compute-Shader-vs-Graphic-Shader"><span class="nav-number">9.</span> <span class="nav-text">Compute Shader vs Graphic Shader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">10.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">165.8k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共165.8k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

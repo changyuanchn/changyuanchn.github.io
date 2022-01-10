@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Frostbite Engine Report简介 地区：瑞典  开发商：瑞典DICE游戏工作室  游戏类型：3D游戏引擎  发行日期：2006  适用游戏类型：第一视觉枪战游戏，以战地为例  商业逻辑：闭源，EA内部商业引擎，未授权其它公司使用该引擎制作游戏   寒霜引擎（Frostbite Engine），是瑞典DICE游戏工作室为著名电子游戏产品《战地》（Battlefield）系列设计的一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="axis tech zone">
+<meta property="og:url" content="http://yoursite.com/2021/12/29/GamesEngine/FrostbiteEngineReport/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="Frostbite Engine Report简介 地区：瑞典  开发商：瑞典DICE游戏工作室  游戏类型：3D游戏引擎  发行日期：2006  适用游戏类型：第一视觉枪战游戏，以战地为例  商业逻辑：闭源，EA内部商业引擎，未授权其它公司使用该引擎制作游戏   寒霜引擎（Frostbite Engine），是瑞典DICE游戏工作室为著名电子游戏产品《战地》（Battlefield）系列设计的一">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-12-30T09:05:07.013Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="axis tech zone">
+<meta name="twitter:description" content="Frostbite Engine Report简介 地区：瑞典  开发商：瑞典DICE游戏工作室  游戏类型：3D游戏引擎  发行日期：2006  适用游戏类型：第一视觉枪战游戏，以战地为例  商业逻辑：闭源，EA内部商业引擎，未授权其它公司使用该引擎制作游戏   寒霜引擎（Frostbite Engine），是瑞典DICE游戏工作室为著名电子游戏产品《战地》（Battlefield）系列设计的一">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/12/29/GamesEngine/FrostbiteEngineReport/">
+
+
+
+
+
+  <title> | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/12/29/GamesEngine/FrostbiteEngineReport/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-12-29T11:07:09+08:00">
+                2021-12-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,745
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Frostbite-Engine-Report"><a href="#Frostbite-Engine-Report" class="headerlink" title="Frostbite Engine Report"></a>Frostbite Engine Report</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
+<li><p>地区：瑞典</p>
+</li>
+<li><p>开发商：瑞典<a href="https://baike.baidu.com/item/DICE/7456761" target="_blank" rel="noopener">DICE</a>游戏工作室</p>
+</li>
+<li><p>游戏类型：3D游戏引擎</p>
+</li>
+<li><p>发行日期：2006</p>
+</li>
+<li><p>适用游戏类型：第一视觉枪战游戏，以战地为例</p>
+</li>
+<li><p>商业逻辑：闭源，EA内部商业引擎，未授权其它公司使用该引擎制作游戏</p>
+</li>
+</ul>
+<p>寒霜引擎（Frostbite Engine），是瑞典DICE游戏工作室为著名电子游戏产品《战地》（Battlefield）系列设计的一款<a href="https://baike.baidu.com/item/3D游戏引擎/410573" target="_blank" rel="noopener">3D游戏引擎</a>。该引擎从2006年起开始研发，第一款使用寒霜引擎的游戏在2008年问世。</p>
+<p>寒霜引擎的特色是可以运作庞大而又有着丰富细节的游戏地图，同时可以利用较低的系统资源渲染地面、建筑、杂物的全破坏效果。使用寒霜引擎可以轻松地运行大规模的、所有物体都可被破坏的游戏。</p>
+<p>寒霜引擎主要用于PC/Xbox/PS系列主机游戏，不涉及手机端游戏，这也就意味着他的渲染流程和技术跟端游或者其他的引擎有较大的差异。</p>
+<h2 id="发展历史"><a href="#发展历史" class="headerlink" title="发展历史"></a>发展历史</h2><ul>
+<li>2008 FrostBite发布<ul>
+<li>第一代Frostbite是与游戏Battlefield Bad Company一起设计和建造的。基于DICE在大型开放世界战地系列方面的经验，Frostbite是一个雄心勃勃的游戏引擎，可以在动态可破坏的环境中实现大规模的多人互动。</li>
+<li>提供的高可破坏性，允许从墙壁到地面本身的几乎每个环境部件都被破坏。</li>
+<li>允许实时照明，允许照明角度和效果动态变化，而无需对环境进行任何修改。</li>
+<li>允许选择性声音优先级，称为<a href="http://en.wikipedia.org/wiki/High_dynamic_range#Audio" target="_blank" rel="noopener">高动态范围（HDR）音频</a>，这意味着它将选择发出更重要和”更响亮”的声音，而不是一次发出每个声音</li>
+</ul>
+</li>
+<li>FrostBite 1.5<ul>
+<li>允许大型结构被坍塌并粉碎其中的一切，以及能够削弱较轻的环境，而不是将它们作为一个单一的实体被摧毁。</li>
+</ul>
+</li>
+<li>2011 FrostBite2<ul>
+<li>与Battlefield 3同时发布。同年，他们还在第一款使用该引擎的非FPS游戏《极品飞车：奔跑》中实现了它。</li>
+<li>引擎充分利用了<a href="http://en.wikipedia.org/wiki/DirectX#DirectX_11" target="_blank" rel="noopener">DirectX 11 API</a>和<a href="http://en.wikipedia.org/wiki/64-bit_computing" target="_blank" rel="noopener">64位处理器</a>，不支持<a href="http://en.wikipedia.org/wiki/DirectX#DirectX_9" target="_blank" rel="noopener">DirectX 9</a></li>
+<li>它还具有增强的游戏内<a href="https://battlefield.fandom.com/wiki/Destruction#Destruction_3.0" target="_blank" rel="noopener">破坏</a>功能，创造了比前作更精致的物理特性。它也用于许多其他<a href="https://battlefield.fandom.com/wiki/Electronic_Arts" target="_blank" rel="noopener">EA</a>游戏，例如<em><a href="https://nfs.fandom.com/wiki/Need_for_Speed:_The_Run" target="_blank" rel="noopener">极品飞车：奔跑</a></em>和<em><a href="https://medalofhonor.fandom.com/wiki/Medal_of_Honor:_Warfighter" target="_blank" rel="noopener">荣誉勋章：战士</a></em>。</li>
+<li>“基于磁贴的延迟着色加速”，通过 DirectCompute。 <a href="https://battlefield.fandom.com/wiki/Frostbite#cite_note-graphics_pipeline-4" target="_blank" rel="noopener">[4]</a>这被移植到PlayStation 3的SPU上。</li>
+<li>形态学抗锯齿 （MLAA），再次使用 DirectCompute 实现，用于节省带宽。</li>
+<li><a href="https://battlefield.fandom.com/wiki/Frostbite#cite_note-5" target="_blank" rel="noopener">准实时无线电</a></li>
+<li><a href="https://battlefield.fandom.com/wiki/Frostbite#cite_note-6" target="_blank" rel="noopener">改善环境破坏</a></li>
+<li><a href="https://battlefield.fandom.com/wiki/Frostbite#cite_note-7" target="_blank" rel="noopener">实时近似地下散射</a></li>
+</ul>
+</li>
+<li>2013 FrostBite3<ul>
+<li>改进的曲面细分技术。</li>
+<li><a href="https://battlefield.fandom.com/wiki/Destruction" target="_blank" rel="noopener">破坏4.0</a>功能，它增强了<a href="https://battlefield.fandom.com/wiki/Destruction" target="_blank" rel="noopener">游戏中的破坏</a>，允许更多的可破坏环境，增强的微观破坏和更大规模的破坏</li>
+<li>增加了新功能Levolution，允许玩家摧毁某些关键对象，然后这些对象将影响地图（从直接区域到整个地图）和游戏性。引入了动态水行为。水的行为更加激进，波浪已经实施，玩家现在面对的是一个真正的水面，它将对所有实体（如玩家和车辆）做出反应</li>
+</ul>
+</li>
+<li>2017 FrostBite4 </li>
+</ul>
+<h2 id="代表游戏"><a href="#代表游戏" class="headerlink" title="代表游戏"></a>代表游戏</h2><p>寒霜引擎主要用于PC/Xbox/PS系列主机游戏，不涉及端游，主要的游戏如下：</p>
+<ul>
+<li><p><a href="https://www.ea.com/games/fifa/fifa-21?isLocalized=true" target="_blank" rel="noopener">FIFA足球21</a></p>
+</li>
+<li><p><a href="https://www.ea.com/games/need-for-speed/need-for-speed-heat?isLocalized=true" target="_blank" rel="noopener">极品飞车20：复仇</a></p>
+</li>
+<li><a href="https://www.ea.com/games/madden-nfl/madden-nfl-21?isLocalized=true" target="_blank" rel="noopener">疯狂橄榄球21</a></li>
+<li><a href="https://www.ea.com/zh-cn/games/battlefield/battlefield-2042" target="_blank" rel="noopener">战地2042</a></li>
+<li><a href="[Buy Dragon Age: Inquisition - Available On PC, PS4 and Xbox One - EA Official](https://www.ea.com/games/dragon-age/dragon-age-inquisition/buy?isLocalized=true">龙腾世纪：审判</a>)</li>
+<li><a href="[Mirror&#39;s Edge™ Catalyst (ea.com">镜之边缘·催化剂</a>](<a href="https://www.ea.com/en-gb/games/mirrors-edge/mirrors-edge-catalyst" target="_blank" rel="noopener">https://www.ea.com/en-gb/games/mirrors-edge/mirrors-edge-catalyst</a>))</li>
+<li><a href="https://www.ea.com/games/battlefield/battlefield-5/buy/pc?isLocalized=true" target="_blank" rel="noopener">战地5</a></li>
+</ul>
+<h1 id="引擎特性"><a href="#引擎特性" class="headerlink" title="引擎特性"></a>引擎特性</h1><ul>
+<li><h2 id="大型地图"><a href="#大型地图" class="headerlink" title="大型地图"></a>大型地图</h2><p>寒霜引擎支持制作可见范围最大32x32km，可活动范围最多4x4km的大地图。寒霜引擎使用了各种尖端的贴图技术，使得游戏在地图面积较大的同时拥有丰富的细节。引擎的立体贴图技术则可以用来渲染次等重要的立体效果，以保持一定效果的同时大幅节约系统资源。更远的场景则使用密度较低的顶点，但较一些同时代游戏纯粹靠贴图表现远景的效果好得多。引擎运用了恰到好处的景深和迷雾效果，使得游戏场景中的地平线拥有自然、逼真的效果。寒霜引擎在构建大规模地图时能够较合理地分配系统资源，不致占用过多的物理内存。</p>
+</li>
+<li><h2 id="破坏效果"><a href="#破坏效果" class="headerlink" title="破坏效果"></a>破坏效果</h2><p>寒霜引擎有一套较完善的可破坏物件系统。较其它引擎，用寒霜引擎制作破坏物件更简单，在游戏中渲染破坏效果消耗的系统资源更少，因此可用来制作“一切皆可破坏”的地图。理论上地面也是可以破坏的，但是考虑到游戏的平衡性和耐玩性，DICE制作的各游戏中并没有应用地面破坏的特性。</p>
+<p>随着引擎的不断完善，破坏效果也有进步。最早的《战地：叛逆连队》中，建筑物的框架不能够损毁，爆炸后建筑物会留下一根根钢筋条屹立不倒；而《战地：叛逆连队2》中，不仅建筑物的框架可以被摧毁，一些小物体的破坏效果也刻画得更为细致，例如当一块木板只被伤到边角时，其整体不至于粉碎。</p>
+</li>
+<li><h2 id="HDR声效"><a href="#HDR声效" class="headerlink" title="HDR声效"></a>HDR声效</h2><p>HDR声效，是寒霜引擎的独家技术，使得震耳欲聋的声音听起来很响，而细微的声音也不会丢失细节。HDR声效工作原理与三维画面的高动态范围效果（<a href="https://baike.baidu.com/item/HDR特效/1467743" target="_blank" rel="noopener">HDR特效</a>）类似。在游戏运行时，程序可以动态调节不同声效的音量大小，从而通过对比来突出音量较大的声效。例如在爆炸发生时，车载广播的音效会被自动调低，以突出爆炸的响声；爆炸结束后，广播的音量相应调高，让玩家清楚地听到广播的内容。</p>
+</li>
+</ul>
+<h2 id="版本特性"><a href="#版本特性" class="headerlink" title="版本特性"></a>版本特性</h2><p>寒霜引擎分为1.x版本和2.x版本。</p>
+<ul>
+<li>1.x版本应用于2010年前的游戏</li>
+<li>2.x版本是1.x的升级版，更大程度地利用了DirectX 11等技术。</li>
+</ul>
+<h2 id="发展趋势"><a href="#发展趋势" class="headerlink" title="发展趋势"></a>发展趋势</h2><h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><ul>
+<li>闭源的内部引擎，外部公开的资料及其有限</li>
+<li>最初是为了第一人称射击类游戏定制的引擎，因此对于其他的类型游戏并不是特别的友好</li>
+<li>只支持DX，目前未看到有支持vulkan</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://www.ea.com/frostbite/engine" target="_blank" rel="noopener">A software development toolset for game creators - Frostbite</a></p>
+<p><a href="https://www.zhihu.com/topic/19927364/hot" target="_blank" rel="noopener">寒霜引擎 (Frostbite) - 知乎 (zhihu.com)</a></p>
+<p><a href="https://www.cnblogs.com/skiwnchiwns/p/10342800.html" target="_blank" rel="noopener">寒霜系列引擎技术解析 - jack船长大哥 - 博客园 (cnblogs.com)</a></p>
+<p><a href="https://battlefield.fandom.com/wiki/Frostbite" target="_blank" rel="noopener">Frostbite | Battlefield Wiki | Fandom</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/07/15/GPUGem/GPU并行架构模型/" rel="next" title="GPU并行架构模型">
+                <i class="fa fa-chevron-left"></i> GPU并行架构模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/01/06/GamesEngine/godotEngineReport/" rel="prev" title>
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">150</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Frostbite-Engine-Report"><span class="nav-number">1.</span> <span class="nav-text">Frostbite Engine Report</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发展历史"><span class="nav-number">1.2.</span> <span class="nav-text">发展历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代表游戏"><span class="nav-number">1.3.</span> <span class="nav-text">代表游戏</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#引擎特性"><span class="nav-number">2.</span> <span class="nav-text">引擎特性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#大型地图"><span class="nav-number">2.1.</span> <span class="nav-text">大型地图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#破坏效果"><span class="nav-number">2.2.</span> <span class="nav-text">破坏效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HDR声效"><span class="nav-number">2.3.</span> <span class="nav-text">HDR声效</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#版本特性"><span class="nav-number">2.4.</span> <span class="nav-text">版本特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发展趋势"><span class="nav-number">2.5.</span> <span class="nav-text">发展趋势</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优缺点"><span class="nav-number">3.</span> <span class="nav-text">优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">3.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">165.8k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共165.8k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
