@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vulkan,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Barrier用于同一个queue中的commands，或者同一个subpass中的commands所明确指定的依赖关系。我们可以想象一下有一大串的command乱序执行（实际上是顺序开始，乱序结束），barrier就是在中间树立一道栅栏，要求栅栏前后保持一定的顺序，但是前后的内部之间的顺序它是不关心的。 commands顺序开始，乱序结束有什么问题么？如果不涉及到对资源的访问，那么就没什么问题。">
+<meta name="keywords" content="vulkan">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vulkan同步Barrier的理解">
+<meta property="og:url" content="http://yoursite.com/2022/01/02/Vulkan/Vulkan同步之Barrier/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="Barrier用于同一个queue中的commands，或者同一个subpass中的commands所明确指定的依赖关系。我们可以想象一下有一大串的command乱序执行（实际上是顺序开始，乱序结束），barrier就是在中间树立一道栅栏，要求栅栏前后保持一定的顺序，但是前后的内部之间的顺序它是不关心的。 commands顺序开始，乱序结束有什么问题么？如果不涉及到对资源的访问，那么就没什么问题。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/vulkan/barrier.png">
+<meta property="og:updated_time" content="2022-01-10T13:38:58.989Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vulkan同步Barrier的理解">
+<meta name="twitter:description" content="Barrier用于同一个queue中的commands，或者同一个subpass中的commands所明确指定的依赖关系。我们可以想象一下有一大串的command乱序执行（实际上是顺序开始，乱序结束），barrier就是在中间树立一道栅栏，要求栅栏前后保持一定的顺序，但是前后的内部之间的顺序它是不关心的。 commands顺序开始，乱序结束有什么问题么？如果不涉及到对资源的访问，那么就没什么问题。">
+<meta name="twitter:image" content="http://yoursite.com/images/vulkan/barrier.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/01/02/Vulkan/Vulkan同步之Barrier/">
+
+
+
+
+
+  <title>Vulkan同步Barrier的理解 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/01/02/Vulkan/Vulkan同步之Barrier/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vulkan同步Barrier的理解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-02T00:00:00+08:00">
+                2022-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机图形学/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机图形学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,146
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Barrier用于同一个queue中的commands，或者同一个subpass中的commands所明确指定的依赖关系。我们可以想象一下有一大串的command乱序执行（实际上是顺序开始，乱序结束），barrier就是在中间树立一道栅栏，要求栅栏前后保持一定的顺序，但是前后的内部之间的顺序它是不关心的。</p>
+<p>commands顺序开始，乱序结束有什么问题么？如果不涉及到对资源的访问，那么就没什么问题。如果不同的command涉及到了对同一资源的访问以及修改，那么就有问题了，也正是因此我们看Barrier的设置函数中主要是对资源进行设置。</p>
+<p>vulkan中barrier提供了一个API来设置，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdPipelineBarrier(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    VkPipelineStageFlags                        srcStageMask,</span><br><span class="line">    VkPipelineStageFlags                        dstStageMask,</span><br><span class="line">    VkDependencyFlags                           dependencyFlags,</span><br><span class="line">    uint32_t                                    memoryBarrierCount,</span><br><span class="line">    const VkMemoryBarrier*                      pMemoryBarriers,</span><br><span class="line">    uint32_t                                    bufferMemoryBarrierCount,</span><br><span class="line">    const VkBufferMemoryBarrier*                pBufferMemoryBarriers,</span><br><span class="line">    uint32_t                                    imageMemoryBarrierCount,</span><br><span class="line">    const VkImageMemoryBarrier*                 pImageMemoryBarriers);</span><br></pre></td></tr></table></figure>
+<p>虽然只有一个API，但是这个API的参数确实变化多端，相当不易理解，下面我们就分析下。</p>
+<ul>
+<li><code>commandBuffer</code> 指的是barrier将要插入的<code>commandBuffer</code>。</li>
+<li><p><code>srcStageMask</code>表示哪个阶段的管线最后写入资源。</p>
+</li>
+<li><p><code>dstStageMask</code>表示哪个阶段的管线接下来从资源读取数据。</p>
+</li>
+<li><code>dependencyFlags</code>描述屏障表示的依赖关系如何影响屏障引用的资源。</li>
+</ul>
+<p>下面的3组参数分别表示设置的3组屏障的类别</p>
+<ul>
+<li><code>pMemoryBarriers</code>与<code>memoryBarrierCount</code>用于全局的内存屏障</li>
+<li><code>bufferMemoryBarrierCount</code>与<code>pBufferMemoryBarriers</code>用于缓冲区的内存屏障</li>
+<li><code>imageMemoryBarrierCount</code>与<code>pImageMemoryBarriers</code>用于图像的内存屏障</li>
+</ul>
+<p>针对上面的3组类型的屏障参数，我们可以有下面的4种场景。</p>
+<ul>
+<li><code>Execution Barrier</code></li>
+<li><code>Memory Barrier</code></li>
+<li><code>Buffer Memory Barrier</code></li>
+<li><code>Image Memory Barrier</code></li>
+</ul>
+<h2 id="Stage-Mask"><a href="#Stage-Mask" class="headerlink" title="Stage Mask"></a>Stage Mask</h2><p>在介绍具体的barrier类型前，我们首先需要理解一下<code>VkPipelineStageFlags</code>这个类型。在<code>vkCmdPipelineBarrier</code>调用中，需要设置<code>srcStageMask</code>和<code>dstStageMask</code>，这两个分别表示源和目的的管线阶段，下面我们具体理解一下。</p>
+<p>GPU是高度流水线化的设备，vulkan中的commands会出现在顶部<code>VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</code>，然后按照顺序执行各个阶段，执行完毕后，命令会在<code>VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT</code>结束。</p>
+<p>vulkan一共定义了如下的管线阶段：</p>
+<ul>
+<li><code>TOP_OF_PIPE_BIT</code></li>
+<li><code>DRAW_INDIRECT_BIT</code></li>
+<li><code>VERTEX_INPUT_BIT</code></li>
+<li><code>VERTEX_SHADER_BIT</code></li>
+<li><code>TESSELLATION_CONTROL_SHADER_BIT</code></li>
+<li><code>TESSELLATION_EVALUATION_SHADER_BIT</code></li>
+<li><code>GEOMETRY_SHADER_BIT</code></li>
+<li><code>FRAGMENT_SHADER_BIT</code></li>
+<li><code>EARLY_FRAGMENT_TESTS_BIT</code></li>
+<li><code>LATE_FRAGMENT_TESTS_BIT</code></li>
+<li><code>COLOR_ATTACHMENT_OUTPUT_BIT</code></li>
+<li><code>TRANSFER_BIT</code></li>
+<li><code>COMPUTE_SHADER_BIT</code></li>
+<li><code>BOTTOM_OF_PIPE_BIT</code></li>
+</ul>
+<p>注意：上面的枚举阶段并不一定是命令的执行顺序，某些阶段可以合并，某些阶段可能会丢失。</p>
+<p>我们看下面的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vkCmdPipelineBarrier(</span><br><span class="line">    commandBuffer,</span><br><span class="line">    VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, // source stage</span><br><span class="line">    VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,    // destination stage</span><br><span class="line">    /* remaining parameters omitted */);</span><br></pre></td></tr></table></figure>
+<p>上面的Barrier设置表示需要等所有的命令都执行完，然后再执行转换，并且在完全转换之前，任何命令都不能启动。这个Barrier将等待所有内容完成，并阻止任何工作开始。通常来讲这样设置效率比较差，会引起一些不必要的pipeline bubble。</p>
+<p>我们再看一个例子：</p>
+<p><img src="/images/vulkan/barrier.png" alt="barrier1"></p>
+<p>假设有一个顶点着色器，这个vertex shader会将数据通过imageStore存储，然后跟着一个想要使用它的计算着色器。在这种情况下，我们不希望等待后续片段着色器完成，因为这可能需要很长时间才能完成。我们希望计算着色器在顶点着色器完成后立即开始。因此我们可以做如下的设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vkCmdPipelineBarrier(</span><br><span class="line">    commandBuffer,</span><br><span class="line">    VK_PIPELINE_VERTEX_SHADER_BIT,     // source stage</span><br><span class="line">    VK_PIPELINE_COMPUTE_SHADER_BIT,    // destination stage</span><br><span class="line">    /* remaining parameters omitted */);</span><br></pre></td></tr></table></figure>
+<h2 id="Execution-Barrier"><a href="#Execution-Barrier" class="headerlink" title="Execution Barrier"></a>Execution Barrier</h2><p>如果上面的3种Barrier都没有设置，那么这个Barrier就是一个Execution Barrier。这也就意味着这个barrier不对资源做任何的限制，而只对command的执行做限制，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1. vkCmdDispatch</span><br><span class="line">2. vkCmdDispatch</span><br><span class="line">3. vkCmdDispatch</span><br><span class="line">4. vkCmdPipelineBarrier(srcStageMask = COMPUTE, dstStageMask = COMPUTE)</span><br><span class="line">5. vkCmdDispatch</span><br><span class="line">6. vkCmdDispatch</span><br><span class="line">7. vkCmdDispatch</span><br></pre></td></tr></table></figure>
+<p>这意味着1，2，3的command执行完毕后，5，6，7的command才开始执行，而1，2，3之间的执行是没有顺序的。</p>
+<p>这么看Execution Barrier很好啊，能解决资源的并发问题啊，即使他们对同一资源进行读写，那么也是在1，2，3读写完毕后，才会执行4，5，6的读写，那么他们有什么问题呢？</p>
+<p>逻辑上没有什么问题，问题在于具体的实现上，由于现代GPU同样采取了复杂的缓存控制机制，这个理想的模型是不存在的。一种可能的结果是，第一个dispatch执行完毕后, resource最新的内容被缓存到了某一级cache中。不幸的是，第二个dispatch开始执行的时候，这个cache对第二个dispatch不可见（例如，两个dispatch被分派到了不同的执行单元中）。尽管从顺序上，这的确保证了第一个dispatch先执行，然后才是第二个dispatch，但是我们仍然无法保证第二个dispatch能够看到第一个dispatch更新后的结果。</p>
+<p>因此Execution Barrier只能保证执行的先后顺序，而不能保证对资源的最终读写顺序，因此需要更多参数来控制（也就是上面的3组类型的屏障参数）。</p>
+<h2 id="Memory-Barrier"><a href="#Memory-Barrier" class="headerlink" title="Memory Barrier"></a>Memory Barrier</h2><p>全局内存屏障，它的存在就是为了解决上面Execution Barrier没法解决的问题的，既然我们只是限定执行顺序没法保证资源的读写同步，那么我们就再加两个变量，用来限定对资源的访问，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkMemoryBarrier &#123;</span><br><span class="line">    VkStructureType    sType;</span><br><span class="line">    const void*        pNext;</span><br><span class="line">    VkAccessFlags      srcAccessMask;</span><br><span class="line">    VkAccessFlags      dstAccessMask;</span><br><span class="line">&#125; VkMemoryBarrier;</span><br></pre></td></tr></table></figure>
+<p>这里新增了<code>srcAccessMask</code>：表示内存最后如何写入。</p>
+<p><code>dstAccessMask</code> ：表示内存接下来如何被读取。</p>
+<p>它们的取值范围如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkAccessFlagBits &#123;</span><br><span class="line">    VK_ACCESS_INDIRECT_COMMAND_READ_BIT = 0x00000001,</span><br><span class="line">    VK_ACCESS_INDEX_READ_BIT = 0x00000002,</span><br><span class="line">    VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = 0x00000004,</span><br><span class="line">    VK_ACCESS_UNIFORM_READ_BIT = 0x00000008,</span><br><span class="line">    VK_ACCESS_INPUT_ATTACHMENT_READ_BIT = 0x00000010,</span><br><span class="line">    VK_ACCESS_SHADER_READ_BIT = 0x00000020,</span><br><span class="line">    VK_ACCESS_SHADER_WRITE_BIT = 0x00000040,</span><br><span class="line">    VK_ACCESS_COLOR_ATTACHMENT_READ_BIT = 0x00000080,</span><br><span class="line">    VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT = 0x00000100,</span><br><span class="line">    VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT = 0x00000200,</span><br><span class="line">    VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = 0x00000400,</span><br><span class="line">    VK_ACCESS_TRANSFER_READ_BIT = 0x00000800,</span><br><span class="line">    VK_ACCESS_TRANSFER_WRITE_BIT = 0x00001000,</span><br><span class="line">    VK_ACCESS_HOST_READ_BIT = 0x00002000,</span><br><span class="line">    VK_ACCESS_HOST_WRITE_BIT = 0x00004000,</span><br><span class="line">    VK_ACCESS_MEMORY_READ_BIT = 0x00008000,</span><br><span class="line">    VK_ACCESS_MEMORY_WRITE_BIT = 0x00010000,</span><br><span class="line">    VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT = 0x02000000,</span><br><span class="line">    VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT = 0x04000000,</span><br><span class="line">    VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT = 0x08000000,</span><br><span class="line">    VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT = 0x00100000,</span><br><span class="line">    VK_ACCESS_COMMAND_PROCESS_READ_BIT_NVX = 0x00020000,</span><br><span class="line">    VK_ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX = 0x00040000,</span><br><span class="line">    VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT = 0x00080000,</span><br><span class="line">    VK_ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV = 0x00800000,</span><br><span class="line">    VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV = 0x00200000,</span><br><span class="line">    VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV = 0x00400000,</span><br><span class="line">    VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT = 0x01000000,</span><br><span class="line">    VK_ACCESS_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkAccessFlagBits;</span><br><span class="line">typedef VkFlags VkAccessFlags;</span><br></pre></td></tr></table></figure>
+<p>全局memory barrier只有<code>srcAccessMask</code>和<code>dstAccessMask</code> ，因此作用于当前所有的resource。</p>
+<p>一般场景下我们也很少用到这种粗粒度的全局内存屏障，大多数场景是需要具体操纵某个resource的时候，根据resource的类型，分别使用buffer或者image的memory barrier.</p>
+<h2 id="Buffer-Memory-Barrier"><a href="#Buffer-Memory-Barrier" class="headerlink" title="Buffer Memory Barrier"></a>Buffer Memory Barrier</h2><p>当我们操作具体的buffer时，就要用到下面的<code>VkBufferMemoryBarrier</code>了。<code>srcAccessMask</code>和<code>dstAccessMask</code> 是和上面一样的定义和意义。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkBufferMemoryBarrier &#123;</span><br><span class="line">    VkStructureType    sType;</span><br><span class="line">    const void*        pNext;</span><br><span class="line">    VkAccessFlags      srcAccessMask;</span><br><span class="line">    VkAccessFlags      dstAccessMask;</span><br><span class="line">    uint32_t           srcQueueFamilyIndex;</span><br><span class="line">    uint32_t           dstQueueFamilyIndex;</span><br><span class="line">    VkBuffer           buffer;</span><br><span class="line">    VkDeviceSize       offset;</span><br><span class="line">    VkDeviceSize       size;</span><br><span class="line">&#125; VkBufferMemoryBarrier;</span><br></pre></td></tr></table></figure>
+<p>这里新增加了<code>srcQueueFamilyIndex</code>和<code>dstQueueFamilyIndex</code>，这是因为BufferMemory的所有权是存在从一个queue到另一个queue的转移的，所以需要设置，如果没有所有权的转移，则两者均设置为<code>VK_QUEUE_FAMILY_IGNORED</code></p>
+<p><code>buffer</code>，<code>offset</code>，<code>size</code>这三个参数用来执行具体的内存缓冲区。</p>
+<h2 id="Image-Memory-Barrier"><a href="#Image-Memory-Barrier" class="headerlink" title="Image Memory Barrier"></a>Image Memory Barrier</h2><p>Image Memory Barrier和Buffer Memory Barrier一样，只不过这里是用来处理Image的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkImageMemoryBarrier &#123;</span><br><span class="line">    VkStructureType            sType;</span><br><span class="line">    const void*                pNext;</span><br><span class="line">    VkAccessFlags              srcAccessMask;</span><br><span class="line">    VkAccessFlags              dstAccessMask;</span><br><span class="line">    VkImageLayout              oldLayout;</span><br><span class="line">    VkImageLayout              newLayout;</span><br><span class="line">    uint32_t                   srcQueueFamilyIndex;</span><br><span class="line">    uint32_t                   dstQueueFamilyIndex;</span><br><span class="line">    VkImage                    image;</span><br><span class="line">    VkImageSubresourceRange    subresourceRange;</span><br><span class="line">&#125; VkImageMemoryBarrier;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>oldLayout</code>和<code>newLayout</code></li>
+</ul>
+<p>我们看这里新增了<code>oldLayout</code>和<code>newLayout</code>这两个参数，这里使用来做图像布局的转换的。我们知道在vulkan中图像是有布局的，在不同的场景下，需要设置为不同的布局的。布局的转换就需要用到Barrier。</p>
+<ul>
+<li><p><code>image</code>指的是相应的图像</p>
+</li>
+<li><p><code>subresourceRange</code>是指屏障影响到的图像的区域</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">typedef struct VkImageSubresourceRange &#123;</span><br><span class="line">    VkImageAspectFlags    aspectMask;</span><br><span class="line">    uint32_t              baseMipLevel;</span><br><span class="line">    uint32_t              levelCount;</span><br><span class="line">    uint32_t              baseArrayLayer;</span><br><span class="line">    uint32_t              layerCount;</span><br><span class="line">&#125; VkImageSubresourceRange;</span><br></pre></td></tr></table></figure>
+<p><code>VkImageAspectFlags</code>是指图像是什么类型的，有如下的类型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">typedef enum VkImageAspectFlagBits &#123;</span><br><span class="line">    VK_IMAGE_ASPECT_COLOR_BIT = 0x00000001,</span><br><span class="line">    VK_IMAGE_ASPECT_DEPTH_BIT = 0x00000002,</span><br><span class="line">    VK_IMAGE_ASPECT_STENCIL_BIT = 0x00000004,</span><br><span class="line">    VK_IMAGE_ASPECT_METADATA_BIT = 0x00000008,</span><br><span class="line">    VK_IMAGE_ASPECT_PLANE_0_BIT = 0x00000010,</span><br><span class="line">    VK_IMAGE_ASPECT_PLANE_1_BIT = 0x00000020,</span><br><span class="line">    VK_IMAGE_ASPECT_PLANE_2_BIT = 0x00000040,</span><br><span class="line">    VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT = 0x00000080,</span><br><span class="line">    VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT = 0x00000100,</span><br><span class="line">    VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT = 0x00000200,</span><br><span class="line">    VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT = 0x00000400,</span><br><span class="line">    VK_IMAGE_ASPECT_PLANE_0_BIT_KHR = VK_IMAGE_ASPECT_PLANE_0_BIT,</span><br><span class="line">    VK_IMAGE_ASPECT_PLANE_1_BIT_KHR = VK_IMAGE_ASPECT_PLANE_1_BIT,</span><br><span class="line">    VK_IMAGE_ASPECT_PLANE_2_BIT_KHR = VK_IMAGE_ASPECT_PLANE_2_BIT,</span><br><span class="line">    VK_IMAGE_ASPECT_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF</span><br><span class="line">&#125; VkImageAspectFlagBits;</span><br><span class="line">typedef VkFlags VkImageAspectFlags;</span><br></pre></td></tr></table></figure>
+<p>常用的也就前几个。</p>
+<ul>
+<li>用于mipmap图像，mipmap的一个子集也可以包含进barrier</li>
+</ul>
+<p><code>baseMipLevel</code> 指定最小数字（最高分辨率）的mipmap层级。</p>
+<p><code>levelCount</code> 指定包含进barrier的mipmap的层级数量</p>
+<p>如果图像不包含mipmap，则<code>baseMipLevel = 0</code> 和 <code>levelCount = 1</code> </p>
+<ul>
+<li>对于阵列图像的图像层子集也可以包含进barrier</li>
+</ul>
+<p><code>baseArrayLayer</code> 设置的第一个层的索引</p>
+<p><code>layerCount</code> 所要包含的层数</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://themaister.net/blog/2019/08/14/yet-another-blog-explaining-vulkan-synchronization/" target="_blank" rel="noopener">Yet another blog explaining Vulkan synchronization – Maister’s Graphics Adventures (themaister.net)</a></p>
+<p><a href="https://gpuopen.com/learn/vulkan-barriers-explained/" target="_blank" rel="noopener">Vulkan® Barriers Explained - GPUOpen</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/80692115" target="_blank" rel="noopener">vulkan中的同步和缓存控制之二，barrier和event - 知乎 (zhihu.com)</a></p>
+<p><a href="https://github.com/KhronosGroup/Vulkan-Docs/wiki/Synchronization-Examples-(Legacy-synchronization-APIs" target="_blank" rel="noopener">Synchronization Examples (Legacy synchronization APIs) · KhronosGroup/Vulkan-Docs Wiki · GitHub</a>)</p>
+<p><a href="https://zhuanlan.zhihu.com/p/164491130" target="_blank" rel="noopener">【译】拆解D3D12和Vulkan中的Barrier（1） - 知乎 (zhihu.com)</a></p>
+<p><a href="https://www.khronos.org/blog/understanding-vulkan-synchronization" target="_blank" rel="noopener">Understanding Vulkan Synchronization - The Khronos Group Inc</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vulkan/" rel="tag"># vulkan</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/01/01/Vulkan/ComputePipeline/" rel="next" title="Vulkan之计算管线">
+                <i class="fa fa-chevron-left"></i> Vulkan之计算管线
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/01/02/GamesEngine/godotEngineReport/" rel="prev" title="Godot Engine Report">
+                Godot Engine Report <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">150</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Stage-Mask"><span class="nav-number">1.</span> <span class="nav-text">Stage Mask</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Execution-Barrier"><span class="nav-number">2.</span> <span class="nav-text">Execution Barrier</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Memory-Barrier"><span class="nav-number">3.</span> <span class="nav-text">Memory Barrier</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Buffer-Memory-Barrier"><span class="nav-number">4.</span> <span class="nav-text">Buffer Memory Barrier</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Image-Memory-Barrier"><span class="nav-number">5.</span> <span class="nav-text">Image Memory Barrier</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">165.7k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共165.7k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
