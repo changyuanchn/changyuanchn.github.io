@@ -88,7 +88,7 @@
 <meta property="og:description" content="Barrier用于同一个queue中的commands，或者同一个subpass中的commands所明确指定的依赖关系。我们可以想象一下有一大串的command乱序执行（实际上是顺序开始，乱序结束），barrier就是在中间树立一道栅栏，要求栅栏前后保持一定的顺序，但是前后的内部之间的顺序它是不关心的。 commands顺序开始，乱序结束有什么问题么？如果不涉及到对资源的访问，那么就没什么问题。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/vulkan/barrier.png">
-<meta property="og:updated_time" content="2022-01-10T13:38:58.989Z">
+<meta property="og:updated_time" content="2022-02-07T14:00:00.227Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vulkan同步Barrier的理解">
 <meta name="twitter:description" content="Barrier用于同一个queue中的commands，或者同一个subpass中的commands所明确指定的依赖关系。我们可以想象一下有一大串的command乱序执行（实际上是顺序开始，乱序结束），barrier就是在中间树立一道栅栏，要求栅栏前后保持一定的顺序，但是前后的内部之间的顺序它是不关心的。 commands顺序开始，乱序结束有什么问题么？如果不涉及到对资源的访问，那么就没什么问题。">
@@ -353,7 +353,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,146
+                  2,235
                 </span>
               
 
@@ -392,6 +392,9 @@
       
         <p>Barrier用于同一个queue中的commands，或者同一个subpass中的commands所明确指定的依赖关系。我们可以想象一下有一大串的command乱序执行（实际上是顺序开始，乱序结束），barrier就是在中间树立一道栅栏，要求栅栏前后保持一定的顺序，但是前后的内部之间的顺序它是不关心的。</p>
 <p>commands顺序开始，乱序结束有什么问题么？如果不涉及到对资源的访问，那么就没什么问题。如果不同的command涉及到了对同一资源的访问以及修改，那么就有问题了，也正是因此我们看Barrier的设置函数中主要是对资源进行设置。</p>
+<p>在khronos的官方的blog里面由一句话室非常重要的，它明了的说明了Barrier是什么：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Pipeline barriers specify what data or which stages of the rendering pipeline to wait for and which stages to block until other specified stages in previous commands are completed.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Pipeline barriers确定了哪些data或者哪些指定的stages需要阻塞等待， 直到previous commands中的specified stages完成。</span><br></pre></td></tr></table></figure>
 <p>vulkan中barrier提供了一个API来设置，如下所示：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">VKAPI_ATTR void VKAPI_CALL vkCmdPipelineBarrier(</span><br><span class="line">    VkCommandBuffer                             commandBuffer,</span><br><span class="line">    VkPipelineStageFlags                        srcStageMask,</span><br><span class="line">    VkPipelineStageFlags                        dstStageMask,</span><br><span class="line">    VkDependencyFlags                           dependencyFlags,</span><br><span class="line">    uint32_t                                    memoryBarrierCount,</span><br><span class="line">    const VkMemoryBarrier*                      pMemoryBarriers,</span><br><span class="line">    uint32_t                                    bufferMemoryBarrierCount,</span><br><span class="line">    const VkBufferMemoryBarrier*                pBufferMemoryBarriers,</span><br><span class="line">    uint32_t                                    imageMemoryBarrierCount,</span><br><span class="line">    const VkImageMemoryBarrier*                 pImageMemoryBarriers);</span><br></pre></td></tr></table></figure>
 <p>虽然只有一个API，但是这个API的参数确实变化多端，相当不易理解，下面我们就分析下。</p>
@@ -534,8 +537,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2022/01/02/GamesEngine/godotEngineReport/" rel="prev" title="Godot Engine Report">
-                Godot Engine Report <i class="fa fa-chevron-right"></i>
+              <a href="/2022/01/02/GamesEngine/FrostbiteEngineReport/" rel="prev" title="Frostbite Engine Report">
+                Frostbite Engine Report <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -642,7 +645,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -726,7 +729,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">165.7k</span>
+    <span title="Site words total count">167.9k</span>
   
 </div>
 
@@ -755,7 +758,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共165.7k字</span>
+  <span class="post-count">博客全站共167.9k字</span>
 </div>
         
 <div class="busuanzi-count">
