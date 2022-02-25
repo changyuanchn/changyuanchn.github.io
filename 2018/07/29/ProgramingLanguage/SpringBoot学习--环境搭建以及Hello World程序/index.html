@@ -335,6 +335,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/29/ProgramingLanguage/SpringBoot学习--环境搭建以及Hello World程序/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/07/29/ProgramingLanguage/SpringBoot学习--环境搭建以及Hello World程序/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -454,8 +464,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/29/MachineLearning/LDA线性判别分析/" rel="next" title="LDA线性判别分析">
-                <i class="fa fa-chevron-left"></i> LDA线性判别分析
+              <a href="/2018/07/27/MachineLearning/多维缩放算法（MDS）/" rel="next" title="多维缩放算法（MDS）">
+                <i class="fa fa-chevron-left"></i> 多维缩放算法（MDS）
               </a>
             
           </div>
@@ -464,8 +474,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/29/DataStructure/Floyd算法/" rel="prev" title="Floyd算法">
-                Floyd算法 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/07/29/MachineLearning/典型相关分析（CCA）/" rel="prev" title="典型相关分析（CCA）">
+                典型相关分析（CCA） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -497,7 +507,10 @@
 
   
     <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
     </div>
 
   
@@ -843,16 +856,51 @@
 
 
   
-    <script type="text/javascript">
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'changyuanchn',
+            repo: 'https://github.com/changyuanchn/changyuanchn.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '82f82fd4b3c71f66c261736a9aca7151809f2c0e',
+            
+                client_id: 'b260167e7c41f29d0da7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -870,12 +918,7 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-  
-
-
-
-
-
+    
 
 
 

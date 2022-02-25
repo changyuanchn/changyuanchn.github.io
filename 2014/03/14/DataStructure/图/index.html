@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="图,数据结构,">
+  <meta name="keywords" content="数据结构,图,">
 
 
 
@@ -80,7 +80,7 @@
 
 
 <meta name="description" content="图的定义图是由点和边组成的一种结构。 也就是说，图G=（V，E），V表示点的集合，E表示边的集合。而边也可以用点对来表示，即（v，w），其中v，w属于V。 如果点对（v，w）是有序的，也就是说（v，w）！=（w，v），那么我们就称图为有向图。 点v和w邻接，当且仅当（v，w）属于E。   图的概念路径：路径由一系列点组成，这些点要满足一个约束条件，即相邻点要构成边。标准定义如下所示  路径由一系列">
-<meta name="keywords" content="图,数据结构">
+<meta name="keywords" content="数据结构,图">
 <meta property="og:type" content="article">
 <meta property="og:title" content="图">
 <meta property="og:url" content="http://yoursite.com/2014/03/14/DataStructure/图/index.html">
@@ -333,6 +333,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/03/14/DataStructure/图/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2014/03/14/DataStructure/图/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -443,9 +453,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/图/" rel="tag"># 图</a>
-          
             <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+          
+            <a href="/tags/图/" rel="tag"># 图</a>
           
         </div>
       
@@ -501,7 +511,10 @@
 
   
     <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjYyMy8xMzE1OA=="></div>
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
     </div>
 
   
@@ -847,22 +860,52 @@
 
 
   
-    <script type="text/javascript">
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
-  
 
 
 
 
 
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'changyuanchn',
+            repo: 'https://github.com/changyuanchn/changyuanchn.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '82f82fd4b3c71f66c261736a9aca7151809f2c0e',
+            
+                client_id: 'b260167e7c41f29d0da7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script>
+    
 
 
 
