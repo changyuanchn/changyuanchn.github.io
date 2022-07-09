@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="重构,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="为什么要搞代码重构有很多的书在讲这个问题，包括经典的《Clean Code》以及《重构：改善既有代码的设计》这些书中，都给出了很多的原因，实际上之所以会导致重构的发生，归根到底就是 代码已经脱离了我们的掌控了 程序写出来是给人看的,附带能在机器上运行，忘记了是哪里看到的这句话。这句话深刻的揭示了编程的本质。当面对一系列糟糕的代码的时候，再好的程序员都只能事半功倍，要花大量的时间去理解糟糕的带啊吗。">
+<meta name="keywords" content="重构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重构的思考">
+<meta property="og:url" content="http://yoursite.com/2018/06/30/ProgramingLanguage/重构/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="为什么要搞代码重构有很多的书在讲这个问题，包括经典的《Clean Code》以及《重构：改善既有代码的设计》这些书中，都给出了很多的原因，实际上之所以会导致重构的发生，归根到底就是 代码已经脱离了我们的掌控了 程序写出来是给人看的,附带能在机器上运行，忘记了是哪里看到的这句话。这句话深刻的揭示了编程的本质。当面对一系列糟糕的代码的时候，再好的程序员都只能事半功倍，要花大量的时间去理解糟糕的带啊吗。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-03-13T16:13:10.019Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="重构的思考">
+<meta name="twitter:description" content="为什么要搞代码重构有很多的书在讲这个问题，包括经典的《Clean Code》以及《重构：改善既有代码的设计》这些书中，都给出了很多的原因，实际上之所以会导致重构的发生，归根到底就是 代码已经脱离了我们的掌控了 程序写出来是给人看的,附带能在机器上运行，忘记了是哪里看到的这句话。这句话深刻的揭示了编程的本质。当面对一系列糟糕的代码的时候，再好的程序员都只能事半功倍，要花大量的时间去理解糟糕的带啊吗。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/30/ProgramingLanguage/重构/">
+
+
+
+
+
+  <title>重构的思考 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/30/ProgramingLanguage/重构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">重构的思考</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-30T00:00:00+08:00">
+                2018-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/30/ProgramingLanguage/重构/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/06/30/ProgramingLanguage/重构/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,209
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="为什么要搞代码重构"><a href="#为什么要搞代码重构" class="headerlink" title="为什么要搞代码重构"></a>为什么要搞代码重构</h3><p>有很多的书在讲这个问题，包括经典的《Clean Code》以及《重构：改善既有代码的设计》这些书中，都给出了很多的原因，实际上之所以会导致重构的发生，归根到底就是</p>
+<p><em>代码已经脱离了我们的掌控了</em></p>
+<p><em>程序写出来是给人看的,附带能在机器上运行</em>，忘记了是哪里看到的这句话。这句话深刻的揭示了编程的本质。当面对一系列糟糕的代码的时候，再好的程序员都只能事半功倍，要花大量的时间去理解糟糕的带啊吗。这也就是为什么要提倡clean code的原因。因此</p>
+<ul>
+<li>clean code也就成为了重构的一个最重要的原因。重构是为了消除代码中的坏味道。</li>
+</ul>
+<p>坏味道有很多种，在重构一书中，列举了很多，如下所示：</p>
+<ul>
+<li>神秘命名（Mysterious Name）</li>
+<li>重复代码（Duplicated Code）</li>
+<li>过长函数（Long Function）</li>
+<li>过长参数列表（Long Parameter List）</li>
+<li>全局数据（Global Data）</li>
+<li>可变数据（Mutable Data）</li>
+<li>发散式变化（Divergent Change）</li>
+<li>霰弹式修改（Shotgun Surgery）</li>
+<li>依恋情结（Feature Envy）</li>
+<li>数据泥团（Data Clumps） </li>
+<li>基本类型偏执（Primitive Obsession） </li>
+<li>重复的switch （Repeated Switches）</li>
+<li>循环语句（Loops）</li>
+<li>冗赘的元素（Lazy Element）</li>
+<li>夸夸其谈通用性（Speculative Generality）</li>
+<li>临时字段（Temporary Field）</li>
+<li>过长的消息链（Message Chains）</li>
+<li>中间人（Middle Man）</li>
+<li>内幕交易（Insider Trading）</li>
+<li>过大的类（Large Class）</li>
+<li>异曲同工的类（Alternative Classes with Different Interfaces）</li>
+<li>纯数据类（Data Class）</li>
+<li>被拒绝的遗赠（Refused Bequest）</li>
+<li>注释（Comments）</li>
+</ul>
+<p>可以看到上面的大部分的坏味道都是代码基础层面的问题，重复代码，过长函数等等。修改了这些问题，能够让代码更容易阅读，这些都是对代码的小改进，通过对代码的小步快跑式的改进，来逐步的提升代码的质量。</p>
+<p>就像演义中谋士一般都会给出上中下三策一样，我认为代码的重构也是分三个级别的。</p>
+<ul>
+<li><p>架构上的重构<br>如果软件的架构上本身已经腐朽了，或者架构本身已经脱离了时代了，那么用上面的哪些技巧或者坏味道改进是不解决问题的。在这种情况下，对架构进行彻底调整或者直接重新设计架构重写代码，才是正确的方式</p>
+</li>
+<li><p>类的重构<br>对于面向对象而言，有一句很有名的话，虽然不一定正确，但是还是很有代表性的，即“万物皆类”。类属于一个较大颗粒度的东西，因此如果类本身设计有问题或者实现有问题的话，则需要对其进行重构调整，比如说类没有对扩展开放，对修改封闭等等。</p>
+</li>
+<li><p>坏味道的重构<br>最基层的就是重构书中提到的种种基于坏味道的重构了，都是一小点一小点的改进，让代码更加易读易懂。</p>
+</li>
+</ul>
+<h3 id="构建测试体系"><a href="#构建测试体系" class="headerlink" title="构建测试体系"></a>构建测试体系</h3><p>重构最怕在没有意识到的情况下，修改了原有的功能。很多时候，即使经过充分的测试，我们也是很难发现引入了bug的了。因此要构建测试体系，尽量尽早发现bug，在最初的阶段就将其消灭掉。</p>
+<h3 id="关于《重构：改善既有代码的设计》这本书"><a href="#关于《重构：改善既有代码的设计》这本书" class="headerlink" title="关于《重构：改善既有代码的设计》这本书"></a>关于《重构：改善既有代码的设计》这本书</h3><p>这本书的价值有80%都在最开始的例子上，后面的内容说实话，有些啰嗦和夸夸其谈了。实际上，如果没有多年的编程经验，是体会不到这些坏味道的坏处的。而如果有了多年的编程经验了，这些坏味道的解决方式也都是大家知道的，这本书也没有什么新意，这就很尴尬了。</p>
+<p>这本书剩下的20%的价值就在后面的400多页的各个重构手法里面提到的步骤上了，精华在于按照书中的步骤走，会让你在重构时能够少引入错误，仅此而已。</p>
+<p>因此对于这本书，最开始的那个例子要认真阅读，学习。</p>
+<h3 id="真正的重构要读什么书"><a href="#真正的重构要读什么书" class="headerlink" title="真正的重构要读什么书"></a>真正的重构要读什么书</h3><p>实际上如果真的想要学习好重构，这本书价值不高。更应该看《设计模式》的书。设计模式才是我们真正应该去用心学习吸收体会的。设计模式的最基础的理念就是一条：</p>
+<ul>
+<li>将变化的部分与不变的部分剥离</li>
+</ul>
+<p>这样就解决了最大的问题：扩展。</p>
+<p>同时设计模式也是无数的编程高手的经验总结，这才是真正有价值的东西。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/重构/" rel="tag"># 重构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/09/MachineLearning/高斯混合模型/" rel="next" title="高斯混合模型">
+                <i class="fa fa-chevron-left"></i> 高斯混合模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/10/MachineLearning/隐马尔科夫模型/" rel="prev" title="隐马尔科夫模型">
+                隐马尔科夫模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">153</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要搞代码重构"><span class="nav-number">1.</span> <span class="nav-text">为什么要搞代码重构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构建测试体系"><span class="nav-number">2.</span> <span class="nav-text">构建测试体系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于《重构：改善既有代码的设计》这本书"><span class="nav-number">3.</span> <span class="nav-text">关于《重构：改善既有代码的设计》这本书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#真正的重构要读什么书"><span class="nav-number">4.</span> <span class="nav-text">真正的重构要读什么书</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">173.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共173.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'changyuanchn',
+            repo: 'https://github.com/changyuanchn/changyuanchn.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '82f82fd4b3c71f66c261736a9aca7151809f2c0e',
+            
+                client_id: 'b260167e7c41f29d0da7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

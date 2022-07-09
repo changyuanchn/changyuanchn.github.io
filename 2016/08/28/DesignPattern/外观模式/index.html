@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="axis tech zone">
 <meta property="og:description" content="其实外观模式实际上跟适配器模式有一点点相通之处，但是也仅是一点点罢了。 外观模式提供了一个统一的接口，用来访问子系统中的一群接口。外观定义了一个高层接口，让子系统更容易使用说白了就是做一件事，之前可能要调用一堆接口，但是外观模式把这一堆接口封装到一个接口中，最终用户只需要调用这一个接口就行了，就这么简单。 下面以一个家庭影院为例来说明下外观模式 假设我们有一个家庭影院系统，我们有个遥控器，我们需要">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2021-06-23T15:32:54.648Z">
+<meta property="og:updated_time" content="2022-03-05T14:44:47.773Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="外观模式">
 <meta name="twitter:description" content="其实外观模式实际上跟适配器模式有一点点相通之处，但是也仅是一点点罢了。 外观模式提供了一个统一的接口，用来访问子系统中的一群接口。外观定义了一个高层接口，让子系统更容易使用说白了就是做一件事，之前可能要调用一堆接口，但是外观模式把这一堆接口封装到一个接口中，最终用户只需要调用这一个接口就行了，就这么简单。 下面以一个家庭影院为例来说明下外观模式 假设我们有一个家庭影院系统，我们有个遥控器，我们需要">
@@ -361,7 +361,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  489
+                  506
                 </span>
               
 
@@ -407,6 +407,7 @@
 <p>然后创建一个外观类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public class HomeTheaterFacade &#123;</span><br><span class="line">    Amplifirer amplifirer;</span><br><span class="line">    Tuner tuner;</span><br><span class="line">    DvdPlayer dvdPlayer;</span><br><span class="line"></span><br><span class="line">    public HomeTheaterFacade(Amplifirer amplifirer,</span><br><span class="line">                             Tuner tuner,</span><br><span class="line">                             DvdPlayer dvdPlayer) &#123;</span><br><span class="line">        this.amplifirer = amplifirer;</span><br><span class="line">        this.tuner = tuner;</span><br><span class="line">        this.dvdPlayer = dvdPlayer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void watchMovie() &#123;</span><br><span class="line">        amplifirer.on();</span><br><span class="line">        tuner.on();</span><br><span class="line">        dvdPlayer.on();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void endMovie() &#123;</span><br><span class="line">        amplifirer.off();</span><br><span class="line">        tuner.off();</span><br><span class="line">        dvdPlayer.off();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这样就可以对相应的函数调用进行统一的管理了。</p>
 <h3 id="最小知识原则：只和你的密友谈话"><a href="#最小知识原则：只和你的密友谈话" class="headerlink" title="最小知识原则：只和你的密友谈话"></a>最小知识原则：只和你的密友谈话</h3><p>这个原则实际上是告诉我们要尽量减少类的耦合</p>
+<h3 id="代码链接如下"><a href="#代码链接如下" class="headerlink" title="代码链接如下"></a>代码链接如下</h3><p><a href="https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/FacadePattern" target="_blank" rel="noopener">https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/FacadePattern</a></p>
 
       
     </div>
@@ -536,7 +537,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">150</span>
+                  <span class="site-state-item-count">153</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -547,7 +548,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -558,7 +559,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-count">42</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -607,7 +608,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#外观模式提供了一个统一的接口，用来访问子系统中的一群接口。外观定义了一个高层接口，让子系统更容易使用"><span class="nav-number">1.</span> <span class="nav-text">外观模式提供了一个统一的接口，用来访问子系统中的一群接口。外观定义了一个高层接口，让子系统更容易使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最小知识原则：只和你的密友谈话"><span class="nav-number">2.</span> <span class="nav-text">最小知识原则：只和你的密友谈话</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#外观模式提供了一个统一的接口，用来访问子系统中的一群接口。外观定义了一个高层接口，让子系统更容易使用"><span class="nav-number">1.</span> <span class="nav-text">外观模式提供了一个统一的接口，用来访问子系统中的一群接口。外观定义了一个高层接口，让子系统更容易使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最小知识原则：只和你的密友谈话"><span class="nav-number">2.</span> <span class="nav-text">最小知识原则：只和你的密友谈话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码链接如下"><span class="nav-number">3.</span> <span class="nav-text">代码链接如下</span></a></li></ol></div>
             
 
           </div>
@@ -642,7 +643,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">167.9k</span>
+    <span title="Site words total count">173.9k</span>
   
 </div>
 
@@ -671,7 +672,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共167.9k字</span>
+  <span class="post-count">博客全站共173.9k字</span>
 </div>
         
 <div class="busuanzi-count">

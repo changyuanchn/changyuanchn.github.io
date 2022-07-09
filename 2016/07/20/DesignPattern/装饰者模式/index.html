@@ -82,7 +82,7 @@
 <meta name="description" content="一杯cafe问题假设我们需要设计一个cafe订单系统，用户可以选择coffee类型以及需要添加的小料，然后计算出它的价格，那么最朴素的方法就是创建一个coffee基类，然后不同类型的coffee继承自这个基类，然后计算他的价格，类图可以如下所示：  但是这样也是有个问题的，这会导致类爆炸（因为添加每一种小料就需要添加一个新的类），如下所示： 面对上面的问题，一种解决方法就是，我们可以在基类中增加小">
 <meta name="keywords" content="设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="装饰者者模式">
+<meta property="og:title" content="装饰者模式">
 <meta property="og:url" content="http://yoursite.com/2016/07/20/DesignPattern/装饰者模式/index.html">
 <meta property="og:site_name" content="axis tech zone">
 <meta property="og:description" content="一杯cafe问题假设我们需要设计一个cafe订单系统，用户可以选择coffee类型以及需要添加的小料，然后计算出它的价格，那么最朴素的方法就是创建一个coffee基类，然后不同类型的coffee继承自这个基类，然后计算他的价格，类图可以如下所示：  但是这样也是有个问题的，这会导致类爆炸（因为添加每一种小料就需要添加一个新的类），如下所示： 面对上面的问题，一种解决方法就是，我们可以在基类中增加小">
@@ -90,9 +90,9 @@
 <meta property="og:image" content="http://yoursite.com/images/patternDesign/coffeeDemo1.jpg">
 <meta property="og:image" content="http://yoursite.com/images/patternDesign/coffeeDemo2.jpg">
 <meta property="og:image" content="http://yoursite.com/images/patternDesign/coffeeDemo3.jpg">
-<meta property="og:updated_time" content="2021-06-23T15:32:54.661Z">
+<meta property="og:updated_time" content="2022-03-01T16:15:57.863Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="装饰者者模式">
+<meta name="twitter:title" content="装饰者模式">
 <meta name="twitter:description" content="一杯cafe问题假设我们需要设计一个cafe订单系统，用户可以选择coffee类型以及需要添加的小料，然后计算出它的价格，那么最朴素的方法就是创建一个coffee基类，然后不同类型的coffee继承自这个基类，然后计算他的价格，类图可以如下所示：  但是这样也是有个问题的，这会导致类爆炸（因为添加每一种小料就需要添加一个新的类），如下所示： 面对上面的问题，一种解决方法就是，我们可以在基类中增加小">
 <meta name="twitter:image" content="http://yoursite.com/images/patternDesign/coffeeDemo1.jpg">
 
@@ -130,7 +130,7 @@
 
 
 
-  <title>装饰者者模式 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>装饰者模式 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -284,7 +284,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">装饰者者模式</h1>
+          <h1 class="post-title" itemprop="name headline">装饰者模式</h1>
         
 
         <div class="post-meta">
@@ -365,7 +365,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  796
+                  807
                 </span>
               
 
@@ -429,7 +429,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class CoffeeDemo &#123;</span><br><span class="line">    public static void main(String args[]) &#123;</span><br><span class="line">        Beverage beverage = new Espresso();</span><br><span class="line">        System.out.println(beverage.getDescription() + &quot; $ &quot; + beverage.cost());</span><br><span class="line"></span><br><span class="line">        Beverage beverage1 = new HouseBlend();</span><br><span class="line">        beverage1 = new Venti(beverage1);</span><br><span class="line">        beverage1 = new Mocha(beverage1);</span><br><span class="line">        beverage1 = new Mocha(beverage1);</span><br><span class="line">        beverage1 = new Whip(beverage1);</span><br><span class="line"></span><br><span class="line">        System.out.println(beverage1.getDescription() + &quot; $ &quot;  + beverage1.cost());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从上面的代码可以看出，我们创建了coffee对象，然后将其传给各个装饰类，这样就起到了装饰的作用。</p>
 <h3 id="装饰者模式的一个缺点"><a href="#装饰者模式的一个缺点" class="headerlink" title="装饰者模式的一个缺点"></a>装饰者模式的一个缺点</h3><p>如果要吐槽装饰者模式的话，那么一个点就是这个模式的类太多了（而且都是小的类）就比如我们的coffeeDemo，每一种配料，每一个size都要一个类，确实有点多而杂，但是比最初的方案还是好太多了。</p>
-<h3 id="代码归档"><a href="#代码归档" class="headerlink" title="代码归档"></a>代码归档</h3>
+<h3 id="代码归档"><a href="#代码归档" class="headerlink" title="代码归档"></a>代码归档</h3><p><a href="https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/decoratorPattern" target="_blank" rel="noopener">https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/decoratorPattern</a></p>
+
       
     </div>
     
@@ -558,7 +559,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">150</span>
+                  <span class="site-state-item-count">153</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -569,7 +570,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -580,7 +581,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-count">42</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -664,7 +665,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">167.9k</span>
+    <span title="Site words total count">173.9k</span>
   
 </div>
 
@@ -693,7 +694,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共167.9k字</span>
+  <span class="post-count">博客全站共173.9k字</span>
 </div>
         
 <div class="busuanzi-count">

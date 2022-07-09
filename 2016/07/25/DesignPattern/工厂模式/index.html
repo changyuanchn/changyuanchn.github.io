@@ -92,7 +92,7 @@
 <meta property="og:image" content="http://yoursite.com/images/patternDesign/pizzaStoreFactory.jpg">
 <meta property="og:image" content="http://yoursite.com/images/patternDesign/Factory.jpg">
 <meta property="og:image" content="http://yoursite.com/images/patternDesign/abstractFactory.jpg">
-<meta property="og:updated_time" content="2021-06-23T15:32:54.650Z">
+<meta property="og:updated_time" content="2022-03-05T13:06:41.184Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="工厂模式">
 <meta name="twitter:description" content="在之前的章节中，我们提到了要针对接口编程，所以在DuckDemo中，我们利用了接口的多态的特性，可以动态的改变对象。但是这样也是存在一定的问题的，下面我们就来分析这个问题。 一个pizza引发的血案假设我们开了一个pizza店，我们提供了一个程序能够让顾客自动下单订购pizza，那么我们的代码可以如下实现：首先我们定义一个pizza类 1234567891011121314151617181920">
@@ -367,7 +367,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,010
+                  3,054
                 </span>
               
 
@@ -415,7 +415,8 @@
 <p>对修改关闭，对扩展开放</p>
 </blockquote>
 <p>因此我们需要引入新的设计模式来解决这个问题，这就是工厂模式。</p>
-<h3 id="上面的代码归档位置"><a href="#上面的代码归档位置" class="headerlink" title="上面的代码归档位置"></a>上面的代码归档位置</h3><h3 id="我们看上面的代码存在什么问题？"><a href="#我们看上面的代码存在什么问题？" class="headerlink" title="我们看上面的代码存在什么问题？"></a>我们看上面的代码存在什么问题？</h3><p>就一个问题，我们在针对具体的实现再编程，也就是我们在具体的new每一个类的实例。我们接触到的第一个原则是：</p>
+<h3 id="上面的代码归档位置"><a href="#上面的代码归档位置" class="headerlink" title="上面的代码归档位置"></a>上面的代码归档位置</h3><p><a href="https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/pizzaDemo" target="_blank" rel="noopener">https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/pizzaDemo</a></p>
+<h3 id="我们看上面的代码存在什么问题？"><a href="#我们看上面的代码存在什么问题？" class="headerlink" title="我们看上面的代码存在什么问题？"></a>我们看上面的代码存在什么问题？</h3><p>就一个问题，我们在针对具体的实现再编程，也就是我们在具体的new每一个类的实例。我们接触到的第一个原则是：</p>
 <blockquote>
 <p>找出变化的部分</p>
 </blockquote>
@@ -427,7 +428,8 @@
 <p>这样我们就把需要修改的部分单独提出来了，放到了工厂类中了。</p>
 <p>那么这样有什么好处呢？好像没什么啊，就是单独的将变化的部分放到了一个类中。实际上这只是一点小改变，当我们需要添加新的加盟店铺时，就只需要使用SimplePizzaFactory创建就好了，尤其是当需要修改种类时，只需要修改SimplePizzaFactory就好了，不用修改两个类。</p>
 <h3 id="类图如下所示"><a href="#类图如下所示" class="headerlink" title="类图如下所示"></a>类图如下所示</h3><p><img src="/images/patternDesign/simplePizzaFactory.jpg" alt="simplePizzaFactory"></p>
-<h3 id="代码归档如下"><a href="#代码归档如下" class="headerlink" title="代码归档如下"></a>代码归档如下</h3><p>当我们真的有了两个加盟店后，我们可以直接调用SimplePizzaFactory去创建对象，但是有个问题哎，就是每个加盟店修改自己的内容，比如说pizza的种类等等，它只能修改SimplePizzaFactory类，这必然会影响到别的加盟店，那么我们就需要方式去解决这个问题。</p>
+<h3 id="代码归档如下"><a href="#代码归档如下" class="headerlink" title="代码归档如下"></a>代码归档如下</h3><p><a href="https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/pizzaSimpleFactoryDemo" target="_blank" rel="noopener">https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/pizzaSimpleFactoryDemo</a></p>
+<p>当我们真的有了两个加盟店后，我们可以直接调用SimplePizzaFactory去创建对象，但是有个问题哎，就是每个加盟店修改自己的内容，比如说pizza的种类等等，它只能修改SimplePizzaFactory类，这必然会影响到别的加盟店，那么我们就需要方式去解决这个问题。</p>
 <p>在上面的代码中，我们每次创建一个实例时，都是用的同一个pizzaStore</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SimplePizzaFactory factory = new SimplePizzaFactory();</span><br><span class="line">PizzaStore nyStore = new PizzaStore(factory);</span><br><span class="line">nyStore.orderPizza(&quot;NY&quot;, &quot;cheese&quot;);</span><br><span class="line">PizzaStore chicagoStore = new PizzaStore(factory);</span><br><span class="line">chicagoStore.orderPizza(&quot;Chicago&quot;, &quot;veggie&quot;);</span><br></pre></td></tr></table></figure>
 <p>我们这里要做的就是对于每个加盟店，创建其自己的store类（继承自pizzaStore），然后在子类中自己创建createPizza方法，让子类自己决定其创建的对象。</p>
@@ -435,7 +437,8 @@
 <p>每个店铺有自己的createPizza方法：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class NYPizzaStore extends PizzaStore &#123;</span><br><span class="line">    Pizza createPizza(String type) &#123;</span><br><span class="line">        if (type.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">            return new NYStyleCheesePizza();</span><br><span class="line">        &#125; else if (type.equals(&quot;veggie&quot;)) &#123;</span><br><span class="line">            return new NYStyleVeggiePizza();</span><br><span class="line">        &#125; else if (type.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">            return new NYStyleClamPizza();</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class ChicagoPizzaStore extends PizzaStore &#123;</span><br><span class="line">    Pizza createPizza(String type) &#123;</span><br><span class="line">        if (type.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">            return new ChicagoStyleCheesePizza();</span><br><span class="line">        &#125; else if (type.equals(&quot;veggie&quot;)) &#123;</span><br><span class="line">            return new ChicagoStyleVeggiePizza();</span><br><span class="line">        &#125; else if (type.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">            return new ChicagoStyleClamPizza();</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="代码归档如下-1"><a href="#代码归档如下-1" class="headerlink" title="代码归档如下"></a>代码归档如下</h3><h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><blockquote>
+<h3 id="代码归档如下-1"><a href="#代码归档如下-1" class="headerlink" title="代码归档如下"></a>代码归档如下</h3><p><a href="https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/pizzaFactory" target="_blank" rel="noopener">https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/pizzaFactory</a></p>
+<h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><blockquote>
 <p>工厂模式就是定义了一个创建对象的接口，但是由子类来决定要实例话的类是哪一个，工厂方法让类把实例化推迟到子类中。</p>
 </blockquote>
 <p>工厂模式一般有两个类，一个是创建者类，一个是产品类。</p>
@@ -457,7 +460,8 @@
 <p>然后我们来看我们的pizzaStore，每个pizzaStore都会调用自己的PizzaIngredientFactory来生产所需要的原料，然后将原料作为输入送到各中pizza制作的函数中，这样就形成了口味不同的pizza。虽然调用的是同一个CheesePizza接口，但是由于原料的不同，进儿产生了不同的pizza。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">public class ChicagoPizzaStore extends PizzaStore &#123;</span><br><span class="line">    protected Pizza createPizza(String item) &#123;</span><br><span class="line">        Pizza pizza = null;</span><br><span class="line">        PizzaIngredientFactory ingredientFactory = new ChicagoPizzaIngredientFactory();</span><br><span class="line"></span><br><span class="line">        if (item.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">            pizza = new CheesePizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;Chicago Style Cheese Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;veggies&quot;)) &#123;</span><br><span class="line">            pizza = new VeggiePizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;Chicago Style veggies Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">            pizza = new ClamPizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;Chicago Style clam Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;pepperoni&quot;)) &#123;</span><br><span class="line">            pizza = new PepperoniPizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;Chicago Style pepperoni Pizza&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return pizza;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">public class NYPizzaStore extends PizzaStore &#123;</span><br><span class="line">    protected Pizza createPizza(String item) &#123;</span><br><span class="line">        Pizza pizza = null;</span><br><span class="line">        PizzaIngredientFactory ingredientFactory = new NYPizzaIngredientFactory();</span><br><span class="line"></span><br><span class="line">        if (item.equals(&quot;cheese&quot;)) &#123;</span><br><span class="line">            pizza = new CheesePizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;NY Style Cheese Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;veggies&quot;)) &#123;</span><br><span class="line">            pizza = new VeggiePizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;NY Style veggies Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;clam&quot;)) &#123;</span><br><span class="line">            pizza = new ClamPizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;NY Style clam Pizza&quot;);</span><br><span class="line">        &#125; else if (item.equals(&quot;pepperoni&quot;)) &#123;</span><br><span class="line">            pizza = new PepperoniPizza(ingredientFactory);</span><br><span class="line">            pizza.setName(&quot;NY Style pepperoni Pizza&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return pizza;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>而我们的各种pizza子类，也继承自pizza类，在子类中实现各自的prepare方法，这样我们在测试用例里面就可以直接调用orderPizza方法来实现不同的pizza类型的prepare函数调用了。</p>
-<h3 id="代码归档路径"><a href="#代码归档路径" class="headerlink" title="代码归档路径"></a>代码归档路径</h3><h3 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h3><blockquote>
+<h3 id="代码归档路径"><a href="#代码归档路径" class="headerlink" title="代码归档路径"></a>代码归档路径</h3><p><a href="https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/pizzaAbstractFactory" target="_blank" rel="noopener">https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/pizzaAbstractFactory</a></p>
+<h3 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h3><blockquote>
 <p>抽象工厂模式提供了一个接口，用于创建相关或依赖对象的家族，而不需要明确的指定类。</p>
 </blockquote>
 <p>上面的原料模型代码就是抽象工厂的应用。</p>
@@ -505,8 +509,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/20/DesignPattern/装饰者模式/" rel="next" title="装饰者者模式">
-                <i class="fa fa-chevron-left"></i> 装饰者者模式
+              <a href="/2016/07/20/DesignPattern/装饰者模式/" rel="next" title="装饰者模式">
+                <i class="fa fa-chevron-left"></i> 装饰者模式
               </a>
             
           </div>
@@ -515,8 +519,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/08/05/DesignPattern/单例模式/" rel="prev" title="单例模式">
-                单例模式 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/30/ProgramingLanguage/虚函数/" rel="prev" title="虚函数">
+                虚函数 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -604,7 +608,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">150</span>
+                  <span class="site-state-item-count">153</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -615,7 +619,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -626,7 +630,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-count">42</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -710,7 +714,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">167.9k</span>
+    <span title="Site words total count">173.9k</span>
   
 </div>
 
@@ -739,7 +743,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共167.9k字</span>
+  <span class="post-count">博客全站共173.9k字</span>
 </div>
         
 <div class="busuanzi-count">

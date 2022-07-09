@@ -87,13 +87,13 @@
 <meta property="og:site_name" content="axis tech zone">
 <meta property="og:description" content="状态模式实际上是为了解决一类状态变化的问题，这类问题不难，但是会很复杂，如果设计不好的化会有一堆的if-else，并且非常难以扩展且及其容易出错。下面我们以一个糖果机的例子来举例说明 糖果机问题假设我们有一个糖果机器，如下图所示：  最初始的状态是糖果机里面没有硬币，当我们投入硬币后，可以选择退回硬币或者转动曲柄，选择转动曲柄则可以得到一颗糖果，如果没有糖果，则退回硬币，有的话则糖果数量-1，如果">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/StatePattern.jpg">
-<meta property="og:image" content="http://yoursite.com/images/StatePattern1.jpg">
-<meta property="og:updated_time" content="2021-06-23T15:32:54.656Z">
+<meta property="og:image" content="http://yoursite.com/images/patternDesign/StatePattern.jpg">
+<meta property="og:image" content="http://yoursite.com/images/patternDesign/StatePattern1.jpg">
+<meta property="og:updated_time" content="2022-03-06T15:32:58.073Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="状态模式">
 <meta name="twitter:description" content="状态模式实际上是为了解决一类状态变化的问题，这类问题不难，但是会很复杂，如果设计不好的化会有一堆的if-else，并且非常难以扩展且及其容易出错。下面我们以一个糖果机的例子来举例说明 糖果机问题假设我们有一个糖果机器，如下图所示：  最初始的状态是糖果机里面没有硬币，当我们投入硬币后，可以选择退回硬币或者转动曲柄，选择转动曲柄则可以得到一颗糖果，如果没有糖果，则退回硬币，有的话则糖果数量-1，如果">
-<meta name="twitter:image" content="http://yoursite.com/images/StatePattern.jpg">
+<meta name="twitter:image" content="http://yoursite.com/images/patternDesign/StatePattern.jpg">
 
 
 
@@ -364,7 +364,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,114
+                  2,138
                 </span>
               
 
@@ -380,7 +380,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  10
+                  11
                 </span>
               
             </div>
@@ -403,10 +403,10 @@
       
         <p>状态模式实际上是为了解决一类状态变化的问题，这类问题不难，但是会很复杂，如果设计不好的化会有一堆的if-else，并且非常难以扩展且及其容易出错。下面我们以一个糖果机的例子来举例说明</p>
 <h3 id="糖果机问题"><a href="#糖果机问题" class="headerlink" title="糖果机问题"></a>糖果机问题</h3><p>假设我们有一个糖果机器，如下图所示：</p>
-<p><img src="/images/StatePattern.jpg" alt="StatePattern"></p>
+<p><img src="/images/patternDesign/StatePattern.jpg" alt="StatePattern"></p>
 <p>最初始的状态是糖果机里面没有硬币，当我们投入硬币后，可以选择退回硬币或者转动曲柄，选择转动曲柄则可以得到一颗糖果，如果没有糖果，则退回硬币，有的话则糖果数量-1，如果售出糖果后，数目为0，则显示糖果售綮。</p>
 <p>我们来看这个问题，糖果机一共就只有这4种状态，实际上这就是糖果机在4个状态之间的转换操作。一般我们遇到这种问题直观的来看，可以这样解决：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">public class GumballMachine &#123;</span><br><span class="line">    final static int SOLD_OUT = 0;</span><br><span class="line">    final static int NO_QUARTER = 1;</span><br><span class="line">    final static int HAS_QUARTER = 2;</span><br><span class="line">    final static int SOLD = 3;</span><br><span class="line"></span><br><span class="line">    int state = SOLD_OUT;</span><br><span class="line">    int count = 0;</span><br><span class="line"></span><br><span class="line">    public GumballMachine(int count) &#123;</span><br><span class="line">        this.count = count;</span><br><span class="line">        if (count &gt; 0) &#123;</span><br><span class="line">            this.state = NO_QUARTER;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void insertQuarter() &#123;</span><br><span class="line">        if (state == HAS_QUARTER) &#123;</span><br><span class="line">            System.out.println(&quot;Already has a quarter, you cannot insert another quarter!&quot;);</span><br><span class="line">        &#125; else if (state == NO_QUARTER) &#123;</span><br><span class="line">            state = HAS_QUARTER;</span><br><span class="line">            System.out.println(&quot;Insert a quarter!&quot;);</span><br><span class="line">        &#125; else if (state == SOLD_OUT) &#123;</span><br><span class="line">            System.out.println(&quot;The gumball is sold out!&quot;);</span><br><span class="line">        &#125; else if (state == SOLD) &#123;</span><br><span class="line">            System.out.println(&quot;Please wait, we already giving you a gumball!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void ejectQuarter() &#123;</span><br><span class="line">        if (state == HAS_QUARTER) &#123;</span><br><span class="line">            System.out.println(&quot;Quarter returned!&quot;);</span><br><span class="line">            state = NO_QUARTER;</span><br><span class="line">        &#125; else if (state == NO_QUARTER) &#123;</span><br><span class="line">            System.out.println(&quot;You had not insert a quarter!&quot;);</span><br><span class="line">        &#125; else if (state == SOLD_OUT) &#123;</span><br><span class="line">            System.out.println(&quot;You cannot eject because you have not insert a quarter!&quot;);</span><br><span class="line">        &#125; else if (state == SOLD) &#123;</span><br><span class="line">            System.out.println(&quot;Sorry we already given you a gumball, you cannot eject quarter!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void turnCrank() &#123;</span><br><span class="line">        if (state == HAS_QUARTER) &#123;</span><br><span class="line">            System.out.println(&quot;You turning....&quot;);</span><br><span class="line">            state = SOLD;</span><br><span class="line">            dispense();</span><br><span class="line">        &#125; else if (state == NO_QUARTER) &#123;</span><br><span class="line">            System.out.println(&quot;Please insert a quarter!&quot;);</span><br><span class="line">        &#125; else if (state == SOLD_OUT) &#123;</span><br><span class="line">            System.out.println(&quot;You cannot turn the crank, the gumball is already sold out&quot;);</span><br><span class="line">        &#125; else if (state == SOLD) &#123;</span><br><span class="line">            System.out.println(&quot;Sorry we already given you a gumball, you cannot turn crank again!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void dispense() &#123;</span><br><span class="line">        if (state == HAS_QUARTER) &#123;</span><br><span class="line">            System.out.println(&quot;No gumball dispensed&quot;);</span><br><span class="line">        &#125; else if (state == NO_QUARTER) &#123;</span><br><span class="line">            System.out.println(&quot;You need to pay first!&quot;);</span><br><span class="line">        &#125; else if (state == SOLD_OUT) &#123;</span><br><span class="line">            System.out.println(&quot;No gumball dispensed&quot;);</span><br><span class="line">        &#125; else if (state == SOLD) &#123;</span><br><span class="line">            System.out.println(&quot;A gumball comes rolling out the slot&quot;);</span><br><span class="line">            count--;</span><br><span class="line">            if (count == 0) &#123;</span><br><span class="line">                System.out.println(&quot;Oops, out of gumballs!&quot;);</span><br><span class="line">                state = SOLD_OUT;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                state = NO_QUARTER;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>代码归档如下：</p>
+<p>代码归档如下：<br><a href="https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/statePattern/ifElseDemo" target="_blank" rel="noopener">https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/statePattern/ifElseDemo</a></p>
 <p>说实话，上面的代码过于复杂了。先不说它的圈复杂度问题，就这个一堆的if-else之间的状态转换就会很让人发麻，一不小心就会搞错了。这在大型软件项目上就等着陷入沼泽吧。即使我们头脑清醒的按照上面的方案实现了这个业务，同时也不在意圈复杂度问题（有钱任性）。那么如果我们增加一点需求，假设在旋转按钮的时候，有一定的概率出两颗糖，那么我们该怎么办呢？（这个问题其实也可以很简单的扩展，我们只要在dispense那里概率性的吐两颗糖就行，但是我们不想这样做，因为这样实际上违反了我们的一个类或者方法，一个责任的原则。同时如果后续要求吐4颗糖或者只吐一颗呢，又要去动手改变代码。）因此我们需要新加一个状态，同时要更改上面的所有函数，状态转换变得更加复杂。。。。。</p>
 <h3 id="那么我们有什么方法能处理掉这一堆的if-else呢？状态模式就是解药。"><a href="#那么我们有什么方法能处理掉这一堆的if-else呢？状态模式就是解药。" class="headerlink" title="那么我们有什么方法能处理掉这一堆的if-else呢？状态模式就是解药。"></a>那么我们有什么方法能处理掉这一堆的if-else呢？状态模式就是解药。</h3><p>状态模式要求每个状态的行为放到各自的类中，每个状态只需要实现它自己的动作即可。糖果机只需要委托给代表当前状态的状态对象即可。</p>
 <ul>
@@ -414,7 +414,7 @@
 <li>然后为机器中的每个状态实现状态类，这些类将负责在对应的状态下进行机器的行为</li>
 <li>最后摆脱条件代码，取而代之的是将动作委托到状态类</li>
 </ul>
-<p><img src="/images/StatePattern1.jpg" alt="StatePattern1"></p>
+<p><img src="/images/patternDesign/StatePattern1.jpg" alt="StatePattern1"></p>
 <ul>
 <li>首先定义state接口</li>
 </ul>
@@ -436,6 +436,7 @@
 <p>然后，我们需要在HasQuarterState里面适配修改状态，这里面主要修改的是turnCrank函数</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public void turnCrank() &#123;</span><br><span class="line">        System.out.println(&quot;You turned crank......&quot;);</span><br><span class="line">        int winner = randomWinner.nextInt(10);</span><br><span class="line">        if ((winner == 0) &amp;&amp; (gumballMachine.getCount() &gt; 1)) &#123;</span><br><span class="line">            gumballMachine.setState(gumballMachine.getWinnerState());</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            gumballMachine.setState(gumballMachine.getSoldState());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>然后在gumballMachine类中添加WinnerState类的初始化</p>
+<p><a href="https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/statePattern/GumballDemo" target="_blank" rel="noopener">https://github.com/changyuanchn/DesignPattern/tree/main/src/com/changyuan/statePattern/GumballDemo</a></p>
 <h3 id="状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类"><a href="#状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类" class="headerlink" title="状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类"></a>状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类</h3>
       
     </div>
@@ -476,8 +477,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/07/ProgramingLanguage/SQLite系列笔记之环境搭建/" rel="prev" title="SQLite系列笔记之环境搭建">
-                SQLite系列笔记之环境搭建 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/07/ProgramingLanguage/SQLite的Python编程/" rel="prev" title="SQLite的Python编程">
+                SQLite的Python编程 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -565,7 +566,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">150</span>
+                  <span class="site-state-item-count">153</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -576,7 +577,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -587,7 +588,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-count">42</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -671,7 +672,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">167.9k</span>
+    <span title="Site words total count">173.9k</span>
   
 </div>
 
@@ -700,7 +701,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共167.9k字</span>
+  <span class="post-count">博客全站共173.9k字</span>
 </div>
         
 <div class="busuanzi-count">
