@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="c++,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="构造函数构造函数是类的一种特殊的函数，他的任务是用来初始化类的数据成员。无论何时，只要类的对象被创建，就会执行构造函数。构造函数的结构也很简单，如下所示：1234567891011class SalesData &amp;#123;public:    SalesData() &amp;#123;&amp;#125;    SalesData(const string&amp;amp; s) : bookName(s) &amp;#12">
+<meta name="keywords" content="c++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="构造函数">
+<meta property="og:url" content="http://yoursite.com/2016/09/30/ProgramingLanguage/构造函数/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="构造函数构造函数是类的一种特殊的函数，他的任务是用来初始化类的数据成员。无论何时，只要类的对象被创建，就会执行构造函数。构造函数的结构也很简单，如下所示：1234567891011class SalesData &amp;#123;public:    SalesData() &amp;#123;&amp;#125;    SalesData(const string&amp;amp; s) : bookName(s) &amp;#12">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-07-10T03:34:05.623Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="构造函数">
+<meta name="twitter:description" content="构造函数构造函数是类的一种特殊的函数，他的任务是用来初始化类的数据成员。无论何时，只要类的对象被创建，就会执行构造函数。构造函数的结构也很简单，如下所示：1234567891011class SalesData &amp;#123;public:    SalesData() &amp;#123;&amp;#125;    SalesData(const string&amp;amp; s) : bookName(s) &amp;#12">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/09/30/ProgramingLanguage/构造函数/">
+
+
+
+
+
+  <title>构造函数 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/30/ProgramingLanguage/构造函数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">构造函数</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-30T00:00:00+08:00">
+                2016-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/09/30/ProgramingLanguage/构造函数/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/09/30/ProgramingLanguage/构造函数/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,076
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h1><p>构造函数是类的一种特殊的函数，他的任务是用来初始化类的数据成员。无论何时，只要类的对象被创建，就会执行构造函数。构造函数的结构也很简单，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class SalesData &#123;</span><br><span class="line">public:</span><br><span class="line">    SalesData() &#123;&#125;</span><br><span class="line">    SalesData(const string&amp; s) : bookName(s) &#123;&#125;</span><br><span class="line">    SalesData(const string&amp; s, int id, double p) : bookName(s), bookId(id), price(p) &#123;&#125;</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    string bookName;</span><br><span class="line">    int bookId;</span><br><span class="line">    double price;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="默认的构造函数"><a href="#默认的构造函数" class="headerlink" title="默认的构造函数"></a>默认的构造函数</h2><p>当我们没有声明任何的构造函数的时候，编译器会为我们生成默认的构造函数</p>
+<h2 id="default"><a href="#default" class="headerlink" title="default"></a>default</h2><p>当我们在构造函数后面添加了default，就意味着我们显示要求编译器生成默认的构造函数。这是因为如果我们给定了任何一个构造函数后，编译器便不会再为我们生成默认构造函数了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class SalesData &#123;</span><br><span class="line">public:</span><br><span class="line">    SalesData() = default；</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="委托构造函数"><a href="#委托构造函数" class="headerlink" title="委托构造函数"></a>委托构造函数</h2><p>委托构造函数是c++11的新标准。所谓的委托构造函数就是一个构造函数可以使用另一个构造函数来初始化，如下所示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class SalesData &#123;</span><br><span class="line">public:</span><br><span class="line">    SalesData() = default;</span><br><span class="line">    SalesData(const string&amp; s, int id, double p) : bookName(s), bookId(id), price(p) &#123;&#125;  // 非委托构造函数</span><br><span class="line">    SalesData(const string&amp; s) : SalesData(s， 0， 0) &#123;&#125; // 委托构造函数</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    string bookName;</span><br><span class="line">    int bookId;</span><br><span class="line">    double price;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">string foo1(&quot;hello&quot;);  // 直接初始化</span><br><span class="line">string foo1 = &quot;hello&quot;;  // 拷贝初始化</span><br><span class="line"></span><br><span class="line">// 定义并初始化一个空的字符串，然后对其进行赋值</span><br><span class="line">string foo2;</span><br><span class="line">foo1 = &quot;world;</span><br></pre></td></tr></table></figure>
+<p>我们看上面的三种方式最终的结果都是一样的，但是这三种行为可是有着本质的不同的，下面我们会来分析</p>
+<h1 id="拷贝构造函数"><a href="#拷贝构造函数" class="headerlink" title="拷贝构造函数"></a>拷贝构造函数</h1><p>拷贝构造函数是一种特殊的构造函数，它在创建对象时，是使用同一类中之前创建的对象来初始化新创建的对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class SalesData &#123;</span><br><span class="line">public:</span><br><span class="line">    SalesData() = default;</span><br><span class="line">    SalesData(const string&amp; s, int id, double p) : bookName(s), bookId(id), price(p) &#123;&#125;  // 非委托构造函数</span><br><span class="line">    SalesData(const string&amp; s) : SalesData(s， 0， 0) &#123;&#125; // 委托构造函数</span><br><span class="line">    SalesData(const SalesData&amp;); // 拷贝构造函数</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    string bookName;</span><br><span class="line">    int bookId;</span><br><span class="line">    double price;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">SalesData::SalesData(const SalesData&amp; src) : bookName(src.bookName), bookId(src.bookId), price(src.price) &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="合成拷贝构造函数"><a href="#合成拷贝构造函数" class="headerlink" title="合成拷贝构造函数"></a>合成拷贝构造函数</h2><p>如果我们没有写拷贝构造函数，那么编译器会为我们生成一个默认的拷贝构造函数，即合成拷贝构造函数。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">string foo1 = &quot;hello&quot;;  // 拷贝初始化</span><br></pre></td></tr></table></figure>
+<p>上面的这种方式，就会通过拷贝构造函数来初始化的。</p>
+<h2 id="拷贝构造函数通常用于："><a href="#拷贝构造函数通常用于：" class="headerlink" title="拷贝构造函数通常用于："></a>拷贝构造函数通常用于：</h2><ul>
+<li>通过使用另一个同类型的对象来初始化新创建的对象。</li>
+<li>复制对象把它作为参数传递给函数。</li>
+<li>复制对象，并从函数返回这个对象。</li>
+</ul>
+<h1 id="拷贝赋值函数"><a href="#拷贝赋值函数" class="headerlink" title="拷贝赋值函数"></a>拷贝赋值函数</h1><p>拷贝复制函数实际上是对“=”运算符的重载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class SalesData &#123;</span><br><span class="line">public:</span><br><span class="line">    SalesData() = default;</span><br><span class="line">    SalesData(const string&amp; s, int id, double p) : bookName(s), bookId(id), price(p) &#123;&#125;  // 非委托构造函数</span><br><span class="line">    SalesData(const string&amp; s) : SalesData(s， 0， 0) &#123;&#125; // 委托构造函数</span><br><span class="line">    SalesData&amp; operator=(const SalesData&amp;);</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    string bookName;</span><br><span class="line">    int bookId;</span><br><span class="line">    double price;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">SalesData&amp; SalesData::operator=(const SalesData&amp; rhs)</span><br><span class="line">&#123;</span><br><span class="line">    bookName = rhs.bookName;</span><br><span class="line">    bookId = rhs.bookId;</span><br><span class="line">    price = rhs.price;</span><br><span class="line">    return *this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="合成拷贝赋值函数"><a href="#合成拷贝赋值函数" class="headerlink" title="合成拷贝赋值函数"></a>合成拷贝赋值函数</h2><p>如果我们没有写拷贝赋值函数，那么编译器会为我们生成一个默认的拷贝赋值函数，即合成拷贝赋值函数。</p>
+<h2 id="例子-1"><a href="#例子-1" class="headerlink" title="例子"></a>例子</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">string foo2;</span><br><span class="line">foo1 = &quot;world;</span><br></pre></td></tr></table></figure>
+<p>上面的操作实际上是分了两步，首先是利用默认初始化将其设置为空字符串，然后再通过拷贝赋值将其设置为“world”</p>
+<h1 id="移动构造函数"><a href="#移动构造函数" class="headerlink" title="移动构造函数"></a>移动构造函数</h1><p>移动构造函数做的是移动操作，而不是拷贝操作。</p>
+<p>移动构造函数基于右值引用的技术。参数一般为该类类型的引用，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">StrVec::StrVec(StrVec&amp;&amp; s) noexcept : </span><br><span class="line">    elements(s.elements),</span><br><span class="line">    firstFree(s.firstFree),</span><br><span class="line">    capacity(s.capacity)</span><br><span class="line">&#123;</span><br><span class="line">    s.elements = s.firstFree = s.capacity = nullptr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>移动构造函数从参数对象中窃取了资源，而不是拷贝，因此经过移动构造函数后，类接管了内存，而参数已经丧失了资源的控制，因此在函数内，我们将其置nullptr。而资源的管理则有类接管。</p>
+<h1 id="移动赋值运算符"><a href="#移动赋值运算符" class="headerlink" title="移动赋值运算符"></a>移动赋值运算符</h1><p>跟移动构造类似，移动赋值函数也是基于右值引用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">StrVec&amp; StrVec::operator=(StrVec&amp;&amp; rhs) noexcept &#123;</span><br><span class="line">    if (this != &amp;rhs) &#123;</span><br><span class="line">        free();</span><br><span class="line">        elements = rhs.elements;</span><br><span class="line">        firstFree = rhs.firstFree;</span><br><span class="line">        capacity = rhs.capacity;</span><br><span class="line">        rhs.elements = rhs.firstFree = rhs.capacity = nullptr; </span><br><span class="line">    &#125;</span><br><span class="line">    return *this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同样的，如果不存在移动构造函数/移动赋值运算符，编译器会为我们合成移动构造函数/移动赋值运算符，但是并不会为所有的类都合成默认的移动构造函数/移动赋值运算符。只有当一个类没有任何自己定义的拷贝控制函数，且类的每个非static数据成员都可以移动时，编译器才会为它合成移动构造函数/移动赋值运算符。</p>
+<h1 id="移动和拷贝"><a href="#移动和拷贝" class="headerlink" title="移动和拷贝"></a>移动和拷贝</h1><p>如果一个类既有移动构造函数/移动赋值，又有拷贝构造函数/拷贝赋值，那么会调用那个呢？其实很简单，因为移动构造函数/移动赋值使用过的是右值，而拷贝构造函数/拷贝赋值，使用过的是左值。因此可以根据传入的参数来决定具体调用哪一个。如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">strVec v1, v2;</span><br><span class="line">v1 = v2; // 这里使用的拷贝赋值，因为v2是左值</span><br><span class="line">v2 = getVec(v1)  // 这里使用的是移动赋值，因为getVec(v1) 是一个右值。</span><br></pre></td></tr></table></figure></p>
+<p>如果类没有定义移动构造/移动赋值，那么右值也将会被拷贝/赋值。</p>
+<h1 id="析构函数"><a href="#析构函数" class="headerlink" title="析构函数"></a>析构函数</h1><p>析构函数用于在对象生命周期结束时，用来释放所申请的内存资源。具体的格式如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Foo &#123;</span><br><span class="line">public:</span><br><span class="line">    ~Foo() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="合成析构函数"><a href="#合成析构函数" class="headerlink" title="合成析构函数"></a>合成析构函数</h2><p>如果我们没有写析构函数，那么编译器会为我们生成一个默认的析构函数，即合成析构函数。</p>
+<p>但是但是如果我们在类中使用了动态内存等，一定不要依赖合成的析构函数，因为这样会造成内存泄露，除非用的智能指针。</p>
+<p>析构函数也可以使用default关键字，用于通知编译器生成默认的析构函数</p>
+<h1 id="自定义的类的行为"><a href="#自定义的类的行为" class="headerlink" title="自定义的类的行为"></a>自定义的类的行为</h1><h2 id="行为像值的类"><a href="#行为像值的类" class="headerlink" title="行为像值的类"></a>行为像值的类</h2><p>所谓行为像值的类是指当我们赋值的时候，执行的是拷贝操作，而不是指针共享。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;string&quot;</span><br><span class="line">using namespace std;</span><br><span class="line">class HasPtr</span><br><span class="line">&#123;</span><br><span class="line">private:</span><br><span class="line">    string* ps;</span><br><span class="line">    int i;</span><br><span class="line">public:</span><br><span class="line">    HasPtr(const string&amp; s = string()) : ps(new string(s)), i(0) &#123;&#125;</span><br><span class="line">    HasPtr(const HasPtr&amp; p) : ps(new string(*(p.ps))), i(p.i) &#123;&#125;</span><br><span class="line">    HasPtr&amp; operator=(const HasPtr&amp; rhs) &#123;</span><br><span class="line">        auto newP = new string(*rhs.ps);   // 这一行和下一行的顺序不行颠倒，否则当p = q，p和q是同一对象时会挂掉。</span><br><span class="line">        delete ps;</span><br><span class="line">        ps = newP;</span><br><span class="line">        i = rhs.i;</span><br><span class="line">        return *this;</span><br><span class="line">    &#125;</span><br><span class="line">    ~HasPtr();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="行为像指针的类"><a href="#行为像指针的类" class="headerlink" title="行为像指针的类"></a>行为像指针的类</h2><p>行为像指针的类是指当我们对类的实例执行下面的赋值操作时（p = q），并不是拷贝操作，而是他们两个指向同一个地址</p>
+<p>下面的这段代码使用引用计数的方式来实现行为像指针的类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class HasPtr</span><br><span class="line">&#123;</span><br><span class="line">private:</span><br><span class="line">    string* ps;</span><br><span class="line">    int i;</span><br><span class="line">    size_t* use;</span><br><span class="line">public:</span><br><span class="line">    HasPtr(const string&amp; s = string()) : ps(new string(s)), i(0), use(new size_t(1)) &#123;&#125;</span><br><span class="line">    HasPtr(const HasPtr&amp; p) : ps(new string(*(p.ps))), i(p.i), use(p.use) &#123; ++*use; &#125;</span><br><span class="line">    HasPtr&amp; operator=(const HasPtr&amp; rhs) &#123;</span><br><span class="line">        ++*rhs.use++;</span><br><span class="line">        if (--*use == 0) &#123;</span><br><span class="line">            delete ps;</span><br><span class="line">            delete use;</span><br><span class="line">        &#125;</span><br><span class="line">        ps = rhs.ps;</span><br><span class="line">        i = rhs.i;</span><br><span class="line">        use = rhs.use;</span><br><span class="line">        return *this;</span><br><span class="line">    &#125;</span><br><span class="line">    ~HasPtr() &#123;</span><br><span class="line">        if (--*use == 0) &#123;</span><br><span class="line">            delete ps;</span><br><span class="line">            delete use;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>也可以使用智能指针的格式来重写上面的小例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class HasPtr</span><br><span class="line">&#123;</span><br><span class="line">private:</span><br><span class="line">    shared_ptr&lt;string&gt; ps;</span><br><span class="line">    int i;</span><br><span class="line">public:</span><br><span class="line">    HasPtr(const string&amp; s = string()) : ps(make_shared&lt;string&gt;(s)), i(0)&#123;&#125;</span><br><span class="line">    HasPtr(const HasPtr&amp; p) : ps(make_shared&lt;string&gt;(p.ps)), i(p.i) &#123;&#125;</span><br><span class="line">    HasPtr&amp; operator=(const HasPtr&amp; rhs) &#123;</span><br><span class="line">        ps = rhs.ps;</span><br><span class="line">        i = rhs.i;</span><br><span class="line">        return *this;</span><br><span class="line">    &#125;</span><br><span class="line">    ~HasPtr() &#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/c/" rel="tag"># c++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/15/DesignPattern/模板方法模式/" rel="next" title="模板方法模式">
+                <i class="fa fa-chevron-left"></i> 模板方法模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/30/DesignPattern/迭代器模式/" rel="prev" title="迭代器模式">
+                迭代器模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">176</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#构造函数"><span class="nav-number">1.</span> <span class="nav-text">构造函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#默认的构造函数"><span class="nav-number">1.1.</span> <span class="nav-text">默认的构造函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#default"><span class="nav-number">1.2.</span> <span class="nav-text">default</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#委托构造函数"><span class="nav-number">1.3.</span> <span class="nav-text">委托构造函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例"><span class="nav-number">1.4.</span> <span class="nav-text">实例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拷贝构造函数"><span class="nav-number">2.</span> <span class="nav-text">拷贝构造函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#合成拷贝构造函数"><span class="nav-number">2.1.</span> <span class="nav-text">合成拷贝构造函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#例子"><span class="nav-number">2.2.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拷贝构造函数通常用于："><span class="nav-number">2.3.</span> <span class="nav-text">拷贝构造函数通常用于：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拷贝赋值函数"><span class="nav-number">3.</span> <span class="nav-text">拷贝赋值函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#合成拷贝赋值函数"><span class="nav-number">3.1.</span> <span class="nav-text">合成拷贝赋值函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#例子-1"><span class="nav-number">3.2.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#移动构造函数"><span class="nav-number">4.</span> <span class="nav-text">移动构造函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#移动赋值运算符"><span class="nav-number">5.</span> <span class="nav-text">移动赋值运算符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#移动和拷贝"><span class="nav-number">6.</span> <span class="nav-text">移动和拷贝</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#析构函数"><span class="nav-number">7.</span> <span class="nav-text">析构函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#合成析构函数"><span class="nav-number">7.1.</span> <span class="nav-text">合成析构函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义的类的行为"><span class="nav-number">8.</span> <span class="nav-text">自定义的类的行为</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#行为像值的类"><span class="nav-number">8.1.</span> <span class="nav-text">行为像值的类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行为像指针的类"><span class="nav-number">8.2.</span> <span class="nav-text">行为像指针的类</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">201.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共201.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'changyuanchn',
+            repo: 'https://github.com/changyuanchn/changyuanchn.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '82f82fd4b3c71f66c261736a9aca7151809f2c0e',
+            
+                client_id: 'b260167e7c41f29d0da7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

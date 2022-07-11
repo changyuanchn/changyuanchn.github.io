@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/30/MachineLearning/极大似然估计与贝叶斯估计/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/27/MachineLearning/多维缩放算法（MDS）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -281,7 +281,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/30/MachineLearning/极大似然估计与贝叶斯估计/" itemprop="url">极大似然估计与贝叶斯估计</a></h1>
+                <a class="post-title-link" href="/2018/07/27/MachineLearning/多维缩放算法（MDS）/" itemprop="url">多维缩放算法（MDS）</a></h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-30T00:00:00+08:00">
-                2018-05-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-27T00:00:00+08:00">
+                2018-07-27
               </time>
             
 
@@ -347,548 +347,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  485
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          引言在机器学习任务中，最最经常遇到的一个问题就是给定一组训练样本，学习到生成这组样本的模型的参数，这也是统计学习的根本任务。我们知道统计学上分频率学派和贝叶斯学派，那么自然的，对这个问题的解决就有两种模型，一种是频率学派推崇的极大似然估计，一种是贝叶斯学派主张的贝叶斯估计，下面我们就来介绍下这两种估
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/30/MachineLearning/极大似然估计与贝叶斯估计/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/29/MachineLearning/决策树/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="changyuan">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="axis tech zone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/29/MachineLearning/决策树/" itemprop="url">决策树</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-29T00:00:00+08:00">
-                2018-05-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2,479
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  8
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          引言决策树是一种树模型，本质上讲就是利用特征对空间进行划分的一种方法。在计算机的数据结构里面我们有二叉树等等模型，在思想上，决策树与他们是一样的。决策树是一种最简单的机器学习算法，甚至某种程度上把它当做机器学习算法有点别扭。对于决策树算法来说，主要包括两点：
-
-以什么样的规则选择根节点
-剪枝防止过拟
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/29/MachineLearning/决策树/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/26/MachineLearning/密度聚类/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="changyuan">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="axis tech zone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/26/MachineLearning/密度聚类/" itemprop="url">密度聚类</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-26T00:00:00+08:00">
-                2018-05-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  876
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  3
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          引言其实对于所有的聚类问题，都有一个核心点，那就是以什么样的规则来划分两个点是不是同一类。密度聚类，本质上就是基于一种密度的概念来进行聚类。而密度的定义本质上也是来自于两点的距离，所以其实对于聚类的算法来看，大家本质上都差不多，谁也别笑话谁。下面我们来总结介绍一种叫做DBSCAN的密度算法。
-DBS
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/26/MachineLearning/密度聚类/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/24/MachineLearning/机器学习书籍/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="changyuan">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="axis tech zone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/24/MachineLearning/机器学习书籍/" itemprop="url">机器学习书籍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-24T00:00:00+08:00">
-                2018-05-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/书籍/" itemprop="url" rel="index">
-                    <span itemprop="name">书籍</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  104
+                  262
                 </span>
               
 
@@ -927,16 +386,13 @@ DBS
       
         
           
-          这一页是一些机器学习的书籍的资源链接。这里面部分书籍已经买过纸质版，但是外出还是电子版比较方便。上传的行为不太道德，但是争取将相应的纸质书籍买下，已做补偿。
-统计学习方法(李航)
-机器学习(周志华)
-神经网络与深度学习(Michael Nielsen)
-深度学习(Yoshua Bengio)
-
-          
+          算法思想MDS算法思想很简单，一句话就是保持样本在原空间和低维空间的距离不变。
+因为距离是样本之间一个很好的分离属性，对于大多数聚类算法来说，距离是将样本分类的重要属性，因此当我们降维后，保持距离不变，那么就相当于保持了样本的相对空间关系不变。
+MDS算法假设m个样本在原始空间中的距离矩阵为D \i
+          ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/05/24/MachineLearning/机器学习书籍/#more" rel="contents">
+            <a class="btn" href="/2018/07/27/MachineLearning/多维缩放算法（MDS）/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -987,7 +443,7 @@ DBS
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/23/MachineLearning/层次聚类/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/26/MachineLearning/KernelPCA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -1006,7 +462,7 @@ DBS
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/23/MachineLearning/层次聚类/" itemprop="url">层次聚类</a></h1>
+                <a class="post-title-link" href="/2018/07/26/MachineLearning/KernelPCA/" itemprop="url">KernelPCA</a></h1>
         
 
         <div class="post-meta">
@@ -1018,8 +474,8 @@ DBS
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-23T00:00:00+08:00">
-                2018-05-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-26T00:00:00+08:00">
+                2018-07-26
               </time>
             
 
@@ -1072,7 +528,7 @@ DBS
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  756
+                  779
                 </span>
               
 
@@ -1111,11 +567,11 @@ DBS
       
         
           
-          引言前面，我们介绍了一些聚类的方法，像k-means啊，密度聚类，LVQ啊，不管怎么样，都要首先随机指定k个中心点，然后用这些中心点逐步迭代找到最终的中心点。这就有问题了，如果随机选取的点不好，不具有代表性，那么就会很糟糕，轻则只是聚类慢，重则会导致聚类效果比较差。本节我们引入层次聚类，它不需要提前
+          算法思想之前的博文里面介绍了PCA算法，作为一个经典的基于线性代数的降维方法，PCA算法对线性数据效果良好。然而如果我们的数据是非线性的（这才是社会的现实啊），那么PCA算法就呵呵了。那么对于非线性问题怎么处理呢？上一章我们讲解了kernel的思想，核就是为了解决非线性问题而诞生的，其将非线性数据映
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/05/23/MachineLearning/层次聚类/#more" rel="contents">
+            <a class="btn" href="/2018/07/26/MachineLearning/KernelPCA/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1166,7 +622,7 @@ DBS
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/22/MachineLearning/LVQ聚类算法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/26/MachineLearning/基于流形学习的数据降维/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -1185,7 +641,7 @@ DBS
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/22/MachineLearning/LVQ聚类算法/" itemprop="url">LVQ聚类算法</a></h1>
+                <a class="post-title-link" href="/2018/07/26/MachineLearning/基于流形学习的数据降维/" itemprop="url">基于流形学习的数据降维</a></h1>
         
 
         <div class="post-meta">
@@ -1197,8 +653,8 @@ DBS
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-22T00:00:00+08:00">
-                2018-05-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-26T00:00:00+08:00">
+                2018-07-26
               </time>
             
 
@@ -1251,188 +707,7 @@ DBS
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  575
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          LVQ算法LVQ是learning vector quantization的简称，是一种被称之为学习向量量化的算法。
-其算法思想是通过找到一组原型向量来代表聚类的中心。而与其他的聚类算法不同，LVQ假设每个样本是有标签的，LVQ通过这些假设的标签来辅助聚类。
-LVQ算法实现给定样本集\left \{
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/22/MachineLearning/LVQ聚类算法/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/20/MachineLearning/朴素贝叶斯算法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="changyuan">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="axis tech zone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/20/MachineLearning/朴素贝叶斯算法/" itemprop="url">朴素贝叶斯算法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-20T00:00:00+08:00">
-                2018-05-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  770
+                  814
                 </span>
               
 
@@ -1471,12 +746,11 @@ LVQ算法实现给定样本集\left \{
       
         
           
-          引言bayes在统计学上是一个非常重要的概念，直接导致了一个流派的诞生，本章我们首先回顾一下bayes公式，以及其在统计学上的一些概念，然后将其引入到机器学习中，引出朴素贝叶斯算法。朴素贝叶斯算法在垃圾邮件过滤等问题上应用广泛，是一个很简单且很实用的算法。
-Bayes定理在数学上，我们用贝叶斯定理表
+          流行是什么manifold就是局部具有欧氏空间性质的空间。在manifold上足够小的区域近似于欧几里得空间。具体说明我们的地球就是一个manifold。当我们在地面上，我们认为地球是平的，两点间的距离可以直接用欧氏距离直接计算，这个也不会引入太大的误差，而站在地球的角度上看，两点的距离这样算是不对
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/05/20/MachineLearning/朴素贝叶斯算法/#more" rel="contents">
+            <a class="btn" href="/2018/07/26/MachineLearning/基于流形学习的数据降维/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1527,7 +801,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/17/MachineLearning/KNN算法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/25/MachineLearning/核思想（kernel trick）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -1546,7 +820,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/17/MachineLearning/KNN算法/" itemprop="url">KNN算法</a></h1>
+                <a class="post-title-link" href="/2018/07/25/MachineLearning/核思想（kernel trick）/" itemprop="url">核思想（kernel trick）</a></h1>
         
 
         <div class="post-meta">
@@ -1558,8 +832,8 @@ Bayes定理在数学上，我们用贝叶斯定理表
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-17T00:00:00+08:00">
-                2018-05-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-25T00:00:00+08:00">
+                2018-07-25
               </time>
             
 
@@ -1612,7 +886,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  456
+                  1,108
                 </span>
               
 
@@ -1628,7 +902,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  4
                 </span>
               
             </div>
@@ -1651,12 +925,14 @@ Bayes定理在数学上，我们用贝叶斯定理表
       
         
           
-          K近邻算法K近邻算法全名为k-nearest neighbor,简称KNN，是一种思想非常简单的监督学习方法。 其核心思想就是如果一个样本在特征空间中的k个最相邻的样本中的大多数属于某一个类别，则该样本也属于这个类别，并具有这个类别上样本的特性。
-也就是说给定有label的训练样本，新的待分类样本需
+          核的定义根据李航的统计学习，对核有如下的定义：
+设\chi为输入空间，H为特征空间（希尔伯特空间），如果存在一个从\chi到H的映射:
+\phi(x): \chi \rightarrow H使得对所有的x,z函数K(x,z)满足条件
+K(x,z) = \phi(x) \cdot \phi(z)则称K
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/05/17/MachineLearning/KNN算法/#more" rel="contents">
+            <a class="btn" href="/2018/07/25/MachineLearning/核思想（kernel trick）/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1707,7 +983,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/17/MachineLearning/k-means算法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/23/DataStructure/滑动窗口/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -1726,7 +1002,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/17/MachineLearning/k-means算法/" itemprop="url">k-means算法</a></h1>
+                <a class="post-title-link" href="/2018/07/23/DataStructure/滑动窗口/" itemprop="url">滑动窗口</a></h1>
         
 
         <div class="post-meta">
@@ -1738,8 +1014,188 @@ Bayes定理在数学上，我们用贝叶斯定理表
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-17T00:00:00+08:00">
-                2018-05-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-23T00:00:00+08:00">
+                2018-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,508
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          引言滑动窗口实际上也属于双指针的技巧范畴，利用两个指针圈定了一个范围。思想简单，但是细节满满，比如什么时候需要扩大窗口（right++），什么时候需要缩小窗口（left++），什么时候更新数据。主要就是这几点，把这几点弄清楚了，那么滑动窗口的问题也就解决了。
+适合解决的问题滑动窗口适合于解决连续的子
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/23/DataStructure/滑动窗口/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/15/MachineLearning/谱聚类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/15/MachineLearning/谱聚类/" itemprop="url">谱聚类</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-15T00:00:00+08:00">
+                2018-07-15
               </time>
             
 
@@ -1792,7 +1248,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  689
+                  1,346
                 </span>
               
 
@@ -1808,7 +1264,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  5
                 </span>
               
             </div>
@@ -1831,11 +1287,12 @@ Bayes定理在数学上，我们用贝叶斯定理表
       
         
           
-          引言通常来说，机器学习根据训练数据是否有标签可以分为两类，一类是监督学习，也就是训练数据有标签，即给定输入，我们知道他属于哪一类，另外一种就是无监督学习，我们不知道他的标签是什么，对于数据应该怎么分类也所知不多。对于监督学习，有很多算法，包括神经网络啊，支持向量机啊等等。对于无监督学习，目前的手段并
+          引言谱聚类（spectual clustering)是一类非常使用的聚类方法。因为算法基于谱图的理论基础上，因此成为谱聚类。与传统的聚类算法相比，它具有能在任意形状的样本空间上聚类且收敛于全局最优解的优点，因此应用广泛，同时是目前研究和应用最广泛的聚类算法。
+谱聚类算法谱聚类思想谱聚类的本质思想就是
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/05/17/MachineLearning/k-means算法/#more" rel="contents">
+            <a class="btn" href="/2018/07/15/MachineLearning/谱聚类/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1886,7 +1343,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/17/MachineLearning/模糊聚类/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/15/ProgramingLanguage/重构书中的例子总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -1905,7 +1362,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/17/MachineLearning/模糊聚类/" itemprop="url">模糊聚类</a></h1>
+                <a class="post-title-link" href="/2018/07/15/ProgramingLanguage/重构书中的例子总结/" itemprop="url">重构书中例子的总结</a></h1>
         
 
         <div class="post-meta">
@@ -1917,8 +1374,190 @@ Bayes定理在数学上，我们用贝叶斯定理表
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-17T00:00:00+08:00">
-                2018-05-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-15T00:00:00+08:00">
+                2018-07-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,986
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  15
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          《重构：改善既有代码的设计》这本书啊，几乎所有的精华都在这个书中最开始的例子里。本文就是对这个例子的总结。
+任务描述例子中是一个CD店，这个店有个管理系统，用于记录顾客的消费，积分并打印消费清单，计算费用等。是一个很简单的管理系统。那么最初的架构是这样的：
+时序图如下所示：
+Movie类是一个数据类
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/15/ProgramingLanguage/重构书中的例子总结/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/10/MachineLearning/隐马尔科夫模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/10/MachineLearning/隐马尔科夫模型/" itemprop="url">隐马尔科夫模型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-10T00:00:00+08:00">
+                2018-07-10
               </time>
             
 
@@ -1971,7 +1610,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  749
+                  1,794
                 </span>
               
 
@@ -1987,7 +1626,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  3
+                  6
                 </span>
               
             </div>
@@ -2010,11 +1649,376 @@ Bayes定理在数学上，我们用贝叶斯定理表
       
         
           
-          引言前面我们讲了k-means, k-means属于一种硬聚类的方法，也就是说一个样本属于哪个类了后，他就是哪个类别的了，非此即彼，来不得半点马虎。但是现实生活中，哪有这么多的确定的事啊，身不由己经常发生，因此引入了模糊聚类，英文名Fuzzy c-means clustering, 模糊聚类意味着样
+          引言隐马尔可夫模型是关于时许序列的概率模型。是由一个隐藏的马尔科夫链随机生成不可观测的状态序列，然后由状态序列生成一个观测序列的过程。
+每个状态生成一个观测，同时每个状态会转移到下一个状态。因此马尔科夫过程有两个关键的序列，一个是状态序列，一个是观测序列。
+
+上图就是一个标准的马尔科夫过程的观测输出
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/05/17/MachineLearning/模糊聚类/#more" rel="contents">
+            <a class="btn" href="/2018/07/10/MachineLearning/隐马尔科夫模型/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/01/DataStructure/回溯算法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/01/DataStructure/回溯算法/" itemprop="url">回溯算法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-01T00:00:00+08:00">
+                2018-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,128
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          引言回溯算法是一个很直白的算法，它被用来做路径的遍历等等。所谓的回溯就是每一次决策我会选择一条路走，递归的这样处理，如果无路可走的时候，或者已经到达终点的时候，那么我就回溯到上一步，然后选择另一条路，直到做完所有的选择位置。
+通过上面的描述，跟dfs很像啊。实际上回溯就是dfs的思想。
+回溯算法的模
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/01/DataStructure/回溯算法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/30/ProgramingLanguage/重构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/30/ProgramingLanguage/重构/" itemprop="url">重构的思考</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-30T00:00:00+08:00">
+                2018-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,209
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          为什么要搞代码重构有很多的书在讲这个问题，包括经典的《Clean Code》以及《重构：改善既有代码的设计》这些书中，都给出了很多的原因，实际上之所以会导致重构的发生，归根到底就是
+代码已经脱离了我们的掌控了
+程序写出来是给人看的,附带能在机器上运行，忘记了是哪里看到的这句话。这句话深刻的揭示了编程
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/30/ProgramingLanguage/重构/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2056,7 +2060,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2104,7 +2108,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">153</span>
+                  <span class="site-state-item-count">176</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2115,7 +2119,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2126,7 +2130,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-count">45</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2194,7 +2198,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">173.9k</span>
+    <span title="Site words total count">201.9k</span>
   
 </div>
 
@@ -2223,7 +2227,7 @@ Bayes定理在数学上，我们用贝叶斯定理表
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共173.9k字</span>
+  <span class="post-count">博客全站共201.9k字</span>
 </div>
         
 <div class="busuanzi-count">

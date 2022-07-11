@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="c++,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="什么是右值首先要明确什么是右值，对于下面的语句1int i = 42; i为左值，42为右值。 右值引用在c++中我们可以对变量进行引用操作，也就是左值引用，如下所示：12int i = 42;int&amp;amp; j = i; 这样i和j实际上是同一变量的不同名字。那么右值引用也是类似的道理，右值引用是对右值的引用（有点废话），如下所示：12int i = 42；int&amp;amp;&amp;amp; j =">
+<meta name="keywords" content="c++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="右值引用">
+<meta property="og:url" content="http://yoursite.com/2020/09/30/ProgramingLanguage/右值引用/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="什么是右值首先要明确什么是右值，对于下面的语句1int i = 42; i为左值，42为右值。 右值引用在c++中我们可以对变量进行引用操作，也就是左值引用，如下所示：12int i = 42;int&amp;amp; j = i; 这样i和j实际上是同一变量的不同名字。那么右值引用也是类似的道理，右值引用是对右值的引用（有点废话），如下所示：12int i = 42；int&amp;amp;&amp;amp; j =">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-07-10T03:34:15.983Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="右值引用">
+<meta name="twitter:description" content="什么是右值首先要明确什么是右值，对于下面的语句1int i = 42; i为左值，42为右值。 右值引用在c++中我们可以对变量进行引用操作，也就是左值引用，如下所示：12int i = 42;int&amp;amp; j = i; 这样i和j实际上是同一变量的不同名字。那么右值引用也是类似的道理，右值引用是对右值的引用（有点废话），如下所示：12int i = 42；int&amp;amp;&amp;amp; j =">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/09/30/ProgramingLanguage/右值引用/">
+
+
+
+
+
+  <title>右值引用 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/30/ProgramingLanguage/右值引用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">右值引用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-30T00:00:00+08:00">
+                2020-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/30/ProgramingLanguage/右值引用/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2020/09/30/ProgramingLanguage/右值引用/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,377
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="什么是右值"><a href="#什么是右值" class="headerlink" title="什么是右值"></a>什么是右值</h1><p>首先要明确什么是右值，对于下面的语句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int i = 42;</span><br></pre></td></tr></table></figure></p>
+<p>i为左值，42为右值。</p>
+<h1 id="右值引用"><a href="#右值引用" class="headerlink" title="右值引用"></a>右值引用</h1><p>在c++中我们可以对变量进行引用操作，也就是左值引用，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int i = 42;</span><br><span class="line">int&amp; j = i;</span><br></pre></td></tr></table></figure></p>
+<p>这样i和j实际上是同一变量的不同名字。那么右值引用也是类似的道理，右值引用是对右值的引用（有点废话），如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int i = 42；</span><br><span class="line">int&amp;&amp; j = i * 2;</span><br></pre></td></tr></table></figure></p>
+<p>在这里i*2是一个右值，也是一个临时的计算结果，我们通过右值引用可以引用到这个右值。</p>
+<p>这有什么用呢？我们完全可以用一个变量m = i * 42来得到这个值啊。在这个例子中实际上右值引用并没有任何意义，后面我们会看到它存在的实际意义。</p>
+<h1 id="右值引用的一些特殊示例"><a href="#右值引用的一些特殊示例" class="headerlink" title="右值引用的一些特殊示例"></a>右值引用的一些特殊示例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int i = 1;</span><br><span class="line">int&amp;&amp; j = i++；  // correct  因为i++是操作会首先返回i的值，然后再++，这是个右值，因此可以用右值引用</span><br><span class="line">int&amp;&amp; k = ++i;   // error    因为++i是先++，然后再返回的变量i，是个左值，因此这里是错误的</span><br><span class="line">int&amp; m = i++；   // error    原理同上</span><br><span class="line">int&amp; n = ++i;    // correct  原理同上</span><br></pre></td></tr></table></figure>
+<h1 id="为什么要有右值引用"><a href="#为什么要有右值引用" class="headerlink" title="为什么要有右值引用"></a>为什么要有右值引用</h1><p>从上面的例子来看，完全看不到右值引用的价值。我们先看下右值的特点：<br>对于左值，左值是相对持久的（毕竟他是一个临时变量），但是右值却是短暂的。用完了就被销毁了。</p>
+<p>右值引用只能绑定到临时对象，而这个临时对象很快就被销毁了，那么如果我们用临时变量来保存的话，会隐式执行拷贝。因此右值引用的存在可以减少不必要的拷贝，提高效率。</p>
+<p>如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void test() &#123;</span><br><span class="line">    vector&lt;int&gt; vs;</span><br><span class="line">    vs.resize(100000);</span><br><span class="line">    for (auto v : s) &#123;</span><br><span class="line">        v = v + 1;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;int&gt; vs1 = vs;  // 这一行被导致拷贝的操作，如果vs比较大，会非常耗时</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void test() &#123;</span><br><span class="line">    vector&lt;int&gt; vs;</span><br><span class="line">    vs.resize(100000);</span><br><span class="line">    for (auto v : s) &#123;</span><br><span class="line">        v = v + 1;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;int&gt; vs2 = std::move(vs);  // 右值引用，没有拷贝操作的发生，一样的达到了目的</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="std-move"><a href="#std-move" class="headerlink" title="std::move"></a>std::move</h1><p>右值引用，然而我们的右值大部分都是一些确定的内存空间或者一些很难有办法使用的临时结果，我们没有办法直接用，而能用的变量大多是左值，不能用于右值引用，因此标准库提供了std::move函数，让我们能通过变量拿到右值。一句话，std::move就是通过左值拿到右值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;</span><br><span class="line">int&amp;&amp; b = std::move(a);</span><br></pre></td></tr></table></figure></p>
+<p>以及我们上面的例子，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void test() &#123;</span><br><span class="line">    vector&lt;int&gt; vs;</span><br><span class="line">    vs.resize(100000);</span><br><span class="line">    for (auto v : s) &#123;</span><br><span class="line">        v = v + 1;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;int&gt; vs2 = std::move(vs);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>说到了这里，右值引用感觉很有用，但是貌似也很鸡肋，这是因为我们的例子没有体现出它的价值，下面我们看他的引用场景</p>
+<ul>
+<li>移动构造函数</li>
+<li>移动赋值运算符</li>
+</ul>
+<h1 id="strVec的例子"><a href="#strVec的例子" class="headerlink" title="strVec的例子"></a>strVec的例子</h1><p>移动构造函数和移动赋值函数在标准库的设计中是很有用的。c++ primer中有个例子就很好。我们知道c++提供了vector模板，可以自动扩展数组的大小，那么它是怎么做的呢？我们不需要提前指定数组的大小，vector会提前申请一块区域，当这块区域用完后，vector会申请另一块2被这个大小的区域，为了保持内存的连续性，它会将旧的数据从当前空间移动到新的空间（注意这里不是copy，而是移动）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;string&quot;</span><br><span class="line">#include &quot;memory&quot;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">class StrVec &#123;</span><br><span class="line">public:</span><br><span class="line">    StrVec() : elements(nullptr), firstFree(nullptr), capacity(nullptr) &#123;&#125;</span><br><span class="line">    StrVec(const StrVec&amp;);</span><br><span class="line">    StrVec&amp; operator=(const StrVec&amp;);</span><br><span class="line">    StrVec::StrVec(StrVec&amp;&amp; s) noexcept : elements(s.elements), firstFree(s.firstFree), capacity(s.capacity) &#123;</span><br><span class="line">        s.elements = s.firstFree = s.capacity = nullptr;</span><br><span class="line">    &#125;</span><br><span class="line">    StrVec&amp; StrVec::operator=(StrVec&amp;&amp; rhs) noexcept &#123;</span><br><span class="line">        if (this != &amp;rhs) &#123;</span><br><span class="line">            free();</span><br><span class="line">            elements = rhs.elements;</span><br><span class="line">            firstFree = rhs.firstFree;</span><br><span class="line">            capacity = rhs.capacity;</span><br><span class="line">            rhs.elements = rhs.firstFree = rhs.capacity = nullptr; </span><br><span class="line">        &#125;</span><br><span class="line">        return *this;</span><br><span class="line">    &#125;</span><br><span class="line">    ~StrVec();</span><br><span class="line"></span><br><span class="line">    void push_back(const string&amp;);</span><br><span class="line"></span><br><span class="line">    void push_back(const string&amp;&amp; s);</span><br><span class="line"></span><br><span class="line">    size_t size() const &#123;</span><br><span class="line">        return firstFree - elements;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    size_t capacity() const &#123;</span><br><span class="line">        return capacity - elements;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    string* begin() const &#123;</span><br><span class="line">        return elements;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    string* end() const &#123;</span><br><span class="line">        return firstFree;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    static allocator&lt;string&gt; alloc;</span><br><span class="line">    void chn_n_alloc() &#123;</span><br><span class="line">        if (size() == capacity()) &#123;</span><br><span class="line">            reallocate();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    void free();</span><br><span class="line">    void reallocate();</span><br><span class="line">    pair&lt;string*, string*&gt; alloc_n_copy(const string*, const string*);</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    string* elements;</span><br><span class="line">    string* firstFree;</span><br><span class="line">    string* capacity;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void StrVec::push_back(const String&amp; s)</span><br><span class="line">&#123;</span><br><span class="line">    ckn_n_alloc();</span><br><span class="line">    alloc.construct(firstFree++, s);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void StrVec::push_back(const string&amp;&amp; s)</span><br><span class="line">&#123;</span><br><span class="line">    chn_n_alloc();</span><br><span class="line">    alloc.construct(firstFree++, std::move(s));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pair&lt;string*, string*&gt; StrVec::alloc_n_copy(const string* b, const string* e)</span><br><span class="line">&#123;</span><br><span class="line">    auto data = alloc.allocate(e - b);</span><br><span class="line">    return &#123;data, uninitialized_copy(b, e, data)&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void StrVec::free()</span><br><span class="line">&#123;</span><br><span class="line">    if (elements) &#123;</span><br><span class="line">        for (auto p = firstFree; p != elements; ) &#123;</span><br><span class="line">            alloc.destroy(--p);</span><br><span class="line">        &#125;</span><br><span class="line">        alloc.deallocate(elements, cvap - elements);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">StrVec::StrVec(const StrVec&amp; s)</span><br><span class="line">&#123;</span><br><span class="line">    auto newData = alloc_n_copy(s.begin(), s.end());</span><br><span class="line">    elements = newData.first;</span><br><span class="line">    firstFree = capacity = newData.second;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">StrVec::~StrVec()</span><br><span class="line">&#123;</span><br><span class="line">    free();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">StrVec&amp; StrVec::operator=(const StrVec&amp; rhs)</span><br><span class="line">&#123;</span><br><span class="line">    auto data = alloc_n_copy(rhs.begin(), rhs.end());</span><br><span class="line">    free();</span><br><span class="line">    elements = data.first;</span><br><span class="line">    firstFree = capacity = data.second;</span><br><span class="line">    return *this;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void StrVec::reallocate()</span><br><span class="line">&#123;</span><br><span class="line">    auto newCapacity = size() ? 2* size() : 1;</span><br><span class="line">    auto newData = alloc.allocate(newCapacity);</span><br><span class="line">    auto dest = newData;</span><br><span class="line">    auto ele = elements;</span><br><span class="line">    for (size_t i = 0; i != size(); ++i) &#123;</span><br><span class="line">        alloc.construct(dest++, std::move(*elem++));</span><br><span class="line">    &#125;</span><br><span class="line">    free();</span><br><span class="line">    elements = newData;</span><br><span class="line">    firstFree = dest;</span><br><span class="line">    capacity = elements + newCapacity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/c/" rel="tag"># c++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/09/DataStructure/深度优先/" rel="next" title="深度优先算法">
+                <i class="fa fa-chevron-left"></i> 深度优先算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/09/30/ProgramingLanguage/c++性能优化/" rel="prev" title="C++性能优化">
+                C++性能优化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">176</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是右值"><span class="nav-number">1.</span> <span class="nav-text">什么是右值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#右值引用"><span class="nav-number">2.</span> <span class="nav-text">右值引用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#右值引用的一些特殊示例"><span class="nav-number">3.</span> <span class="nav-text">右值引用的一些特殊示例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么要有右值引用"><span class="nav-number">4.</span> <span class="nav-text">为什么要有右值引用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#std-move"><span class="nav-number">5.</span> <span class="nav-text">std::move</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#strVec的例子"><span class="nav-number">6.</span> <span class="nav-text">strVec的例子</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">201.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共201.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'changyuanchn',
+            repo: 'https://github.com/changyuanchn/changyuanchn.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '82f82fd4b3c71f66c261736a9aca7151809f2c0e',
+            
+                client_id: 'b260167e7c41f29d0da7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="编程语言,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="类或者结构体常用数据前置结构体数据不要嵌套太深，因为每一级的嵌套都意味着一次的寻址相关的数据放到一起，提升数据的耦合性，提高访问效率常用数据前置，以免导致页交换等 12345struct compact&amp;#123;    int a;    int b;    int c[10000];&amp;#125; 几种构造函数默认构造函数初始化构造函数拷贝构造函数赋值构造函数 12345678910111213">
+<meta name="keywords" content="编程语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++性能优化">
+<meta property="og:url" content="http://yoursite.com/2020/09/30/ProgramingLanguage/c++性能优化/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="类或者结构体常用数据前置结构体数据不要嵌套太深，因为每一级的嵌套都意味着一次的寻址相关的数据放到一起，提升数据的耦合性，提高访问效率常用数据前置，以免导致页交换等 12345struct compact&amp;#123;    int a;    int b;    int c[10000];&amp;#125; 几种构造函数默认构造函数初始化构造函数拷贝构造函数赋值构造函数 12345678910111213">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-07-10T06:59:48.786Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++性能优化">
+<meta name="twitter:description" content="类或者结构体常用数据前置结构体数据不要嵌套太深，因为每一级的嵌套都意味着一次的寻址相关的数据放到一起，提升数据的耦合性，提高访问效率常用数据前置，以免导致页交换等 12345struct compact&amp;#123;    int a;    int b;    int c[10000];&amp;#125; 几种构造函数默认构造函数初始化构造函数拷贝构造函数赋值构造函数 12345678910111213">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/09/30/ProgramingLanguage/c++性能优化/">
+
+
+
+
+
+  <title>C++性能优化 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/30/ProgramingLanguage/c++性能优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">C++性能优化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-30T00:00:00+08:00">
+                2020-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/30/ProgramingLanguage/c++性能优化/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2020/09/30/ProgramingLanguage/c++性能优化/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  852
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="类或者结构体常用数据前置"><a href="#类或者结构体常用数据前置" class="headerlink" title="类或者结构体常用数据前置"></a>类或者结构体常用数据前置</h1><p>结构体数据不要嵌套太深，因为每一级的嵌套都意味着一次的寻址<br>相关的数据放到一起，提升数据的耦合性，提高访问效率<br>常用数据前置，以免导致页交换等</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct compact&#123;</span><br><span class="line">    int a;</span><br><span class="line">    int b;</span><br><span class="line">    int c[10000];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="几种构造函数"><a href="#几种构造函数" class="headerlink" title="几种构造函数"></a>几种构造函数</h1><p>默认构造函数<br>初始化构造函数<br>拷贝构造函数<br>赋值构造函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">struct MyData &#123;</span><br><span class="line">    MyData() &#123; cout &lt;&lt; &quot;Default Construct&quot; &lt;&lt; endl;&#125;</span><br><span class="line">    MyData(const MyData&amp; rhs) &#123;cout &lt;&lt; &quot;Copy Construct&quot; &lt;&lt; endl;&#125;</span><br><span class="line">    MyData&amp; operator=(const MyData&amp; rhs) &#123;cout &lt;&lt; &quot;Assign Construct&quot; &lt;&lt; endl; return *this;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class MyType &#123;</span><br><span class="line">public:</span><br><span class="line">    MyType(MyData data) &#123;</span><br><span class="line">        _data = data;</span><br><span class="line">        cout &lt;&lt; &quot;MyType constructor&quot; &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    MyData _data;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class MyType1 &#123;</span><br><span class="line">public:</span><br><span class="line">    MyType1(MyData&amp; data) &#123;</span><br><span class="line">        _data = data;</span><br><span class="line">        cout &lt;&lt; &quot;MyType1 constructor&quot; &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    MyData _data;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class MyType2 &#123;</span><br><span class="line">public:</span><br><span class="line">    MyType2(MyData&amp; data) : _data(data) &#123;</span><br><span class="line">        cout &lt;&lt; &quot;MyType2 constructor&quot; &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    MyData _data;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    MyData data;</span><br><span class="line">    cout &lt;&lt; &quot;========================&quot; &lt;&lt; endl;</span><br><span class="line">    MyType type(data);</span><br><span class="line">    cout &lt;&lt; &quot;========================&quot; &lt;&lt; endl;</span><br><span class="line">    MyType1 type1(data);</span><br><span class="line">    cout &lt;&lt; &quot;========================&quot; &lt;&lt; endl;</span><br><span class="line">    MyType2 type2(data);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Default Construct</span><br><span class="line">========================</span><br><span class="line">Copy Construct</span><br><span class="line">Default Construct</span><br><span class="line">Assign Construct</span><br><span class="line">MyType constructor</span><br><span class="line">========================</span><br><span class="line">Default Construct</span><br><span class="line">Assign Construct</span><br><span class="line">MyType1 constructor</span><br><span class="line">========================</span><br><span class="line">Copy Construct</span><br><span class="line">MyType2 constructor</span><br></pre></td></tr></table></figure>
+<h1 id="类成员的初始化放到初始化列表中"><a href="#类成员的初始化放到初始化列表中" class="headerlink" title="类成员的初始化放到初始化列表中"></a>类成员的初始化放到初始化列表中</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class MyType2 &#123;</span><br><span class="line">public:</span><br><span class="line">    MyType2(MyData&amp; data) : _data(data) &#123;</span><br><span class="line">        cout &lt;&lt; &quot;MyType2 constructor&quot; &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    MyData _data;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="内存相关的优化"><a href="#内存相关的优化" class="headerlink" title="内存相关的优化"></a>内存相关的优化</h1><ul>
+<li><p>尽量使用栈内存，少用堆内存</p>
+<p>  堆内存是new出来的，慢，且容易产生碎片<br>  堆内存也更容易被操作系统给交换到外存中。</p>
+</li>
+<li>引用传参</li>
+<li><p>placement new</p>
+<ul>
+<li>new不能被重载，它先调用operator new分配内存，然后调用构造函数初始化那段内存</li>
+<li>operator new 要实现不同的内存分配行为，需要重载operator new， 而不是new</li>
+<li>placement new是operator new的一个重载版本，它不分配内存，只是返回只想已经分配好的某段内存的一个指针，因此不能删除它，只能调用对象的析构函数。placement new重用了已有的内存，没有频繁的内存申请和释放，提升了性能，减轻了碎片化。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void testPlacementNew() &#123;</span><br><span class="line">    unsigned char buf[sizeof(int) * 2];</span><br><span class="line">    for (int i = 0; i &lt; 100000; ++i) &#123;</span><br><span class="line">        ComplexType* ct = new (buf) ComplexType();</span><br><span class="line">        reinterpret_cast&lt;ComplexType*&gt;(buf)-&gt;~ComplexType();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="循环优化"><a href="#循环优化" class="headerlink" title="循环优化"></a>循环优化</h1><h2 id="iter-相比于iter-会少一步指令"><a href="#iter-相比于iter-会少一步指令" class="headerlink" title="++iter 相比于iter++ 会少一步指令"></a>++iter 相比于iter++ 会少一步指令</h2><h2 id="外小内大"><a href="#外小内大" class="headerlink" title="外小内大"></a>外小内大</h2><p>二维数组是按行存储的。如果一行存储的数据超过了数据分页，那么按列访问就会导致频繁的跨页访问。<br>连续访问的数据比跳页访问要快<br>外小内大的方式还能节约内存，因为页面交换的时候可能需要额外的内存来帮助<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void testSmallbig()&#123;</span><br><span class="line">    double data[100][10000];</span><br><span class="line">    for (int i = 0; i &lt; 100; i++) &#123;</span><br><span class="line">        for (int j = 0; j &lt; 10000; j++) &#123;</span><br><span class="line">            data[i][j] = i * j;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="C-新特性的性能优化"><a href="#C-新特性的性能优化" class="headerlink" title="C++ 新特性的性能优化"></a>C++ 新特性的性能优化</h1><h2 id="右值引用和移动语义"><a href="#右值引用和移动语义" class="headerlink" title="右值引用和移动语义"></a>右值引用和移动语义</h2><p>减少两个对象交互时的不必要copy<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">void test() &#123;</span><br><span class="line">    vector&lt;int&gt; vs;</span><br><span class="line">    vs.resize(100000);</span><br><span class="line">    for (auto v : s) &#123;</span><br><span class="line">        v = v + 1;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;int&gt; vs1 = vs;</span><br><span class="line">    vector&lt;int&gt; vs2 = std::move(vs);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用前提：</p>
+<ul>
+<li>定义的类使用了资源并定义了移动构造函数和移动赋值运算符</li>
+<li>该变量即将不再使用</li>
+</ul>
+<h2 id="unordered-map"><a href="#unordered-map" class="headerlink" title="unordered_map"></a>unordered_map</h2><h2 id="make-shared"><a href="#make-shared" class="headerlink" title="make_shared"></a>make_shared</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::shared_ptr&lt;Data&gt; spw(new Data);</span><br><span class="line">auto spw = std::make_shared&lt;Data&gt;();</span><br></pre></td></tr></table></figure>
+<h2 id="final"><a href="#final" class="headerlink" title="final"></a>final</h2><h2 id="constexpr"><a href="#constexpr" class="headerlink" title="constexpr"></a>constexpr</h2><p>编译期计算</p>
+<h1 id="容器选择"><a href="#容器选择" class="headerlink" title="容器选择"></a>容器选择</h1><p>vector &gt; deque &gt; list/forward_list</p>
+<h1 id="qsort比sort快"><a href="#qsort比sort快" class="headerlink" title="qsort比sort快"></a>qsort比sort快</h1><h1 id="编译器优化"><a href="#编译器优化" class="headerlink" title="编译器优化"></a>编译器优化</h1><ul>
+<li>短小函数inline化</li>
+<li>PGO</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编程语言/" rel="tag"># 编程语言</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/30/ProgramingLanguage/右值引用/" rel="next" title="右值引用">
+                <i class="fa fa-chevron-left"></i> 右值引用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/03/02/GPUGem/GPU结构初识/" rel="prev" title="GPU结构初识">
+                GPU结构初识 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">176</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#类或者结构体常用数据前置"><span class="nav-number">1.</span> <span class="nav-text">类或者结构体常用数据前置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#几种构造函数"><span class="nav-number">2.</span> <span class="nav-text">几种构造函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类成员的初始化放到初始化列表中"><span class="nav-number">3.</span> <span class="nav-text">类成员的初始化放到初始化列表中</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内存相关的优化"><span class="nav-number">4.</span> <span class="nav-text">内存相关的优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#循环优化"><span class="nav-number">5.</span> <span class="nav-text">循环优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#iter-相比于iter-会少一步指令"><span class="nav-number">5.1.</span> <span class="nav-text">++iter 相比于iter++ 会少一步指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#外小内大"><span class="nav-number">5.2.</span> <span class="nav-text">外小内大</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-新特性的性能优化"><span class="nav-number">6.</span> <span class="nav-text">C++ 新特性的性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#右值引用和移动语义"><span class="nav-number">6.1.</span> <span class="nav-text">右值引用和移动语义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#unordered-map"><span class="nav-number">6.2.</span> <span class="nav-text">unordered_map</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#make-shared"><span class="nav-number">6.3.</span> <span class="nav-text">make_shared</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#final"><span class="nav-number">6.4.</span> <span class="nav-text">final</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constexpr"><span class="nav-number">6.5.</span> <span class="nav-text">constexpr</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#容器选择"><span class="nav-number">7.</span> <span class="nav-text">容器选择</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#qsort比sort快"><span class="nav-number">8.</span> <span class="nav-text">qsort比sort快</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译器优化"><span class="nav-number">9.</span> <span class="nav-text">编译器优化</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">201.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共201.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'changyuanchn',
+            repo: 'https://github.com/changyuanchn/changyuanchn.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '82f82fd4b3c71f66c261736a9aca7151809f2c0e',
+            
+                client_id: 'b260167e7c41f29d0da7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

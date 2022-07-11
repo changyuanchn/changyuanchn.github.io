@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="算法,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="算法简介Dijkstra算法是一种计算最短路径的算法，对于给定的一个有权重的图，Dijkstra算法可以计算出任一点到其他各点的最短路径。 Dijkstra‘s algorithm是一种greedy algorithm。贪婪算法就是在算法的每一个阶段都取最大值。一般情况下，贪婪算法能取得较好的效果。但是贪婪算法是有其缺陷的，也就是说能达到局部最优，而未必能达到全局最优，举个例子，假设要兑换15分的">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dijkstra算法">
+<meta property="og:url" content="http://yoursite.com/2018/10/15/DataStructure/Dijkstra算法/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="算法简介Dijkstra算法是一种计算最短路径的算法，对于给定的一个有权重的图，Dijkstra算法可以计算出任一点到其他各点的最短路径。 Dijkstra‘s algorithm是一种greedy algorithm。贪婪算法就是在算法的每一个阶段都取最大值。一般情况下，贪婪算法能取得较好的效果。但是贪婪算法是有其缺陷的，也就是说能达到局部最优，而未必能达到全局最优，举个例子，假设要兑换15分的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/DataStructure/2022-05-18-23-04-44.png">
+<meta property="og:updated_time" content="2022-07-10T07:45:17.736Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dijkstra算法">
+<meta name="twitter:description" content="算法简介Dijkstra算法是一种计算最短路径的算法，对于给定的一个有权重的图，Dijkstra算法可以计算出任一点到其他各点的最短路径。 Dijkstra‘s algorithm是一种greedy algorithm。贪婪算法就是在算法的每一个阶段都取最大值。一般情况下，贪婪算法能取得较好的效果。但是贪婪算法是有其缺陷的，也就是说能达到局部最优，而未必能达到全局最优，举个例子，假设要兑换15分的">
+<meta name="twitter:image" content="http://yoursite.com/images/DataStructure/2022-05-18-23-04-44.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/15/DataStructure/Dijkstra算法/">
+
+
+
+
+
+  <title>Dijkstra算法 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/15/DataStructure/Dijkstra算法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Dijkstra算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-15T00:00:00+08:00">
+                2018-10-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/15/DataStructure/Dijkstra算法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/10/15/DataStructure/Dijkstra算法/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,035
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="算法简介"><a href="#算法简介" class="headerlink" title="算法简介"></a>算法简介</h1><p>Dijkstra算法是一种计算最短路径的算法，对于给定的一个有权重的图，Dijkstra算法可以计算出任一点到其他各点的最短路径。</p>
+<p>Dijkstra‘s algorithm是一种greedy algorithm。贪婪算法就是在算法的每一个阶段都取最大值。一般情况下，贪婪算法能取得较好的效果。但是贪婪算法是有其缺陷的，也就是说能达到局部最优，而未必能达到全局最优，举个例子，假设要兑换15分的硬币，而硬币有12分的，10分的，5分的，1分的，那么根据贪婪算法，最终的兑换结果为1个12分的，3个一分的；而最优结果应该是一个10分的，一个5分的。（这里我们定义最优为硬币个数最少）。</p>
+<p>Dijkstra‘s algorithm的步骤是：<br>对于每一个阶段，Dijkstra‘s algorithm会在所有未处理的点中选取一个最小距离的点v，然后把给定点s到v的路径定义为最小路径。</p>
+<h1 id="算法图解原理"><a href="#算法图解原理" class="headerlink" title="算法图解原理"></a>算法图解原理</h1><p>假设我们有如下的一个图<br><img src="/images/DataStructure/2022-05-18-23-04-44.png" alt></p>
+<p>我们需要知道v1到其他所有点的最短花费，那么要怎么做呢？</p>
+<p>我们需要定义一个distance[]数组用来记录最短的花费<br>定义一个visited[]数组来记录是否访问过节点</p>
+<p>首先选择v1点，然后遍历v1的所有子节点，这里有v2和v4，在distance里面记录他们的距离</p>
+<p>【0，2，+oo，1，+oo，+oo，+oo】<br>【1，0，0，0，0，0，0】</p>
+<p>然后选择未遍历的最近的点，就是v4，然后遍历v4的子节点，这里有v3，v6，v7，v5。我们更新v1到这些点的距离</p>
+<p>【0，2，3，1，3，9，5】<br>【1，0，0，1，0，0，0】</p>
+<p>然后从未遍历的点中，选择距离最短的点，那就是v2点，然后用v2点来更新最短距离，看v2的子节点v4，v5。然后更新这两个节点的最小距离<br>我们发现通过v2点的距离分别为5和12，这大于已有的最短距离，因此不更新distance中的数据</p>
+<p>【0，2，3，1，3，9，5】<br>【1，1，0，1，0，0，0】</p>
+<p>然后选择下一个节点v3，它的子节点v1和v6，v1不需要更新，那我们看v6，通过v3点的距离为3 + 5 = 8 &lt; 9，因此需要更新v6的最短距离</p>
+<p>【0，2，3，1，3，8，5】<br>【1，1，1，1，0，0，0】</p>
+<p>然后选择下一个节点v5，它的子节点为v7，通过v5的距离 3 + 6 = 9 &gt; 5，因此不更新distance中的最短距离</p>
+<p>【0，2，3，1，3，8，5】<br>【1，1，1，1，1，0，0】</p>
+<p>然后选择下一个节点v7，它的子节点为v6，通过v7到v6的距离为 5 + 1 = 6 &lt; 8，因此更新distance中的最短距离</p>
+<p>【0，2，3，1，3，6，5】<br>【1，1，1，1，1，0，1】</p>
+<p>最后剩下一个节点v6，他没有子节点，结束。</p>
+<h1 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h1><ul>
+<li><p>首先定义数据结构，以点为中心</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;vector&lt;vector&lt;int&gt;&gt;&gt; graphs;</span><br><span class="line">graphs[0]表示点0对应的边信息</span><br><span class="line">graphs[0][0]表示点0对应的第一条边的信息</span><br><span class="line">graphs[0][0]包含三个元素，分别为启示点，终点，以及权重。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>再定义一个distance的数组，因为每次要取最小的值，因此最好用priority_queue。</p>
+</li>
+<li><p>还要定义一个结构用来对应节点和最小的值，以及是否被访问过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct Node &#123;</span><br><span class="line">    int nodeId;</span><br><span class="line">    int distance;</span><br><span class="line">    bool isVisited;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>下面我们来看具体的实现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">typedef struct Node &#123;</span><br><span class="line">    int nodeId;</span><br><span class="line">    int distance;</span><br><span class="line">    bool isVisited;</span><br><span class="line">    bool operator&lt;(const Node&amp; rhs) const &#123;</span><br><span class="line">        return distance &lt; rhs.distance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; Node;</span><br><span class="line"></span><br><span class="line">priority_queue&lt;struct Node&gt; pq;</span><br><span class="line"></span><br><span class="line">vector&lt;int&gt; distanceVec;</span><br><span class="line"></span><br><span class="line">vector&lt;int&gt; Dijkstra(vector&lt;vector&lt;vector&lt;int&gt;&gt;&gt;&amp; graphs)</span><br><span class="line">&#123;</span><br><span class="line">    vector&lt;Node&gt; nodeVec(graphs.size());</span><br><span class="line">    distanceVec.resize(graphs.size(), INT_MAX);</span><br><span class="line">    for (int i = 0; i &lt; graphs.size(); ++i) &#123;</span><br><span class="line">        nodeVec[i].distance = INT_MAX;</span><br><span class="line">        nodeVec[i].nodeId = i;</span><br><span class="line">        nodeVec[i].isVisited = false;</span><br><span class="line">    &#125;</span><br><span class="line">    nodeVec[k - 1].distance = 0;</span><br><span class="line">    pq.push(nodeVec[k - 1]);</span><br><span class="line">    while (!pq.empty()) &#123;</span><br><span class="line">        Node curr = pq.top();</span><br><span class="line">        pq.pop();</span><br><span class="line">        </span><br><span class="line">        if (nodeVec[curr.nodeId].isVisited) &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        nodeVec[curr.nodeId].isVisited = true;</span><br><span class="line">        for (auto&amp; edge : graphs[curr.nodeId]) &#123;</span><br><span class="line">            int to = edge[1];</span><br><span class="line">            int weight = edge[2];</span><br><span class="line">            if (nodeVec[to].isVisited) &#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            int currDistance = curr.distance + weight;</span><br><span class="line">            if (nodeVec[to].distance &gt; currDistance) &#123;</span><br><span class="line">                nodeVec[to].distance = currDistance;</span><br><span class="line">                distanceVec[to] = currDistance;</span><br><span class="line">                pq.push(nodeVec[to]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="例题分析"><a href="#例题分析" class="headerlink" title="例题分析"></a>例题分析</h1><h2 id="743-网络延迟时间"><a href="#743-网络延迟时间" class="headerlink" title="743. 网络延迟时间"></a><a href="https://leetcode.cn/problems/network-delay-time/" target="_blank" rel="noopener">743. 网络延迟时间</a></h2><p>这个问题就是一个标准的Dijkstra算法的应用。在这道题目中，我们需要计算出起始节点到所有节点的距离，然后从结果中选择最大值即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">typedef struct Node &#123;</span><br><span class="line">    int nodeId;</span><br><span class="line">    int distance;</span><br><span class="line">    bool isVisited = false;</span><br><span class="line">    bool operator&lt;(const Node&amp; rhs) const &#123;</span><br><span class="line">        return distance &lt; rhs.distance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; Node;</span><br><span class="line"></span><br><span class="line">priority_queue&lt;struct Node&gt; pq;</span><br><span class="line"></span><br><span class="line">vector&lt;int&gt; distanceVec;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    // 根据题目的数据，构建图的数据结构</span><br><span class="line">    vector&lt;vector&lt;vector&lt;int&gt;&gt;&gt; buildGraph(vector&lt;vector&lt;int&gt;&gt;&amp; times, int n)</span><br><span class="line">    &#123;</span><br><span class="line">        vector&lt;vector&lt;vector&lt;int&gt;&gt;&gt; graphs;</span><br><span class="line">        graphs.resize(n);</span><br><span class="line">        for (auto&amp; time : times) &#123;</span><br><span class="line">            int from = time[0] - 1;</span><br><span class="line">            int to = time[1] - 1;</span><br><span class="line">            int weight = time[2];</span><br><span class="line">            graphs[from].push_back(&#123;from, to, weight&#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        return graphs;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int networkDelayTime(vector&lt;vector&lt;int&gt;&gt;&amp; times, int n, int k) &#123;</span><br><span class="line">        distanceVec.clear();</span><br><span class="line">        while (!pq.empty()) &#123;</span><br><span class="line">            pq.pop();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        vector&lt;vector&lt;vector&lt;int&gt;&gt;&gt; graphs = buildGraph(times, n);</span><br><span class="line">        // 初始化所有的节点结构</span><br><span class="line">        vector&lt;Node&gt; nodeVec(graphs.size());</span><br><span class="line">        distanceVec.resize(graphs.size(), INT_MAX);</span><br><span class="line">        for (int i = 0; i &lt; graphs.size(); ++i) &#123;</span><br><span class="line">            nodeVec[i].distance = INT_MAX;</span><br><span class="line">            nodeVec[i].nodeId = i;</span><br><span class="line">            nodeVec[i].isVisited = false;</span><br><span class="line">        &#125;</span><br><span class="line">        // 开始遍历</span><br><span class="line">        nodeVec[k - 1].distance = 0;</span><br><span class="line">        pq.push(nodeVec[k - 1]);</span><br><span class="line">        while (!pq.empty()) &#123;</span><br><span class="line">            Node curr = pq.top();</span><br><span class="line">            pq.pop();</span><br><span class="line">            </span><br><span class="line">            if (nodeVec[curr.nodeId].isVisited) &#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            nodeVec[curr.nodeId].isVisited = true;</span><br><span class="line">            for (auto&amp; edge : graphs[curr.nodeId]) &#123;</span><br><span class="line">                int to = edge[1];</span><br><span class="line">                int weight = edge[2];</span><br><span class="line">                if (nodeVec[to].isVisited) &#123;</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line">                int currDistance = curr.distance + weight;</span><br><span class="line">                if (nodeVec[to].distance &gt; currDistance) &#123;</span><br><span class="line">                    nodeVec[to].distance = currDistance;</span><br><span class="line">                    distanceVec[to] = currDistance;</span><br><span class="line">                    pq.push(nodeVec[to]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int maxValue = 0;</span><br><span class="line">        for (int i = 0; i &lt; n; ++i) &#123;</span><br><span class="line">            if (i == k -1) &#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            maxValue = max(maxValue, distanceVec[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        return maxValue == INT_MAX ? -1 : maxValue;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="1631-最小体力消耗路径"><a href="#1631-最小体力消耗路径" class="headerlink" title="1631. 最小体力消耗路径"></a><a href="https://leetcode.cn/problems/path-with-minimum-effort/" target="_blank" rel="noopener">1631. 最小体力消耗路径</a></h2><h2 id="1514-概率最大的路径"><a href="#1514-概率最大的路径" class="headerlink" title="1514. 概率最大的路径"></a><a href="https://leetcode.cn/problems/path-with-maximum-probability/" target="_blank" rel="noopener">1514. 概率最大的路径</a></h2><p>这道题目初看好像跟Dijkstra关系不大，首先这是个无向图，其次这次是各个路径相乘，而且是最大值。实际上这也是可以用Dijkstra算法的，只不过是要做一定的修改变通。</p>
+<ul>
+<li>首先无向图实际上就是一个双向的有向图罢了</li>
+<li>其次每次更新的时候，把加法换做乘法即可，同时大值才更新</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">typedef struct Node &#123;</span><br><span class="line">    double nodeId;</span><br><span class="line">    double weight;</span><br><span class="line">    bool isVisited = false;</span><br><span class="line">    bool operator&lt;(const Node&amp; rhs) const &#123;</span><br><span class="line">        return weight &lt; rhs.weight;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; Node;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    vector&lt;vector&lt;vector&lt;double&gt;&gt;&gt; buildGraph(int n, vector&lt;vector&lt;int&gt;&gt;&amp; edges, vector&lt;double&gt;&amp; succProb)</span><br><span class="line">    &#123;</span><br><span class="line">        vector&lt;vector&lt;vector&lt;double&gt;&gt;&gt; graphs(n);</span><br><span class="line">        for (int i = 0; i &lt; edges.size(); ++i) &#123;</span><br><span class="line">            double from = edges[i][0];</span><br><span class="line">            double to = edges[i][1];</span><br><span class="line">            double weight = succProb[i];</span><br><span class="line">            graphs[from].push_back(&#123;from ,to, weight&#125;);</span><br><span class="line">            graphs[to].push_back(&#123;to, from ,weight&#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        return graphs;</span><br><span class="line">    &#125;</span><br><span class="line">    double maxProbability(int n, vector&lt;vector&lt;int&gt;&gt;&amp; edges, vector&lt;double&gt;&amp; succProb, int start, int end) &#123;</span><br><span class="line">        vector&lt;vector&lt;vector&lt;double&gt;&gt;&gt; graphs = buildGraph(n, edges, succProb);</span><br><span class="line"></span><br><span class="line">        vector&lt;Node&gt; nodeVec(n);</span><br><span class="line">        for (int i = 0; i &lt; n; ++i) &#123;</span><br><span class="line">            nodeVec[i].weight = 0.0f;</span><br><span class="line">            nodeVec[i].nodeId = i;</span><br><span class="line">            nodeVec[i].isVisited = false;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        nodeVec[start].weight = 1.0f;</span><br><span class="line">        pq.push(nodeVec[start]);</span><br><span class="line">        while (!pq.empty()) &#123;</span><br><span class="line">            Node curr = pq.top();</span><br><span class="line">            pq.pop();</span><br><span class="line">            </span><br><span class="line">            // 提前结束</span><br><span class="line">            if (curr.nodeId == end) &#123;</span><br><span class="line">                return nodeVec[end].weight;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            if (nodeVec[curr.nodeId].isVisited) &#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            nodeVec[curr.nodeId].isVisited = true;</span><br><span class="line">            int currNodeId = static_cast&lt;int&gt;(curr.nodeId);</span><br><span class="line">            for (auto&amp; edge : graphs[currNodeId]) &#123;</span><br><span class="line">                int to = static_cast&lt;int&gt;(edge[1]);</span><br><span class="line">                double weight = edge[2];</span><br><span class="line">                if (nodeVec[to].isVisited) &#123;</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line">                double currWeight = curr.weight * weight;</span><br><span class="line">                if (currWeight &gt; nodeVec[to].weight) &#123;</span><br><span class="line">                    nodeVec[to].weight = currWeight;</span><br><span class="line">                    pq.push(nodeVec[to]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return nodeVec[end].weight;</span><br><span class="line">    &#125;</span><br><span class="line">private:</span><br><span class="line">    priority_queue&lt;Node&gt; pq;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><p>从上面的算法可以看出，Dijkstra算法适合于计算权重为正的有向图。</p>
+<ul>
+<li>那么如果权重为负呢？Dijkstra算法无法直接解决权重为负的图，但是我们可以为所以的权重都加一个正数，让权重变为正，就可以解决了</li>
+<li>如果是无权重图呢？更简单了，那就相当于所有的权重均为1。</li>
+</ul>
+<p>因此对于有向图，一般都可以通过Dijkstra算法来解决最短路径问题</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag"># 算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/05/DataStructure/最小树算法/" rel="next" title="最小树算法">
+                <i class="fa fa-chevron-left"></i> 最小树算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/30/DataStructure/LRU算法/" rel="prev" title="LRU算法">
+                LRU算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">176</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#算法简介"><span class="nav-number">1.</span> <span class="nav-text">算法简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法图解原理"><span class="nav-number">2.</span> <span class="nav-text">算法图解原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法实现"><span class="nav-number">3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#例题分析"><span class="nav-number">4.</span> <span class="nav-text">例题分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#743-网络延迟时间"><span class="nav-number">4.1.</span> <span class="nav-text">743. 网络延迟时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1631-最小体力消耗路径"><span class="nav-number">4.2.</span> <span class="nav-text">1631. 最小体力消耗路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1514-概率最大的路径"><span class="nav-number">4.3.</span> <span class="nav-text">1514. 概率最大的路径</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#扩展"><span class="nav-number">5.</span> <span class="nav-text">扩展</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">201.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共201.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'changyuanchn',
+            repo: 'https://github.com/changyuanchn/changyuanchn.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '82f82fd4b3c71f66c261736a9aca7151809f2c0e',
+            
+                client_id: 'b260167e7c41f29d0da7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

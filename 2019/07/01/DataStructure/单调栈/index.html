@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="单调栈栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。 那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。 以上就是单调栈的全部描述。 这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。 leetcode上的实例739 每日温度 这道题实际上就是求比当前数更大的数的位置。那么我们需要维持一个单调">
+<meta name="description" content="单调栈栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。 那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。 以上就是单调栈的全部描述。 这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。 单调栈的模板我们要维持一个栈是单调的，要么是单调升，要么是单调减的。那么我们在栈里面存放的是什么数据呢？一般">
 <meta name="keywords" content="算法,leetcode">
 <meta property="og:type" content="article">
 <meta property="og:title" content="单调栈">
 <meta property="og:url" content="http://yoursite.com/2019/07/01/DataStructure/单调栈/index.html">
 <meta property="og:site_name" content="axis tech zone">
-<meta property="og:description" content="单调栈栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。 那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。 以上就是单调栈的全部描述。 这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。 leetcode上的实例739 每日温度 这道题实际上就是求比当前数更大的数的位置。那么我们需要维持一个单调">
+<meta property="og:description" content="单调栈栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。 那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。 以上就是单调栈的全部描述。 这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。 单调栈的模板我们要维持一个栈是单调的，要么是单调升，要么是单调减的。那么我们在栈里面存放的是什么数据呢？一般">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/monoStack.png">
-<meta property="og:updated_time" content="2021-10-08T13:41:52.790Z">
+<meta property="og:updated_time" content="2022-07-10T03:34:16.767Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="单调栈">
-<meta name="twitter:description" content="单调栈栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。 那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。 以上就是单调栈的全部描述。 这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。 leetcode上的实例739 每日温度 这道题实际上就是求比当前数更大的数的位置。那么我们需要维持一个单调">
+<meta name="twitter:description" content="单调栈栈的概念大家都是清晰的， 就是维系一个先进后出，后进先出的容器。 那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。 以上就是单调栈的全部描述。 这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。 单调栈的模板我们要维持一个栈是单调的，要么是单调升，要么是单调减的。那么我们在栈里面存放的是什么数据呢？一般">
 <meta name="twitter:image" content="http://yoursite.com/images/monoStack.png">
 
 
@@ -363,7 +363,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,579
+                  2,821
                 </span>
               
 
@@ -379,7 +379,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  11
+                  12
                 </span>
               
             </div>
@@ -404,6 +404,14 @@
 <p>那么单调栈， 显而易见， 就是要维护我们的栈是单调的，也就是递增的或者递减的。</p>
 <p>以上就是单调栈的全部描述。</p>
 <p>这绝对是没有营养的解释，但是实际上单调栈的内容就是这么多。所以我们通过一些例子来进一步解释看这个单调栈的运用。</p>
+<h2 id="单调栈的模板"><a href="#单调栈的模板" class="headerlink" title="单调栈的模板"></a>单调栈的模板</h2><p>我们要维持一个栈是单调的，要么是单调升，要么是单调减的。那么我们在栈里面存放的是什么数据呢？一般而言是数据的索引，而非具体的值。</p>
+<ul>
+<li>首先创建一个单调栈用来存放索引。</li>
+<li>遍历数组，从单调栈里取索引数据，看是否满足条件（比如说对于单调递减栈，如果索引对应的数据 &lt; 当前数据，则表示当前数据比top数据大，不能再入栈了，需要处理了）</li>
+<li>当需要处理时，将栈内的元素一次出栈，然后进行处理，直到栈顶元素不再满足条件</li>
+<li>将当前元素入栈</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;int&gt; dailyTemperatures(vector&lt;int&gt;&amp; temperatures) &#123;</span><br><span class="line">    stack&lt;int&gt; monoStack;</span><br><span class="line">    vector&lt;int&gt; ret(temperatures.size());</span><br><span class="line">    for (int i = 0; i &lt; temperatures.size(); i++) &#123;</span><br><span class="line">        while (!monoStack.empty() &amp;&amp; temperatures[monoStack.top()] &lt; temperatures[i]) &#123;</span><br><span class="line">            ret[monoStack.top()] = i - monoStack.top();</span><br><span class="line">            monoStack.pop();</span><br><span class="line">        &#125;</span><br><span class="line">        monoStack.push(i);</span><br><span class="line">    &#125;</span><br><span class="line">    return ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="leetcode上的实例"><a href="#leetcode上的实例" class="headerlink" title="leetcode上的实例"></a>leetcode上的实例</h2><p><a href="https://leetcode-cn.com/problems/daily-temperatures/" target="_blank" rel="noopener">739 每日温度</a></p>
 <p>这道题实际上就是求比当前数更大的数的位置。那么我们需要维持一个单调递减的栈，当将要入栈的元素大于栈顶的元素时，栈顶元素出栈，我们就计算这两个数的索引的差值。</p>
 <p>需要注意的是栈里存放的是元素的索引，而不是元素的值，这一点是需要注意的。</p>
@@ -473,8 +481,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/07/07/DataStructure/滑动窗口/" rel="prev" title="滑动窗口">
-                滑动窗口 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/01/05/Vulkan/Vulkan之Instance/" rel="prev" title="Vulkan之Instance">
+                Vulkan之Instance <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -562,7 +570,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">153</span>
+                  <span class="site-state-item-count">176</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -573,7 +581,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -584,7 +592,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-count">45</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -633,7 +641,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#单调栈"><span class="nav-number">1.</span> <span class="nav-text">单调栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#leetcode上的实例"><span class="nav-number">2.</span> <span class="nav-text">leetcode上的实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多余的话"><span class="nav-number">3.</span> <span class="nav-text">多余的话</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在最后的话"><span class="nav-number">4.</span> <span class="nav-text">写在最后的话</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#单调栈"><span class="nav-number">1.</span> <span class="nav-text">单调栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单调栈的模板"><span class="nav-number">2.</span> <span class="nav-text">单调栈的模板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#leetcode上的实例"><span class="nav-number">3.</span> <span class="nav-text">leetcode上的实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多余的话"><span class="nav-number">4.</span> <span class="nav-text">多余的话</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在最后的话"><span class="nav-number">5.</span> <span class="nav-text">写在最后的话</span></a></li></ol></div>
             
 
           </div>
@@ -668,7 +676,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">173.9k</span>
+    <span title="Site words total count">201.9k</span>
   
 </div>
 
@@ -697,7 +705,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共173.9k字</span>
+  <span class="post-count">博客全站共201.9k字</span>
 </div>
         
 <div class="busuanzi-count">

@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/01/22/DataStructure/左堆/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/10/DataStructure/八皇后问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -281,7 +281,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2014/01/22/DataStructure/左堆/" itemprop="url">左堆</a></h1>
+                <a class="post-title-link" href="/2016/05/10/DataStructure/八皇后问题/" itemprop="url">八皇后问题</a></h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-01-22T00:00:00+08:00">
-                2014-01-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-10T00:00:00+08:00">
+                2016-05-10
               </time>
             
 
@@ -347,7 +347,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  611
+                  763
                 </span>
               
 
@@ -386,12 +386,12 @@
       
         
           
-          引论为什么要提出左堆这么一个概念呢？有了二插堆还不够么。这是因为前面提到的数据结构在支持合并（merge）操作的时候是比较差的。比如对于一个二叉查找树来说，要把两个二叉查找树合并，那么可能需要把一个二叉树的结点一个一个的插入到另一个二叉树中，这个的时间消耗是一个很恐怖的事情。因此我们引入左堆。
-左堆
+          回溯算法：回溯算法也算是遍历算法的一种，回溯算法是对Brute-Force算法的一种改进算法，一个典型的应用是走迷宫问题，当我们走一个迷宫时，如果无路可走了，那么我们就可以退一步，再在其他的路上尝试一步，如果还是无路可走，那么就再退一步，尝试新的路，直到走到终点或者退回到原点。
+皇后问题：N皇后问题
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2014/01/22/DataStructure/左堆/#more" rel="contents">
+            <a class="btn" href="/2016/05/10/DataStructure/八皇后问题/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -442,7 +442,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/01/12/DataStructure/优先队列/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/10/DataStructure/八皇后问题之python解法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -461,7 +461,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2014/01/12/DataStructure/优先队列/" itemprop="url">优先队列（堆）</a></h1>
+                <a class="post-title-link" href="/2016/05/10/DataStructure/八皇后问题之python解法/" itemprop="url">八皇后问题之python解法</a></h1>
         
 
         <div class="post-meta">
@@ -473,8 +473,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-01-12T00:00:00+08:00">
-                2014-01-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-10T00:00:00+08:00">
+                2016-05-10
               </time>
             
 
@@ -527,7 +527,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,626
+                  186
                 </span>
               
 
@@ -543,7 +543,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  7
+                  1
                 </span>
               
             </div>
@@ -566,12 +566,14 @@
       
         
           
-          引论优先队列英文名为Priority Queue，也常被称为Heaps，也就是堆。
-前面已经有了链表，堆栈，队列，树等数据结构，尤其是树，是一个很强大的数据结构，能做很多事情，那么为什么还要引进一个优先队列的东东呢？它和队列有什么本质的不同呢？看一个例子，有一个打印机，但是有很多的文件需要打印，那么
+          八皇后的问题解析请见：
+八皇后问题
+这里给出Python的解法，相对于C语言，Python比较简单，代码量较小，但是效率也只能呵呵了，貌似很难两全啊。
+首先定义冲突函数：123456def conflict(state,nextX):    nextY = len(state)    for i i
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2014/01/12/DataStructure/优先队列/#more" rel="contents">
+            <a class="btn" href="/2016/05/10/DataStructure/八皇后问题之python解法/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -622,7 +624,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/01/02/DataStructure/伸展树/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/05/ProgramingLanguage/数组不等于指针/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -641,7 +643,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2014/01/02/DataStructure/伸展树/" itemprop="url">伸展树</a></h1>
+                <a class="post-title-link" href="/2016/05/05/ProgramingLanguage/数组不等于指针/" itemprop="url">数组不等于指针</a></h1>
         
 
         <div class="post-meta">
@@ -653,8 +655,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-01-02T00:00:00+08:00">
-                2014-01-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-05T00:00:00+08:00">
+                2016-05-05
               </time>
             
 
@@ -676,8 +678,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
-                    <span itemprop="name">数据结构与算法</span>
+                  <a href="/categories/C语言/" itemprop="url" rel="index">
+                    <span itemprop="name">C语言</span>
                   </a>
                 </span>
 
@@ -707,7 +709,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  675
+                  852
                 </span>
               
 
@@ -723,7 +725,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  3
                 </span>
               
             </div>
@@ -746,14 +748,11 @@
       
         
           
-          伸展树是一种相对简单的树结构，它保证从空树开始任意M次对树的操作最多花费O(MlogN)的时间。
-这种保证并不能排除某次操作的时间为O(N)的可能，但是能保证每次操作平均的时间为O（logN）。对于一系列的操作，有的可能花费时间多些，有的少些。
-伸展树基于这样的一个事实：
-对于时间花费为O(N}的二
+          引论C语言中有一种说法叫做“指针和数组等价”，在很多情况下，我们感觉确实如此，比如说对数组的引用总是可以写成对指针的引用，指针和数组名在一定意义上可以互用。但是作为一门高度精炼的语言（纯属个人感觉），如果指针和数组真的等价的话，那么c语言就真真没有必要设计这样两个名词了。看下面的例子：1234//f
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2014/01/02/DataStructure/伸展树/#more" rel="contents">
+            <a class="btn" href="/2016/05/05/ProgramingLanguage/数组不等于指针/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -804,7 +803,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/12/22/DataStructure/AVL树/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/09/22/DataStructure/随机化算法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -823,7 +822,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2013/12/22/DataStructure/AVL树/" itemprop="url">AVL树</a></h1>
+                <a class="post-title-link" href="/2014/09/22/DataStructure/随机化算法/" itemprop="url">随机化算法</a></h1>
         
 
         <div class="post-meta">
@@ -835,8 +834,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-12-22T00:00:00+08:00">
-                2013-12-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-09-22T00:00:00+08:00">
+                2014-09-22
               </time>
             
 
@@ -889,7 +888,186 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,320
+                  928
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          引论随机是很有用的一个东西，先不去管什么随机化算法，至少随机数是个很好的东西，就像掷骰子，总可以帮组我们决定一些犹豫不决的并且无关紧要的事。在机器学习中，一般我们都是要在整个数据集中随机抽取一定的数据做训练，另外一些做测试，这样结果才能有说服力，这里也将用到了随机数。因此下面我们首先来讲解一下伪随机
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2014/09/22/DataStructure/随机化算法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/09/02/DataStructure/字符串的模式匹配/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2014/09/02/DataStructure/字符串的模式匹配/" itemprop="url">字符串的模式匹配</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-09-02T00:00:00+08:00">
+                2014-09-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,350
                 </span>
               
 
@@ -928,11 +1106,13 @@
       
         
           
-          前面介绍了二叉查找树，二叉查找树的平均时间复杂度为O(logN),是相当低的，因此是一种非常优异的模型。但是这只是对一个随机输入的二叉查找树有效（平衡的二叉树）。当我们进行一定次数的插入（或删除）后，可能会导致二叉树不平衡，甚至退化成链表，这样会重新使时间复杂度变为O(logN).因此，引入AVL树
+          引论这里主要想讨论一下字符串的模式匹配，主要是KMP算法。
+假设我们有一个字符串S，称之为原始串；另一个字符串T，称之为模式串；字符串匹配是指找出原始串S中是否含有模式串T，如果含有，则返回S中第一个匹配项的位置；
+例如S = a b c a b c a b d e f；T = a b c a b 
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2013/12/22/DataStructure/AVL树/#more" rel="contents">
+            <a class="btn" href="/2014/09/02/DataStructure/字符串的模式匹配/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -983,7 +1163,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/12/12/DataStructure/B树/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/05/29/DataStructure/Huffman编码/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -1002,7 +1182,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2013/12/12/DataStructure/B树/" itemprop="url">B树</a></h1>
+                <a class="post-title-link" href="/2014/05/29/DataStructure/Huffman编码/" itemprop="url">Huffman编码</a></h1>
         
 
         <div class="post-meta">
@@ -1014,8 +1194,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-12-12T00:00:00+08:00">
-                2013-12-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-05-29T00:00:00+08:00">
+                2014-05-29
               </time>
             
 
@@ -1068,7 +1248,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  471
+                  468
                 </span>
               
 
@@ -1107,18 +1287,12 @@
       
         
           
-          定义大多数的查找树都是二叉树，这个可以理解，因为二叉树相对来说比较简单，易行，用递归方式编程也较易实现。这里介绍一种非二叉的树，即B树。
-B数的性质一个M阶的B树，应该具有以下的性质：
-
-根节点要么是叶子，要么具有2-M个子节点
-
-非叶节点（根节点除外）具有[M/2]-M个子节点
-
-所有的叶节点具有
+          问题引入Huffman 编码也也是贪婪算法的一种应用，它在文件压缩中有较强的应用。
+对于计算机来说，它只认识两个数0，1 。而对于字符，计算机需要对其进行二进制编码来表示。假设对于128个字符，常规的编码方式利用8个位来表示（其中1位为奇偶校验位）。假设我们的文件只有7种不同的字符组成，那么我们可以
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2013/12/12/DataStructure/B树/#more" rel="contents">
+            <a class="btn" href="/2014/05/29/DataStructure/Huffman编码/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1169,7 +1343,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/12/02/DataStructure/二叉树/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/04/14/DataStructure/最短路径算法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -1188,7 +1362,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2013/12/02/DataStructure/二叉树/" itemprop="url">二叉树</a></h1>
+                <a class="post-title-link" href="/2014/04/14/DataStructure/最短路径算法/" itemprop="url">最短路径算法</a></h1>
         
 
         <div class="post-meta">
@@ -1200,8 +1374,8 @@ B数的性质一个M阶的B树，应该具有以下的性质：
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-12-02T00:00:00+08:00">
-                2013-12-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-04-14T00:00:00+08:00">
+                2014-04-14
               </time>
             
 
@@ -1254,7 +1428,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,127
+                  1,986
                 </span>
               
 
@@ -1270,7 +1444,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  8
                 </span>
               
             </div>
@@ -1293,16 +1467,20 @@ B数的性质一个M阶的B树，应该具有以下的性质：
       
         
           
-          首先回顾一些树的基本概念：根节点（root）：没有父亲的结点。
-树叶（leaf）：没有儿子的结点。
-路径（path）：是一个结点到另一个结点的序列表示，这些结点都应该是父子关系。
-路径的长（length）: 路径上边的条数。为序列个数减一。
-深度（depth）：根结点到某一结点的唯一路径的长。
-高（
+          引论正如名字所言，最短路径算法就是为了找到一个图中，某一个点到其他点的最短路径或者是距离。
+最短路径算法一般分为四种情况：
+
+无权重的最短路径
+有权重的最短路径
+边的权重为负的图
+无圈的图
+
+ps：上面的情况针对的都是有向图。
+无权重的最短路径下图是一个例子：假设我们取点v3作为初始点，计算点v3到
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2013/12/02/DataStructure/二叉树/#more" rel="contents">
+            <a class="btn" href="/2014/04/14/DataStructure/最短路径算法/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1353,7 +1531,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/11/29/DataStructure/递归/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/04/03/DataStructure/网络流/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -1372,7 +1550,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2013/11/29/DataStructure/递归/" itemprop="url">递归</a></h1>
+                <a class="post-title-link" href="/2014/04/03/DataStructure/网络流/" itemprop="url">网络流</a></h1>
         
 
         <div class="post-meta">
@@ -1384,8 +1562,8 @@ B数的性质一个M阶的B树，应该具有以下的性质：
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-11-29T00:00:00+08:00">
-                2013-11-29
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-04-03T00:00:00+08:00">
+                2014-04-03
               </time>
             
 
@@ -1438,7 +1616,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  573
+                  821
                 </span>
               
 
@@ -1454,7 +1632,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  3
                 </span>
               
             </div>
@@ -1477,11 +1655,12 @@ B数的性质一个M阶的B树，应该具有以下的性质：
       
         
           
-          引论递归的定义是：A function defined in terms of itself is called recursive. 也就是说一个函数的定义需要用到这个函数的本身。递归是一个很奇妙的思想，从上面的定义看去，递归貌似一个死循环，这个当然是不对的，递归总会有一个结束的条件，也就是基准情
+          引论网络流问题是有实际应用来源的。个人觉得网络流应该是网络流量的意思，它限制了一个网络的最大流量问题。举个例子，对于一个给水网络，每条管道的最大流量是确定的，这就要求我们解决整个给水网络的流量问题；或者是交通网络，可以对每条道路的交通流量进行计算，使其不能超多最大的道路流量。
+数字模型对于一个网络流
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2013/11/29/DataStructure/递归/#more" rel="contents">
+            <a class="btn" href="/2014/04/03/DataStructure/网络流/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1532,7 +1711,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/11/22/DataStructure/队列/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/03/24/DataStructure/拓扑排序/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -1551,7 +1730,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2013/11/22/DataStructure/队列/" itemprop="url">队列</a></h1>
+                <a class="post-title-link" href="/2014/03/24/DataStructure/拓扑排序/" itemprop="url">拓扑排序</a></h1>
         
 
         <div class="post-meta">
@@ -1563,8 +1742,8 @@ B数的性质一个M阶的B树，应该具有以下的性质：
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-11-22T00:00:00+08:00">
-                2013-11-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-03-24T00:00:00+08:00">
+                2014-03-24
               </time>
             
 
@@ -1617,7 +1796,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  375
+                  911
                 </span>
               
 
@@ -1633,7 +1812,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  4
                 </span>
               
             </div>
@@ -1656,14 +1835,14 @@ B数的性质一个M阶的B树，应该具有以下的性质：
       
         
           
-          队列与堆栈不同，队列是一边进，另一边出的表，如下图所示：
-队列的主要操作也比较少，主要的有入队，出队，检查队列是否为空，
-队列一般会有两个标志位，即Front和Rear，表示对头和队尾，通过对这两个标志位进行操作，可以对队列进行适当的操作。
-数组形式声明与实现1234567891011struct 
+          拓扑排序拓扑排序是对有向无圈图的顶点的一种排序，这个排序的结果是如果存在一条vi到vj的路径，那么排序中vi在vj的前面。
+下图是一个有向无圈图的例子：
+
+在这个有向无圈图中，1,6,5,7,4,2,3；1,6,5,7,2,4,3；这两组都是拓扑排序，我们可以看到这两种排序都满足拓扑排序的要求，比如
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2013/11/22/DataStructure/队列/#more" rel="contents">
+            <a class="btn" href="/2014/03/24/DataStructure/拓扑排序/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1714,7 +1893,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/11/12/DataStructure/栈/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/03/24/DataStructure/欧拉回路/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="changyuan">
@@ -1733,7 +1912,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2013/11/12/DataStructure/栈/" itemprop="url">栈</a></h1>
+                <a class="post-title-link" href="/2014/03/24/DataStructure/欧拉回路/" itemprop="url">欧拉回路</a></h1>
         
 
         <div class="post-meta">
@@ -1745,8 +1924,8 @@ B数的性质一个M阶的B树，应该具有以下的性质：
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-11-12T00:00:00+08:00">
-                2013-11-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-03-24T00:00:00+08:00">
+                2014-03-24
               </time>
             
 
@@ -1799,7 +1978,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  532
+                  859
                 </span>
               
 
@@ -1815,7 +1994,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  3
                 </span>
               
             </div>
@@ -1838,193 +2017,14 @@ B数的性质一个M阶的B树，应该具有以下的性质：
       
         
           
-          栈就是插入和删除都在一个方向的一种表的数据结构，也就是所谓的“先进后出”，其实就像一个瓶子，只有一面是能够打开的，要想拿出最里面的东西，就要先吧上面的东西移开。下图形象的显示了什么是栈。其实这个图说明了一切
+          欧拉回路，是一个图问题，也就是说假设我们拿着一只笔，在纸上画一个图，在这个期间笔不能离开纸，同时每一个边只能画一次。也就是人们常说的一笔完成。如下面例子所示：
 
-&lt;注意图中的SP与下面程序中的S不是一个东西，SP是栈指针，它指向栈顶元素，而S是为
+图a，图b可以一笔画出来，而图c不可以。欧拉回路就是研究这个问题：什么样的图能够一笔画成。
+我先先来分析上面的图a，可以发现对于图a，虽然
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2013/11/12/DataStructure/栈/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/11/10/ProgramingLanguage/读书笔记之C Traps and Pitfalls/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="changyuan">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="axis tech zone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2013/11/10/ProgramingLanguage/读书笔记之C Traps and Pitfalls/" itemprop="url">读书笔记之C Traps and Pitfalls</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-11-10T00:00:00+08:00">
-                2013-11-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
-                    <span itemprop="name">读书笔记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  5,134
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  19
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          第一章：Lexical Pitfalls主要讲了一些词汇层上的内容，比如说‘=’和‘==’是不一样的（这个当然），只不过在编程的时候比较容易写错，同理还有‘&amp;&amp;’和‘&amp;’，‘||’和‘|’。
-不过书中提到了一个比较有意思的问题：c编译器是怎样区分token的？，举个例子，a—
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2013/11/10/ProgramingLanguage/读书笔记之C Traps and Pitfalls/#more" rel="contents">
+            <a class="btn" href="/2014/03/24/DataStructure/欧拉回路/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -2066,7 +2066,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2114,7 +2114,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">153</span>
+                  <span class="site-state-item-count">176</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2125,7 +2125,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2136,7 +2136,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-count">45</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2204,7 +2204,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">173.9k</span>
+    <span title="Site words total count">201.9k</span>
   
 </div>
 
@@ -2233,7 +2233,7 @@ B数的性质一个M阶的B树，应该具有以下的性质：
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共173.9k字</span>
+  <span class="post-count">博客全站共201.9k字</span>
 </div>
         
 <div class="busuanzi-count">

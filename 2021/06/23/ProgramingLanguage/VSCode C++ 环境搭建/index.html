@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C++,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="安装vscode以及相应的扩展首先在 Visual Studio Code on macOS这里下载vscode，然后安装，随后在vscode里面安装c++的插件，如下所示：  安装clang在终端中确保clang已经安装好，可以用如下的命令查询 1clang --version 12345changyuandeMacBook-Pro:RayTacingDemo changyuanchen$ cl">
+<meta name="keywords" content="C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VSCode C++ 环境搭建">
+<meta property="og:url" content="http://yoursite.com/2021/06/23/ProgramingLanguage/VSCode C++ 环境搭建/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="安装vscode以及相应的扩展首先在 Visual Studio Code on macOS这里下载vscode，然后安装，随后在vscode里面安装c++的插件，如下所示：  安装clang在终端中确保clang已经安装好，可以用如下的命令查询 1clang --version 12345changyuandeMacBook-Pro:RayTacingDemo changyuanchen$ cl">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/programming/image-20220429151003671.png">
+<meta property="og:image" content="http://yoursite.com/images/programming/image-20220429152959646.png">
+<meta property="og:image" content="http://yoursite.com/images/programming/image-20220429154635511.png">
+<meta property="og:image" content="http://yoursite.com/2021/06/23/ProgramingLanguage/VSCode%20C++%20环境搭建/images/programming/default-build-task.png">
+<meta property="og:image" content="http://yoursite.com/images/programming/image-20220429161814132.png">
+<meta property="og:image" content="http://yoursite.com/images/programming/image-20220429161742772.png">
+<meta property="og:image" content="http://yoursite.com/images/programming/image-20220429170325084.png">
+<meta property="og:image" content="http://yoursite.com/images/programming/image-20220429172304742.png">
+<meta property="og:image" content="http://yoursite.com/images/programming/image-20220429172325176.png">
+<meta property="og:updated_time" content="2022-07-10T07:21:13.519Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VSCode C++ 环境搭建">
+<meta name="twitter:description" content="安装vscode以及相应的扩展首先在 Visual Studio Code on macOS这里下载vscode，然后安装，随后在vscode里面安装c++的插件，如下所示：  安装clang在终端中确保clang已经安装好，可以用如下的命令查询 1clang --version 12345changyuandeMacBook-Pro:RayTacingDemo changyuanchen$ cl">
+<meta name="twitter:image" content="http://yoursite.com/images/programming/image-20220429151003671.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/06/23/ProgramingLanguage/VSCode C++ 环境搭建/">
+
+
+
+
+
+  <title>VSCode C++ 环境搭建 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/23/ProgramingLanguage/VSCode C++ 环境搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">VSCode C++ 环境搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-23T00:00:00+08:00">
+                2021-06-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/06/23/ProgramingLanguage/VSCode C++ 环境搭建/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2021/06/23/ProgramingLanguage/VSCode C++ 环境搭建/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,241
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="安装vscode以及相应的扩展"><a href="#安装vscode以及相应的扩展" class="headerlink" title="安装vscode以及相应的扩展"></a>安装vscode以及相应的扩展</h1><p>首先在 <a href="https://code.visualstudio.com/docs/setup/mac" target="_blank" rel="noopener">Visual Studio Code on macOS</a>这里下载vscode，然后安装，随后在vscode里面安装c++的插件，如下所示：</p>
+<p><img src="/images/programming/image-20220429151003671.png" alt="image-20220429151003671"></p>
+<h1 id="安装clang"><a href="#安装clang" class="headerlink" title="安装clang"></a>安装clang</h1><p>在终端中确保clang已经安装好，可以用如下的命令查询</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang --version</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">changyuandeMacBook-Pro:RayTacingDemo changyuanchen$ clang --version</span><br><span class="line">Apple clang version 12.0.5 (clang-1205.0.22.11)</span><br><span class="line">Target: x86_64-apple-darwin20.6.0</span><br><span class="line">Thread model: posix</span><br><span class="line">InstalledDir: /Library/Developer/CommandLineTools/usr/bin</span><br></pre></td></tr></table></figure>
+<p>如果没有安装，可以用如下的命令安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xcode-select --install</span><br></pre></td></tr></table></figure>
+<h1 id="创建基础工程"><a href="#创建基础工程" class="headerlink" title="创建基础工程"></a>创建基础工程</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir projects</span><br><span class="line">cd projects</span><br><span class="line">mkdir helloworld</span><br><span class="line">cd helloworld</span><br><span class="line">code .</span><br></pre></td></tr></table></figure>
+<p>在运行code命令的时候，有可能会找不到命令，如下所示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">changyuandeMacBook-Pro:helloWorld changyuanchen$ code .</span><br><span class="line">-bash: code: command not found</span><br></pre></td></tr></table></figure>
+<p>这是因为我们想通过命令直接打开vscode项目,用的命令是 code ./,不过你得先安装code，要执行下面的操作：<br>安装code：打开VSCode –&gt; command+shift+p –&gt; 输入shell command –&gt; 点击提示Shell Command: Install ‘code’ command in PATH运行，成功后会有如下的截图提示</p>
+<p><img src="/images/programming/image-20220429152959646.png" alt="image-20220429152959646"></p>
+<p>这样我们就能够运行code命令了。</p>
+<p>运行命令后会拉起一个vscode工程，这个目录就是vscode的workspace。</p>
+<h2 id="在文件夹helloworld下创建c-文件"><a href="#在文件夹helloworld下创建c-文件" class="headerlink" title="在文件夹helloworld下创建c++文件"></a>在文件夹helloworld下创建c++文件</h2><p><img src="/images/programming/image-20220429154635511.png" alt="image-20220429154635511"></p>
+<h2 id="开始配置编译"><a href="#开始配置编译" class="headerlink" title="开始配置编译"></a>开始配置编译</h2><p>在vscode中要开始编译需要在.vscode目录下创建task.json文件，具体如下所示：</p>
+<p><strong>Terminal</strong> &gt; <strong>Configure Default Build Task</strong>(快捷键为shift+command+P 然后搜configure default build task)</p>
+<p>然后选择<strong>C/C++ clang++ build active file</strong>来编译当前的文件</p>
+<p><img src="images/programming/default-build-task.png" alt="Build task"></p>
+<p>随后他会自动生成task.json文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	&quot;version&quot;: &quot;2.0.0&quot;,</span><br><span class="line">	&quot;tasks&quot;: [</span><br><span class="line">		&#123;</span><br><span class="line">			&quot;type&quot;: &quot;cppbuild&quot;,</span><br><span class="line">			&quot;label&quot;: &quot;C/C++: clang++ 生成活动文件&quot;,</span><br><span class="line">			&quot;command&quot;: &quot;/usr/bin/clang++&quot;,  // 执行的编译器</span><br><span class="line">			&quot;args&quot;: [</span><br><span class="line">				&quot;-fdiagnostics-color=always&quot;,</span><br><span class="line">				&quot;-g&quot;,</span><br><span class="line">				&quot;$&#123;file&#125;&quot;,</span><br><span class="line">				&quot;-o&quot;,</span><br><span class="line">				&quot;$&#123;fileDirname&#125;/$&#123;fileBasenameNoExtension&#125;&quot;</span><br><span class="line">			],</span><br><span class="line">			&quot;options&quot;: &#123;</span><br><span class="line">				&quot;cwd&quot;: &quot;$&#123;fileDirname&#125;&quot;</span><br><span class="line">			&#125;,</span><br><span class="line">			&quot;problemMatcher&quot;: [</span><br><span class="line">				&quot;$gcc&quot;</span><br><span class="line">			],</span><br><span class="line">			&quot;group&quot;: &#123;</span><br><span class="line">				&quot;kind&quot;: &quot;build&quot;,</span><br><span class="line">				&quot;isDefault&quot;: true</span><br><span class="line">			&#125;,</span><br><span class="line">			&quot;detail&quot;: &quot;编译器: /usr/bin/clang++&quot;</span><br><span class="line">		&#125;</span><br><span class="line">	]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里解释下重要参数的意义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;command&quot;: &quot;/usr/bin/clang++&quot;,  // 执行的编译器</span><br><span class="line">&quot;args&quot;:  // 传递给编译器执行的命令参数</span><br><span class="line">&quot;cwd&quot;:  // current working directory， 这个需要设置为当前cpp文件所在的文件夹位置</span><br></pre></td></tr></table></figure>
+<p>这里面是一些默认的配置，我们需要用下面的内容将其替换</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  // See https://go.microsoft.com/fwlink/?LinkId=733558</span><br><span class="line">  // for the documentation about the tasks.json format</span><br><span class="line">  &quot;version&quot;: &quot;2.0.0&quot;,</span><br><span class="line">  &quot;tasks&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;type&quot;: &quot;shell&quot;,</span><br><span class="line">      &quot;label&quot;: &quot;clang++ build active file&quot;,</span><br><span class="line">      &quot;command&quot;: &quot;/usr/bin/clang++&quot;,</span><br><span class="line">      &quot;args&quot;: [</span><br><span class="line">        &quot;-std=c++17&quot;,</span><br><span class="line">        &quot;-stdlib=libc++&quot;,</span><br><span class="line">        &quot;-g&quot;,</span><br><span class="line">        &quot;$&#123;file&#125;&quot;,</span><br><span class="line">        &quot;-o&quot;,</span><br><span class="line">        &quot;$&#123;fileDirname&#125;/$&#123;fileBasenameNoExtension&#125;&quot;</span><br><span class="line">      ],</span><br><span class="line">      &quot;options&quot;: &#123;</span><br><span class="line">        &quot;cwd&quot;: &quot;$&#123;workspaceFolder&#125;&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;problemMatcher&quot;: [&quot;$gcc&quot;],</span><br><span class="line">      &quot;group&quot;: &#123;</span><br><span class="line">        &quot;kind&quot;: &quot;build&quot;,</span><br><span class="line">        &quot;isDefault&quot;: true</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>替换了以后，就开始执行编译，可以直接用快捷键shift+command+B执行，或者<strong>Terminal</strong> &gt; <strong>Run Build Task</strong>执行</p>
+<p>如果成功的话，会在terminal中显示如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; Executing task: /usr/bin/clang++ -std=c++17 -stdlib=libc++ -g /Users/changyuanchen/Code/cppTestCode/vscodeEngineTest/helloWorld/main.cpp -o /Users/changyuanchen/Code/cppTestCode/vscodeEngineTest/helloWorld/main &lt;</span><br><span class="line"></span><br><span class="line">Terminal will be reused by tasks, press any key to close it.</span><br></pre></td></tr></table></figure>
+<p>然后我们在目录下可以看到生成了一个可执行文件main</p>
+<p><img src="/images/programming/image-20220429161814132.png" alt="image-20220429161814132"></p>
+<p>我们也可以点击+号，创建一个新的terminal，然后执行可执行文件</p>
+<p><img src="/images/programming/image-20220429161742772.png" alt="image-20220429161742772"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">changyuandeMacBook-Pro:helloWorld changyuanchen$ ./main</span><br><span class="line">hello world</span><br></pre></td></tr></table></figure>
+<p>接下来继续修正task.json文件</p>
+<ul>
+<li>把<code>${file}</code>.修改为<code>&quot;${workspaceFolder}/*.cpp&quot;</code> 这样工程就可以编译所有的cpp文件了，而不是只能编译这一个文件</li>
+<li>把输出文件的名字可以通过修改 <code>&quot;${fileDirname}/${fileBasenameNoExtension}&quot;</code> 来硬编码成指定的名字 （<code>&quot;${workspaceFolder}/myProgram.out&quot;</code>).</li>
+</ul>
+<h2 id="对工程进行debug"><a href="#对工程进行debug" class="headerlink" title="对工程进行debug"></a>对工程进行debug</h2><p>对工程进行debug需要配置launch.json文件，这样才能利用LLDB debugger来debug工程</p>
+<p><strong>Run</strong> &gt; <strong>Add Configuration</strong></p>
+<p>然后选择：</p>
+<p><img src="/images/programming/image-20220429170325084.png" alt="image-20220429170325084"></p>
+<p>这样会生成一个launch.json文件，然后我们需要对其做如下的配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  // Use IntelliSense to learn about possible attributes.</span><br><span class="line">  // Hover to view descriptions of existing attributes.</span><br><span class="line">  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387</span><br><span class="line">  &quot;version&quot;: &quot;0.2.0&quot;,</span><br><span class="line">  &quot;configurations&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;name&quot;: &quot;clang++ - Build and debug active file&quot;,</span><br><span class="line">      &quot;type&quot;: &quot;cppdbg&quot;,</span><br><span class="line">      &quot;request&quot;: &quot;launch&quot;,</span><br><span class="line">      &quot;program&quot;: &quot;$&#123;fileDirname&#125;/$&#123;fileBasenameNoExtension&#125;&quot;,</span><br><span class="line">      &quot;args&quot;: [],</span><br><span class="line">      &quot;stopAtEntry&quot;: true,</span><br><span class="line">      &quot;cwd&quot;: &quot;$&#123;workspaceFolder&#125;&quot;,</span><br><span class="line">      &quot;environment&quot;: [],</span><br><span class="line">      &quot;externalConsole&quot;: false,</span><br><span class="line">      &quot;MIMode&quot;: &quot;lldb&quot;,</span><br><span class="line">      &quot;preLaunchTask&quot;: &quot;clang++ build active file&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面我们来看下具体的参数解析：</p>
+<ul>
+<li><code>program</code>是想要debug的程序，这个是我们在task.json中的-o的输出保持一致</li>
+<li><code>preLaunchTask</code> 要跟 <code>tasks.json</code> 中的 <code>label</code> 的内容保持一致</li>
+<li><code>stopAtEntry</code> 设置为 <code>true</code> 则意味着在debug的时候会在main函数处设置断点停止，设置为false则不会如此。</li>
+</ul>
+<h2 id="c-扩展设置"><a href="#c-扩展设置" class="headerlink" title="c++扩展设置"></a>c++扩展设置</h2><p>为了对c++进行更多的扩展，我们需要设置 <code>c_cpp_properties.json</code>文件。</p>
+<p>执行shitft+command+P，然后选择<strong>C/C++: Edit Configurations (UI)</strong> </p>
+<p>会生成 <code>c_cpp_properties.json</code>文件，以及开启UI的设置层，可以在这里进行设置。</p>
+<p>这里面比较重要的设置如下：</p>
+<p><img src="/images/programming/image-20220429172304742.png" alt="image-20220429172304742"></p>
+<p><img src="/images/programming/image-20220429172325176.png" alt="image-20220429172325176"></p>
+<p>生成的文件如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;configurations&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;Mac&quot;,</span><br><span class="line">            &quot;includePath&quot;: [</span><br><span class="line">                &quot;$&#123;workspaceFolder&#125;/**&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;defines&quot;: [],</span><br><span class="line">            &quot;macFrameworkPath&quot;: [</span><br><span class="line">                &quot;/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/System/Library/Frameworks&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;compilerPath&quot;: &quot;/usr/bin/clang&quot;,</span><br><span class="line">            &quot;cStandard&quot;: &quot;c17&quot;,</span><br><span class="line">            &quot;cppStandard&quot;: &quot;c++11&quot;,</span><br><span class="line">            &quot;intelliSenseMode&quot;: &quot;macos-clang-x64&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;version&quot;: 4</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>来自官网的指南yyds</p>
+<p><a href="https://code.visualstudio.com/docs/cpp/config-clang-mac" target="_blank" rel="noopener">https://code.visualstudio.com/docs/cpp/config-clang-mac</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/23/ComputerGraphic/渲染方程/" rel="next" title="渲染方程">
+                <i class="fa fa-chevron-left"></i> 渲染方程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/07/15/GPUGem/GPU并行架构模型/" rel="prev" title="GPU并行架构模型">
+                GPU并行架构模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">176</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装vscode以及相应的扩展"><span class="nav-number">1.</span> <span class="nav-text">安装vscode以及相应的扩展</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装clang"><span class="nav-number">2.</span> <span class="nav-text">安装clang</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建基础工程"><span class="nav-number">3.</span> <span class="nav-text">创建基础工程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#在文件夹helloworld下创建c-文件"><span class="nav-number">3.1.</span> <span class="nav-text">在文件夹helloworld下创建c++文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始配置编译"><span class="nav-number">3.2.</span> <span class="nav-text">开始配置编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对工程进行debug"><span class="nav-number">3.3.</span> <span class="nav-text">对工程进行debug</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c-扩展设置"><span class="nav-number">3.4.</span> <span class="nav-text">c++扩展设置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">201.9k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共201.9k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'changyuanchn',
+            repo: 'https://github.com/changyuanchn/changyuanchn.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '82f82fd4b3c71f66c261736a9aca7151809f2c0e',
+            
+                client_id: 'b260167e7c41f29d0da7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
