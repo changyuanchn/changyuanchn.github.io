@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="架构,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="架构视图架构视图是对某一视角或某一点上看到的系统所作的简化描述，描述中涵盖系统某一特定方面，而省略了与此方面无关的实体。 常见的有4+1视图 4+1视图 多视图间信息流动，支撑视图间的一致性  Logical View 面向系统逻辑分析与设计，描述系统逻辑结构的视图 Development View 面向系统开发以及软件管理，描述系统代码机构，构建结构的视图 Deployment View 面向系">
+<meta name="keywords" content="架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="软件视图">
+<meta property="og:url" content="http://yoursite.com/2022/07/07/SoftwareEngine/架构视图/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="架构视图架构视图是对某一视角或某一点上看到的系统所作的简化描述，描述中涵盖系统某一特定方面，而省略了与此方面无关的实体。 常见的有4+1视图 4+1视图 多视图间信息流动，支撑视图间的一致性  Logical View 面向系统逻辑分析与设计，描述系统逻辑结构的视图 Development View 面向系统开发以及软件管理，描述系统代码机构，构建结构的视图 Deployment View 面向系">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/softwareEngine/view.jpg">
+<meta property="og:image" content="http://yoursite.com/images/softwareEngine/view1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/softwareEngine/view2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/softwareEngine/view3.jpg">
+<meta property="og:image" content="http://yoursite.com/images/softwareEngine/view4.jpg">
+<meta property="og:image" content="http://yoursite.com/images/softwareEngine/view5.jpg">
+<meta property="og:updated_time" content="2022-07-16T14:38:27.898Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="软件视图">
+<meta name="twitter:description" content="架构视图架构视图是对某一视角或某一点上看到的系统所作的简化描述，描述中涵盖系统某一特定方面，而省略了与此方面无关的实体。 常见的有4+1视图 4+1视图 多视图间信息流动，支撑视图间的一致性  Logical View 面向系统逻辑分析与设计，描述系统逻辑结构的视图 Development View 面向系统开发以及软件管理，描述系统代码机构，构建结构的视图 Deployment View 面向系">
+<meta name="twitter:image" content="http://yoursite.com/images/softwareEngine/view.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/07/07/SoftwareEngine/架构视图/">
+
+
+
+
+
+  <title>软件视图 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/07/07/SoftwareEngine/架构视图/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">软件视图</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-07-07T12:30:00+08:00">
+                2022-07-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/软件工程/" itemprop="url" rel="index">
+                    <span itemprop="name">软件工程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/07/07/SoftwareEngine/架构视图/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2022/07/07/SoftwareEngine/架构视图/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,748
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="架构视图"><a href="#架构视图" class="headerlink" title="架构视图"></a>架构视图</h1><p>架构视图是对某一视角或某一点上看到的系统所作的简化描述，描述中涵盖系统某一特定方面，而省略了与此方面无关的实体。</p>
+<p>常见的有4+1视图</p>
+<h1 id="4-1视图"><a href="#4-1视图" class="headerlink" title="4+1视图"></a>4+1视图</h1><p><img src="/images/softwareEngine/view.jpg" alt="view"></p>
+<p>多视图间信息流动，支撑视图间的一致性</p>
+<ul>
+<li>Logical View 面向系统逻辑分析与设计，描述系统逻辑结构的视图</li>
+<li>Development View 面向系统开发以及软件管理，描述系统代码机构，构建结构的视图</li>
+<li>Deployment View 面向系统部署，描述系统交付，安装，部署的视图</li>
+<li>Process View 面向系统运行，描述系统启动过程，运行期交互的视图</li>
+<li>UserCase View 以用例作为驱动元素，驱动和验证其他四个视图的设计。用例视图不增加设计元素，仅增加用例作为输入，因此是+1视图。</li>
+</ul>
+<h1 id="视图与质量属性的关系"><a href="#视图与质量属性的关系" class="headerlink" title="视图与质量属性的关系"></a>视图与质量属性的关系</h1><p>质量属性贯穿各视图的另一个维度，直接决定各个视图中的元素和关系设计</p>
+<h1 id="用例视图"><a href="#用例视图" class="headerlink" title="用例视图"></a>用例视图</h1><p>用例视图描述系统和外部环境之间的关系和交互，并显式定义系统范围，职责，边界以关键用例交互。</p>
+<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><ul>
+<li>理解目标系统所处的上下文语境的结构、业务及其动态特性</li>
+<li>描述系统上下文，确定系统和外部的边界以及外部实体的关系</li>
+<li>描述关键场景和用例，驱动和验证其他4个视图的设计</li>
+</ul>
+<h2 id="建模方法"><a href="#建模方法" class="headerlink" title="建模方法"></a>建模方法</h2><ul>
+<li>模型：系统上下文模型，系统交互场景模型</li>
+<li>元素：系统，外部实体（其他系统或人）</li>
+<li>关系：外部接口，外部依赖关系</li>
+</ul>
+<h2 id="系统上下文模型"><a href="#系统上下文模型" class="headerlink" title="系统上下文模型"></a>系统上下文模型</h2><p>要点：</p>
+<ul>
+<li>系统本身及外部实体均为黑盒，隐藏内部结构</li>
+<li>关注系统及外部实体的职责（服务与数据），质量属性</li>
+<li>标识系统与外部实体间的接口，职责（提供或使用数据，服务，事件等），质量属性，依赖关系等</li>
+<li>建议画出组织边界</li>
+<li>上下文模型中需要完整描述系统对外的接口。包括物理哦接口，逻辑给口，协议栈等。可基于此开展完整的暴露面分析和针对暴露面的威胁分析。</li>
+</ul>
+<p><img src="/images/softwareEngine/view1.jpg" alt="view1"></p>
+<h2 id="系统用例交互场景"><a href="#系统用例交互场景" class="headerlink" title="系统用例交互场景"></a>系统用例交互场景</h2><p>要点：</p>
+<ul>
+<li>通过系统关键用例界定系统边界和行为</li>
+<li>对于系统与外部实体之间的关键用例和复杂交互关系，可以采用序列图对交互场景进行建模，一边描述隐含的需求和约束，帮助系统验证</li>
+</ul>
+<p><img src="/images/softwareEngine/view2.jpg" alt="view2"></p>
+<p><img src="/images/softwareEngine/view3.jpg" alt="view3"></p>
+<h1 id="逻辑视图"><a href="#逻辑视图" class="headerlink" title="逻辑视图"></a>逻辑视图</h1><p>逻辑视图用于面向设计人员描述系统分解及技术方案</p>
+<ul>
+<li>逻辑视图描述系统的逻辑分解，以及分解出的逻辑元素间的关系</li>
+<li>逻辑模型划分的服务，组件等元素是后续其他视图的基准，必须与后续各视图的相应元素如开发视图中的实际代码仓，目录，以及编译构建工程，部署视图的交付单元，可部署单元等建立对应关系</li>
+<li>可基于逻辑视图开展威胁分析</li>
+<li>在逻辑视图部件划分时，通常会有用于描述业务功能的业务组件，以及作为技术支撑的技术部件（如database，Cache，中间件），对于这两种部件应采用不同的模型表述，以便支持业务与技术的解耦以及技术部件的替换<ul>
+<li>通过逻辑模型和数据模型描述业务功能，其中不包括技术元素，以及各部件的具体实现技术方案。逻辑模型和数据模型在本领域内重用</li>
+<li>通过技术模型描述具体的技术方案和技术选型，包括支撑性的技术元素</li>
+</ul>
+</li>
+</ul>
+<h2 id="逻辑视图的基本元素"><a href="#逻辑视图的基本元素" class="headerlink" title="逻辑视图的基本元素"></a>逻辑视图的基本元素</h2><ul>
+<li>逻辑视图可分层分级表达，如先分成子系统/层/面或者域/子域等，再继续划分</li>
+<li>系统划分的最小功能元素，根据不同产品采用的技术不同<ul>
+<li>对于云化/微服务架构产品，建议可最终划分到服务/微服务，对于微服务内的组件/模块划分，是否再架构设计中呈现，可由团队自行决定</li>
+<li>对于组件化/模块化架构的产品，建议最终划分到组件，对于开源/第三方组件，可考虑跟踪到模块。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/softwareEngine/view4.jpg" alt="view4"></p>
+<p>最细粒度要能跟代码对应上。</p>
+<h2 id="逻辑模型-—-系统分解"><a href="#逻辑模型-—-系统分解" class="headerlink" title="逻辑模型 — 系统分解"></a>逻辑模型 — 系统分解</h2><ul>
+<li>系统功能分解（为什么要分解？）<ul>
+<li>理解业务</li>
+<li>团队划分</li>
+<li>高内聚，低耦合</li>
+</ul>
+</li>
+<li>逻辑 vs 技术实现</li>
+<li>逻辑模型与实现技术无关</li>
+</ul>
+<p>逻辑模型 — 需求出发，按功能直接分解？</p>
+<ul>
+<li>流程图分解<ul>
+<li>按照特性、功能进行初步分解</li>
+<li>按useCase的逻辑步骤分解成服务（或者软件模块）</li>
+</ul>
+</li>
+</ul>
+<h3 id="如何按照功能分解的方式设计一辆车"><a href="#如何按照功能分解的方式设计一辆车" class="headerlink" title="如何按照功能分解的方式设计一辆车"></a>如何按照功能分解的方式设计一辆车</h3><p><img src="/images/softwareEngine/view5.jpg" alt="view5"></p>
+<p>上面这样按照功能分解时不合适的，车的不同的部件组合实现了上面的功能，比如说上面的左转和前进模块有很多的内部实现是相同的，如果按照这样的分解，是存在极大的冗余的，且同一功能需要多出修改，是不合适的。</p>
+<p>因此需要对系统的功能进行抽象，聚类，将系统功能转化为设计部件。</p>
+<p>因此架构设计从更关注系统行为转换为更关注系统构成。</p>
+<h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><ul>
+<li>数据模型描述系统存储，操作，管理和分发数据的方式，包括数据结构，内容，所有权，标识符和映射关系等多方面数据相关的设计决策</li>
+<li>主要描述数据的逻辑结构（数据静态和动态结构，所有权，生命周期等）</li>
+<li>数据模型中的常见图包括：静态数据结构，动态数据流，数据所有权，数据生命周期</li>
+</ul>
+<p>数据模型不直接讲数据库，而是数据结构</p>
+<h2 id="技术模型-—-架构实现"><a href="#技术模型-—-架构实现" class="headerlink" title="技术模型 — 架构实现"></a>技术模型 — 架构实现</h2><ul>
+<li>描述用以支撑系统实现的技术部件，包括框架，中间件等以及实现各功能和质量属性的关键机制，技术方案，编程语言等。</li>
+<li>描述各功能部件的实现方案和框架代码</li>
+<li>在某些场景下，实际上转变成了技术“上下文”<br>技术模型 2D -&gt; 3D -&gt; 4D<ul>
+<li>2D：基本的数据结构和实现方案，如MVC，通过ORM连接数据库等</li>
+<li>3D：各技术部件的技术选型，如ORM选用Hibernate，view选用AngularJS等</li>
+<li>4D：各技术部件版本选择及演进，如ORM从Hibernate4.3.8演进到4.4.1</li>
+</ul>
+</li>
+</ul>
+<p>在技术模型中需要对4D信息进行描述，既关键技术方案，具体选型，以及版本演进。</p>
+<h2 id="逻辑视图推荐方法-—-DDD"><a href="#逻辑视图推荐方法-—-DDD" class="headerlink" title="逻辑视图推荐方法 —- DDD"></a>逻辑视图推荐方法 —- DDD</h2><p>聚焦业务领域，以业务模型而非技术实现作为架构设计的驱动力，从而实现业务逻辑上的松耦合。</p>
+<p>DDD战略设计：通过衔接是上下文进行系统划分</p>
+<h1 id="开发视图"><a href="#开发视图" class="headerlink" title="开发视图"></a>开发视图</h1><p>面向开发人员，主要包括开发，测试，编译，构建，维护</p>
+<ul>
+<li><p>设计与代码一致性映射问题<br>架构设计元素（子系统，服务，组件）与代码元素（代码仓，目录，包，文件）以及构建元素（二进制交付件）之间的对应关系</p>
+</li>
+<li><p>代码，构建依赖问题<br>架构设计中的依赖关系如何体现在代码中</p>
+</li>
+</ul>
+<h2 id="代码模型"><a href="#代码模型" class="headerlink" title="代码模型"></a>代码模型</h2><p>逻辑视图到代码模型的元素映射</p>
+<ul>
+<li>针对逻辑视图中每个元素，需要给出明确代码仓/目录（微服务，组件独立代码仓（推荐））</li>
+<li>针对每个元素，需给出内含的目录结构，至少包括内外部接口目录和源文件目录划分</li>
+</ul>
+<p>代码模型中的依赖关系的建立</p>
+<ul>
+<li>在明确代码与逻辑元素映射后，可获取相应元素间的依赖和调用关系模型，形成真实代码依赖和调用关系模型，从而确保代码与架构一致性（有工具可以自动生成）</li>
+<li>架构和代码间的一致性是双方的。即支持逻辑视图到开发视图到代码的正向一致性；也需支持从代码反向生成开发视图，及与逻辑视图反向同步。</li>
+</ul>
+<h2 id="构建模型"><a href="#构建模型" class="headerlink" title="构建模型"></a>构建模型</h2><p>从源码到机器码</p>
+<p>构建模型主要描述</p>
+<ul>
+<li>产品构建过程，即从源码到二进制交付件的生成关系</li>
+<li>每个构建过程中依赖的工具链，以及工具版本信息</li>
+<li>二进制交付件在运行目录的位置</li>
+<li>二进制交付件与逻辑视图元素的映射关系</li>
+</ul>
+<h1 id="部署视图"><a href="#部署视图" class="headerlink" title="部署视图"></a>部署视图</h1><p>用于描述二进制交付件的打包发布及部署</p>
+<p>部署视图描述产品交付过程，交付依赖；在测试和生产环境中的功能分布结构，部署对象之间的相互依赖关系等。部署视图显示定义系统的交付编排过程，部署结构及部署的工具</p>
+<h2 id="目的-1"><a href="#目的-1" class="headerlink" title="目的"></a>目的</h2><ul>
+<li>确定系统的交付件构成</li>
+<li>理解目标系统在测试，运行环境的最终形态，其结构组成，部件的依赖关系，呈现整体模型。</li>
+<li>确定系统的部署工具及部署方法</li>
+</ul>
+<h2 id="交付模型"><a href="#交付模型" class="headerlink" title="交付模型"></a>交付模型</h2><p>二进制交付件的打包交付过程</p>
+<p>交付模型实现从开发视角（二进制交付件）到交付视角（面向客户的订单）的转换</p>
+<p>交付模型主要描述</p>
+<ul>
+<li>产品打包交付过程</li>
+<li>交付模型中需要明确每个订单包含的内容和整个打包过程</li>
+<li>打包过程依赖的工具链，以及工具版本信息</li>
+<li>产品订单与逻辑视图中相应元素的映射关系</li>
+</ul>
+<h1 id="运行视图"><a href="#运行视图" class="headerlink" title="运行视图"></a>运行视图</h1><p>用于系统运行设计</p>
+<p>运行视图主要对进程，进程组，线程，进程间通信等进行建模，也可以对互斥，信号量等保护数据和资源的机制进行建模。同时运行视图还包括架构强关联的功能和特性的运行设计。</p>
+<p>运行模型主要包括以下部分</p>
+<ul>
+<li>逻辑，任务映射：讲逻辑元素映射运行时的执行实体上（暴扣VM，进程，进程组，线程等）</li>
+<li>运行期的并行处理：包括进程，线程设计，资源共享机制，进程间通讯机制，死锁分析，进程、线程优先级设计。</li>
+<li>关键运行设计：关键功能，安全/可靠性机制等，可采用顺序图，活动图，状态图等方式</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/架构/" rel="tag"># 架构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/06/15/ProgramingLanguage/路由器设置无线桥接模式/" rel="next" title="路由器设置无线桥接模式">
+                <i class="fa fa-chevron-left"></i> 路由器设置无线桥接模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/07/12/SoftwareEngine/如何做好交付/" rel="prev" title="如何做好交付">
+                如何做好交付 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#架构视图"><span class="nav-number">1.</span> <span class="nav-text">架构视图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-1视图"><span class="nav-number">2.</span> <span class="nav-text">4+1视图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#视图与质量属性的关系"><span class="nav-number">3.</span> <span class="nav-text">视图与质量属性的关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用例视图"><span class="nav-number">4.</span> <span class="nav-text">用例视图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目的"><span class="nav-number">4.1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建模方法"><span class="nav-number">4.2.</span> <span class="nav-text">建模方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#系统上下文模型"><span class="nav-number">4.3.</span> <span class="nav-text">系统上下文模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#系统用例交互场景"><span class="nav-number">4.4.</span> <span class="nav-text">系统用例交互场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#逻辑视图"><span class="nav-number">5.</span> <span class="nav-text">逻辑视图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑视图的基本元素"><span class="nav-number">5.1.</span> <span class="nav-text">逻辑视图的基本元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑模型-—-系统分解"><span class="nav-number">5.2.</span> <span class="nav-text">逻辑模型 — 系统分解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何按照功能分解的方式设计一辆车"><span class="nav-number">5.2.1.</span> <span class="nav-text">如何按照功能分解的方式设计一辆车</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据模型"><span class="nav-number">5.3.</span> <span class="nav-text">数据模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术模型-—-架构实现"><span class="nav-number">5.4.</span> <span class="nav-text">技术模型 — 架构实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑视图推荐方法-—-DDD"><span class="nav-number">5.5.</span> <span class="nav-text">逻辑视图推荐方法 —- DDD</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开发视图"><span class="nav-number">6.</span> <span class="nav-text">开发视图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#代码模型"><span class="nav-number">6.1.</span> <span class="nav-text">代码模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建模型"><span class="nav-number">6.2.</span> <span class="nav-text">构建模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署视图"><span class="nav-number">7.</span> <span class="nav-text">部署视图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目的-1"><span class="nav-number">7.1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#交付模型"><span class="nav-number">7.2.</span> <span class="nav-text">交付模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运行视图"><span class="nav-number">8.</span> <span class="nav-text">运行视图</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">211.1k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共211.1k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'changyuanchn',
+            repo: 'https://github.com/changyuanchn/changyuanchn.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '82f82fd4b3c71f66c261736a9aca7151809f2c0e',
+            
+                client_id: 'b260167e7c41f29d0da7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

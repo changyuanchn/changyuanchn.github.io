@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="IPD流程,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="IPD流程的英文名称为Integrated Product Development，集成产品开发管理。整个IPD流程很大，包括整个项目的研发管理，甚至包括回款投资等等，这里我们只站在软件开发的角度，来介绍分享下IPD流程。 IPD流程的步骤站在软件开发的交付，IPD流程主要包括以下的几个步骤  各个阶段的研发的主要活动如下概念阶段  产品需求分析 技术评审1 准备开发和验证计划  计划阶段  产品">
+<meta name="keywords" content="IPD流程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPD流程">
+<meta property="og:url" content="http://yoursite.com/2022/07/12/SoftwareEngine/IPD流程/index.html">
+<meta property="og:site_name" content="axis tech zone">
+<meta property="og:description" content="IPD流程的英文名称为Integrated Product Development，集成产品开发管理。整个IPD流程很大，包括整个项目的研发管理，甚至包括回款投资等等，这里我们只站在软件开发的角度，来介绍分享下IPD流程。 IPD流程的步骤站在软件开发的交付，IPD流程主要包括以下的几个步骤  各个阶段的研发的主要活动如下概念阶段  产品需求分析 技术评审1 准备开发和验证计划  计划阶段  产品">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/softwareEngine/IPD1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/softwareEngine/IPD2.jpg">
+<meta property="og:updated_time" content="2022-07-12T06:08:11.649Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IPD流程">
+<meta name="twitter:description" content="IPD流程的英文名称为Integrated Product Development，集成产品开发管理。整个IPD流程很大，包括整个项目的研发管理，甚至包括回款投资等等，这里我们只站在软件开发的角度，来介绍分享下IPD流程。 IPD流程的步骤站在软件开发的交付，IPD流程主要包括以下的几个步骤  各个阶段的研发的主要活动如下概念阶段  产品需求分析 技术评审1 准备开发和验证计划  计划阶段  产品">
+<meta name="twitter:image" content="http://yoursite.com/images/softwareEngine/IPD1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/07/12/SoftwareEngine/IPD流程/">
+
+
+
+
+
+  <title>IPD流程 | axis tech zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">axis tech zone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">a personal tech blog website</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/07/12/SoftwareEngine/IPD流程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="changyuan">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="axis tech zone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">IPD流程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-07-12T12:30:00+08:00">
+                2022-07-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/软件工程-项目管理/" itemprop="url" rel="index">
+                    <span itemprop="name">软件工程, 项目管理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/07/12/SoftwareEngine/IPD流程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2022/07/12/SoftwareEngine/IPD流程/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,379
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>IPD流程的英文名称为Integrated Product Development，集成产品开发管理。整个IPD流程很大，包括整个项目的研发管理，甚至包括回款投资等等，这里我们只站在软件开发的角度，来介绍分享下IPD流程。</p>
+<h1 id="IPD流程的步骤"><a href="#IPD流程的步骤" class="headerlink" title="IPD流程的步骤"></a>IPD流程的步骤</h1><p>站在软件开发的交付，IPD流程主要包括以下的几个步骤</p>
+<p><img src="/images/softwareEngine/IPD1.jpg" alt="IPD1"></p>
+<h2 id="各个阶段的研发的主要活动如下"><a href="#各个阶段的研发的主要活动如下" class="headerlink" title="各个阶段的研发的主要活动如下"></a>各个阶段的研发的主要活动如下</h2><p>概念阶段</p>
+<ul>
+<li>产品需求分析</li>
+<li>技术评审1</li>
+<li>准备开发和验证计划</li>
+</ul>
+<p>计划阶段</p>
+<ul>
+<li>产品架构和系统设计</li>
+<li>技术评审2</li>
+<li>专项概要设计</li>
+<li>技术评审3</li>
+</ul>
+<p>开发阶段</p>
+<ul>
+<li>详细设计与开发</li>
+<li>技术评审4</li>
+<li>系统设计验证</li>
+<li>技术评审4A</li>
+<li>系统集成测试（SDV）</li>
+<li>技术评审5</li>
+</ul>
+<p>验证阶段</p>
+<ul>
+<li>系统验证测试（SVT）</li>
+<li>Beta测试</li>
+<li>技术评审6</li>
+</ul>
+<p>生命周期阶段</p>
+<ul>
+<li>问题与缺陷管理</li>
+<li>补丁开发</li>
+<li>硬件维护</li>
+<li>资料维护</li>
+<li>市场，生产技术支持</li>
+</ul>
+<p>更加详细的附带了每个技术评审点的流程图如下所示：</p>
+<p><img src="/images/softwareEngine/IPD2.jpg" alt="IPD2"></p>
+<h2 id="技术评审（Technical-Review）"><a href="#技术评审（Technical-Review）" class="headerlink" title="技术评审（Technical Review）"></a>技术评审（Technical Review）</h2><ul>
+<li>TR1 关注需求包的完整性和备选概念的合理性</li>
+<li>TR2 审视产品设计规格，关注设计需求是否完成转化成设计规格</li>
+<li>TR3 审视所有设计规格被分解到位，子系统与功能领域的设计方案完成并评审通过</li>
+<li>TR4 完成SDV测试</li>
+<li>TR4A 评估产品成熟度，确保问题与风险闭环，供应与制造经过验证确保能支持产品生产</li>
+<li>TR5 产品满足功能和性能要求，产品需求全部实现</li>
+<li>TR6 产品经过验证能够满足全球批量发货商用</li>
+</ul>
+<p>对于IPD流程，上面的是技术评审点，实际上整个项目还有决策评审点</p>
+<h2 id="决策评审点（Decision-Checkpoint）"><a href="#决策评审点（Decision-Checkpoint）" class="headerlink" title="决策评审点（Decision Checkpoint）"></a>决策评审点（Decision Checkpoint）</h2><p>下面的决策评审点分别对应了上面的研发的各个阶段<br>charter：charter评审通过以为着IPMT/BMT同意立项，以及概念阶段的资源投入<br>CDCP: IPMT/BMT同意PDT计划阶段的资源投入<br>PDCP: IPMT/BMT同意PDT开发验证阶段的资源投入，PDT将按照签署的合同要求开发并交付产品包<br>EDCP: EDCP通过意味着产品包达到足够的质量要求，IRB/IPMT同意针对某一特定的机会提前销售该产品包<br>ADCP: ADCP通过意味着IPMT/BMT同意PDT发布阶段的资源投入，已经确定产品可以大批量上市的时间<br>LDCP：生命周期终止</p>
+<p>上面的术语解释：<br>IPMT（Integrated Portfolio Management Team) 集成组合管理团队。是产品投资决策和评审机构。是一个高层跨部门团队，包括各个部门的最高主管<br>BMT（Business Manager Team）业务主管团队<br>PDT是一个强矩阵管理团队，核心架构包括POP(project operator), PQA(Project Quality Assurance), 以及相关功能领域的核心代表，包括财务代表，开发代表，制造代表，市场代表，采购代表，服务代表等。</p>
+<h1 id="IPD流程适合的领域"><a href="#IPD流程适合的领域" class="headerlink" title="IPD流程适合的领域"></a>IPD流程适合的领域</h1><p>IPD流程适合于大型的企业软件，工具软件以及电信软件的开发。这也是为什么华为公司从IBM引入IPD流程后迅速发展的一个原因之一。对于大型的企业软件或者电信软件，因为他们最重要的要求是稳定，而不是快速迭代，所以IPD流程的繁琐细节可以尽最大的努力去减少bug，保证系统的稳定。</p>
+<h1 id="IPD流程存在的问题"><a href="#IPD流程存在的问题" class="headerlink" title="IPD流程存在的问题"></a>IPD流程存在的问题</h1><p>IPD流程老旧繁琐。我们可以看到一个版本从概念到发布一般要半年的时间，而且在整个阶段有各种各样的评审，实际上极大的限制了程序员的主观性与效率。对于大型的企业软件或者电信软件，因为他们最重要的要求是稳定，而不是快速迭代，所以IPD流程的繁琐细节可以尽最大的努力去减少bug，保证系统的稳定。</p>
+<p>然而对于互联网软件来说，这个流程就太过于臃肿了，新增一个功能要层层验证审批，几个月后才能更新一个版本，在网红都不能红三个月的互联网，估计早就凉凉了。</p>
+<p>而且为了IPD流程，需要大量的组织和研发人员，实际开发人员占比较低，也导致了研发成本较高。</p>
+<p>同时很多时候评审的专家脱离代码较久，而一线的开发人员却没有太多方案的话语权，也会导致开发过程中的反复。</p>
+<p>对于部分研发管理人员而言，迷信认为IPD流程能够保证产品质量，进而把软件工程师人力化，不注重软件工程师的专业技能，认为只要认识代码就能上手，其他的由IPD流程保证，这样会导致项目质量以及代码质量存在极大问题。同时为了符合IPD流程的时间周期，各种骚操作被频繁发明或使用，也会导致整个项目越来越腐朽，变成一坨任何人都不敢动的且尚能维持使用的垃圾。</p>
+<p>IPD流程在实际的应用中有时候也会存在变形的情况。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/IPD流程/" rel="tag"># IPD流程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/07/12/SoftwareEngine/如何做好交付/" rel="next" title="如何做好交付">
+                <i class="fa fa-chevron-left"></i> 如何做好交付
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/07/12/ComputerGraphic/人工智能在图形学上的应用/" rel="prev" title="人工智能在图形学上的应用">
+                人工智能在图形学上的应用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div onclick="showGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+        <div id="gitment-container" style="display:none"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="changyuan">
+            
+              <p class="site-author-name" itemprop="name">changyuan</p>
+              <p class="site-description motion-element" itemprop="description">所谓妖，只不过是求而不得的人，修而未成的果。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/changyuanchn" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/changyuanchn" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-CSDN"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#IPD流程的步骤"><span class="nav-number">1.</span> <span class="nav-text">IPD流程的步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#各个阶段的研发的主要活动如下"><span class="nav-number">1.1.</span> <span class="nav-text">各个阶段的研发的主要活动如下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术评审（Technical-Review）"><span class="nav-number">1.2.</span> <span class="nav-text">技术评审（Technical Review）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#决策评审点（Decision-Checkpoint）"><span class="nav-number">1.3.</span> <span class="nav-text">决策评审点（Decision Checkpoint）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IPD流程适合的领域"><span class="nav-number">2.</span> <span class="nav-text">IPD流程适合的领域</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IPD流程存在的问题"><span class="nav-number">3.</span> <span class="nav-text">IPD流程存在的问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">changyuan</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">211.1k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <!--div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+-->
+
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共211.1k字</span>
+</div>
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'changyuanchn',
+            repo: 'https://github.com/changyuanchn/changyuanchn.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '82f82fd4b3c71f66c261736a9aca7151809f2c0e',
+            
+                client_id: 'b260167e7c41f29d0da7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      function showGitment(){
+        document.getElementById("gitment-display-button").style.display = "none";
+        document.getElementById("gitment-container").style.display = "block";
+        renderGitment();
+      }
+      
+      </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
